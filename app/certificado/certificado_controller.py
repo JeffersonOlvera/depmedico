@@ -123,7 +123,11 @@ class CertificadoController:
             form_data = request.form.to_dict()
             usuario = session.get("usuario", "No disponible")
 
-            payload = {**form_data, "usuario_actualizacion": usuario, "status": "Completada"}
+            payload = {
+                **form_data,
+                "usuario_actualizacion": usuario,
+                "status": "Completada",
+            }
             print(payload)
 
             data_validated = CertificadoSchema(**payload).dict()
@@ -171,7 +175,7 @@ class CertificadoController:
             cedula = request.args.get("cedula")
             response = service.obtener_por_ced(cedula)
             form_data = response.json()
-    
+
             nombre = form_data.get("Nombre")
             cedula = form_data.get("Cedula")
             nhc = form_data.get("NHC")
@@ -259,7 +263,7 @@ class CertificadoController:
             print("CEDULA: ", cedula)
             try:
                 response = requests.post(
-                    "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaCertOcup",
+                    f"{BASE_URL}/FormDepMedico/Cargar/fichaCertOcup",
                     json=payload,
                     headers={"AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s"},
                     verify=False,
@@ -571,7 +575,7 @@ class CertificadoController:
             try:
                 # Realiza una solicitud POST a la API con la cédula
                 response = requests.post(
-                    "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaCertOcup",
+                    f"{BASE_URL}/FormDepMedico/Cargar/fichaCertOcup",
                     json=payload,
                     headers={"AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s"},
                     verify=False,

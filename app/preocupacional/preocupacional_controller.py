@@ -41,7 +41,6 @@ from app.core.utils.resize_img import base_firma_doc
 from app.preocupacional.preocupacional_schema import PreocupacionalSchema
 
 
-
 service = PreocupacionalService()
 
 
@@ -213,7 +212,13 @@ class PreocupacionalController:
             form_data = request.form.to_dict()
             usuario = session.get("usuario", "No disponible")
 
-            payload = {**form_data, "usuario_actualizacion": usuario, "status": "Completada", "tipo_ficha": "Droga", "firma_Colaborador": session.get("firma_colaborador", "")}
+            payload = {
+                **form_data,
+                "usuario_actualizacion": usuario,
+                "status": "Completada",
+                "tipo_ficha": "Droga",
+                "firma_Colaborador": session.get("firma_colaborador", ""),
+            }
 
             data_validated = PreocupacionalSchema(**payload).dict()
 
@@ -250,20 +255,20 @@ class PreocupacionalController:
                 "forms/medico/form_preocupacional_doc.html",
                 errores={},
                 form_data=form_data,
-            )        
+            )
 
     def cargar(self):
         print("Entra al controller de cargar")
         form_data = {}
         errores = {}
-        
-        try:    
+
+        try:
             cedula = request.form.get("cedula")
             response = service.obtener_por_ced(cedula)
             form_data = response.json()
             print(form_data)
 
-            session['firma_colaborador'] = form_data.get('firma_colaborador', '')
+            session["firma_colaborador"] = form_data.get("firma_colaborador", "")
 
             experiencias = [
                 {
@@ -272,37 +277,39 @@ class PreocupacionalController:
                     "actividad": form_data.get("Actividad_1", ""),
                     "tiempo": form_data.get("Tiempo_1", ""),
                     "riesgo": form_data.get("Riego_1", ""),
-                    "observacion": form_data.get("Antc_Observ_1", "")
-                    },
-                    {
-                        "empresa": form_data.get("Empresa_2", ""),
-                        "puesto": form_data.get("Puesto_2", ""),
-                        "actividad": form_data.get("Actividad_2", ""),
-                        "tiempo": form_data.get("Tiempo_2", ""),
-                        "riesgo": form_data.get("Riego_2", ""),
-                        "observacion": form_data.get("Antc_Observ_2", "")
-                    },
-                    {
-                        "empresa": form_data.get("Empresa_3", ""),
-                        "puesto": form_data.get("Puesto_3", ""),
-                        "actividad": form_data.get("Actividad_3", ""),
-                        "tiempo": form_data.get("Tiempo_3", ""),
-                        "riesgo": form_data.get("Riego_3", ""),
-                        "observacion": form_data.get("Antc_Observ_3", "")
-                    },
-                    {
-                        "empresa": form_data.get("Empresa_4", ""),
-                        "puesto": form_data.get("Puesto_4", ""),
-                        "actividad": form_data.get("Actividad_4", ""),
-                        "tiempo": form_data.get("Tiempo_4", ""),
-                        "riesgo": form_data.get("Riego_4", ""),
-                        "observacion": form_data.get("Antc_Observ_4", "")
-                    }
-                ]
+                    "observacion": form_data.get("Antc_Observ_1", ""),
+                },
+                {
+                    "empresa": form_data.get("Empresa_2", ""),
+                    "puesto": form_data.get("Puesto_2", ""),
+                    "actividad": form_data.get("Actividad_2", ""),
+                    "tiempo": form_data.get("Tiempo_2", ""),
+                    "riesgo": form_data.get("Riego_2", ""),
+                    "observacion": form_data.get("Antc_Observ_2", ""),
+                },
+                {
+                    "empresa": form_data.get("Empresa_3", ""),
+                    "puesto": form_data.get("Puesto_3", ""),
+                    "actividad": form_data.get("Actividad_3", ""),
+                    "tiempo": form_data.get("Tiempo_3", ""),
+                    "riesgo": form_data.get("Riego_3", ""),
+                    "observacion": form_data.get("Antc_Observ_3", ""),
+                },
+                {
+                    "empresa": form_data.get("Empresa_4", ""),
+                    "puesto": form_data.get("Puesto_4", ""),
+                    "actividad": form_data.get("Actividad_4", ""),
+                    "tiempo": form_data.get("Tiempo_4", ""),
+                    "riesgo": form_data.get("Riego_4", ""),
+                    "observacion": form_data.get("Antc_Observ_4", ""),
+                },
+            ]
 
-            
             return render_template(
-                "forms/medico/form_preocupacional_doc.html", errores={}, form_data=form_data, experiencias=experiencias
+                "forms/medico/form_preocupacional_doc.html",
+                errores={},
+                form_data=form_data,
+                experiencias=experiencias,
             )
 
         except ValidationError as e:
@@ -342,7 +349,7 @@ class PreocupacionalController:
             try:
                 # Realiza una solicitud POST a la API con la cédula
                 response = requests.post(
-                    "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaPreocupacional",
+                    f"{BASE_URL}/FormDepMedico/Cargar/fichaPreocupacional",
                     json=payload,
                     headers={"AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s"},
                     verify=False,
@@ -762,9 +769,9 @@ class PreocupacionalController:
                         )
 
                     doc.close()  # Cierra el documento original
-                    print("Se cierra el doc. Guardando...")            
+                    print("Se cierra el doc. Guardando...")
                     # Guarda el nuevo documento PDF aplanado en un archivo temporal
-                    temp_file = NamedTemporaryFile(delete=False, suffix='.pdf')
+                    temp_file = NamedTemporaryFile(delete=False, suffix=".pdf")
                     pdf_path_output = temp_file.name
                     temp_file.close()  # Cerrar el handle antes de usar el archivo
 
@@ -823,7 +830,7 @@ class PreocupacionalController:
             try:
                 # Realiza una solicitud POST a la API con la cédula
                 response = requests.post(
-                    "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaPreocupacional",
+                    f"{BASE_URL}/FormDepMedico/Cargar/fichaPreocupacional",
                     json=payload,
                     headers={"AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s"},
                     verify=False,
@@ -1140,7 +1147,12 @@ class PreocupacionalController:
                             REDUCED_SIGN = base64.b64decode(data_sign)
 
                             tempxlsx1 = os.path.join(
-                                os.path.dirname(__file__), "..", "..","static", "files", "PRE_TEMP.png"
+                                os.path.dirname(__file__),
+                                "..",
+                                "..",
+                                "static",
+                                "files",
+                                "PRE_TEMP.png",
                             )
 
                             # Guardar la firma redimensionada temporalmente

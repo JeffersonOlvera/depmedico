@@ -1,3 +1,4 @@
+import os
 from flask import jsonify
 import requests
 from datetime import datetime
@@ -5,10 +6,11 @@ from datetime import datetime
 
 class DrogaService:
 
-    API_GUARDAR = "https://192.168.137.16:47096/FormDepMedico/Guardar/fichaDrogas"
-    API_ACTUALIZAR = "https://192.168.137.16:47096/FormDepMedico/Actualizar/fichaDrogas"
-    API_CARGAR = "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaDrogas"
-    API_LISTAR = "https://192.168.137.16:47096/FormDepMedico/Listar/fichaDrogas"
+    BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+    API_GUARDAR = f"{BASE_URL}/FormDepMedico/Guardar/fichaDrogas"
+    API_ACTUALIZAR = f"{BASE_URL}/FormDepMedico/Actualizar/fichaDrogas"
+    API_CARGAR = f"{BASE_URL}/FormDepMedico/Cargar/fichaDrogas"
+    API_LISTAR = f"{BASE_URL}/FormDepMedico/Listar/fichaDrogas"
 
     HEADERS = {
         "AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s",
@@ -70,20 +72,17 @@ class DrogaService:
         fecha_ingreso = datetime.strptime(fecha_ingreso_str, "%m/%d/%Y %I:%M:%S %p")
         return fecha_ingreso <= fecha_tope, fecha_ingreso
 
-    def obtener_todas(self, rango_fechas={} ):
+    def obtener_todas(self, rango_fechas={}):
         """Obtiene todas las fichas de drogas en un rango de fechas"""
         print("TESSST")
         try:
 
-            payload = {
-                "fechaDesde": "2024-02-24",
-                "fechaHasta": "2030-05-02"
-            }
+            payload = {"fechaDesde": "2024-02-24", "fechaHasta": "2030-05-02"}
 
             response = requests.post(
                 self.API_LISTAR, headers=self.HEADERS, verify=False, json=payload
             )
-            
+
             print(response, response.status_code)
             if response.status_code in [200, 201]:
 
@@ -155,8 +154,8 @@ class DrogaService:
                 timeout=30,
             )
             print(f"Código de estado DROGA ACTU: {response.status_code}")
-            print(f"Respuesta DROGA ACTU: {response.text}")    
-            
+            print(f"Respuesta DROGA ACTU: {response.text}")
+
             if response.status_code == 200:
                 return {"success": True, "message": "Formulario enviado correctamente"}
             else:
@@ -174,4 +173,3 @@ class DrogaService:
             }
         except Exception as e:
             return {"success": False, "message": f"Error inesperado: {str(e)}"}
-

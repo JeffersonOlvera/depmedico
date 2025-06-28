@@ -1,11 +1,17 @@
 from datetime import datetime
+import os
 from app.core.api_service import BaseApiService
 
 
 class ConsentimientoService(BaseApiService):
+
     def __init__(self):
+        # Primero obtenemos la BASE_URL
+        BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+
+        # Luego llamamos al constructor padre usando la variable local
         super().__init__(
-            base_url="https://192.168.137.16:47096/FormDepMedico",
+            base_url=f"{BASE_URL}/FormDepMedico",
             resource="fichaConsInformado",
             headers={
                 "AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s",
@@ -26,10 +32,13 @@ class ConsentimientoService(BaseApiService):
 
     def obtener_todas(self, fecha_desde="2024-02-24", fecha_hasta="2030-05-02"):
 
-        return self.post("Listar", {
-            "fechaDesde": fecha_desde,
-            "fechaHasta": fecha_hasta,
-        })
+        return self.post(
+            "Listar",
+            {
+                "fechaDesde": fecha_desde,
+                "fechaHasta": fecha_hasta,
+            },
+        )
 
     def validar_fecha_ingreso(self, fecha_ingreso_str):
         fecha_tope = datetime.strptime(f"{datetime.now().year}-12-31", "%Y-%m-%d")

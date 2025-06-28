@@ -1,3 +1,4 @@
+import os
 import requests
 from flask import jsonify
 from datetime import datetime
@@ -5,10 +6,11 @@ from datetime import datetime
 
 class CertificadoService:
 
-    API_GUARDAR = "https://192.168.137.16:47096/FormDepMedico/Guardar/fichaCertOcup"
-    API_ACTUALIZAR = "https://192.168.137.16:47096/FormDepMedico/Actualizar/fichaCertOcup"
-    API_CARGAR = "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaCertOcup"
-    API_LISTAR = "https://192.168.137.16:47096/FormDepMedico/Listar/fichaCertOcup"
+    BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+    API_GUARDAR = f"{BASE_URL}/FormDepMedico/Guardar/fichaCertOcup"
+    API_ACTUALIZAR = f"{BASE_URL}/FormDepMedico/Actualizar/fichaCertOcup"
+    API_CARGAR = f"{BASE_URL}/FormDepMedico/Cargar/fichaCertOcup"
+    API_LISTAR = f"{BASE_URL}/FormDepMedico/Listar/fichaCertOcup"
 
     HEADERS = {
         "AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s",
@@ -144,10 +146,7 @@ class CertificadoService:
     def obtener_todas(self, rango_fechas={}):
         try:
 
-            payload = {
-                "fechaDesde": "2024-02-24",
-                "fechaHasta": "2030-05-02"
-            }
+            payload = {"fechaDesde": "2024-02-24", "fechaHasta": "2030-05-02"}
             response = requests.post(
                 self.API_LISTAR, headers=self.HEADERS, verify=False, json=payload
             )

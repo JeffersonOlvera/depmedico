@@ -1,3 +1,4 @@
+import os
 from flask import jsonify
 import requests
 from datetime import datetime
@@ -5,10 +6,11 @@ from datetime import datetime
 
 class PreocupacionalService:
 
-    API_GUARDAR = "https://192.168.137.16:47096/FormDepMedico/Guardar/fichaPreocupacional"
-    API_ACTUALIZAR = "https://192.168.137.16:47096/FormDepMedico/Actualizar/fichaPreocupacional"
-    API_CARGAR = "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaPreocupacional"
-    API_LISTAR = "https://192.168.137.16:47096/FormDepMedico/Listar/fichaPreocupacional"
+    BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+    API_GUARDAR = f"{BASE_URL}/FormDepMedico/Guardar/fichaPreocupacional"
+    API_ACTUALIZAR = f"{BASE_URL}/FormDepMedico/Actualizar/fichaPreocupacional"
+    API_CARGAR = f"{BASE_URL}/FormDepMedico/Cargar/fichaPreocupacional"
+    API_LISTAR = f"{BASE_URL}/FormDepMedico/Listar/fichaPreocupacional"
 
     HEADERS = {
         "AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s",
@@ -74,15 +76,12 @@ class PreocupacionalService:
         print("TESSST")
         try:
 
-            payload = {
-                "fechaDesde": "2024-02-24",
-                "fechaHasta": "2030-05-02"
-            }
+            payload = {"fechaDesde": "2024-02-24", "fechaHasta": "2030-05-02"}
 
             response = requests.post(
                 self.API_LISTAR, headers=self.HEADERS, verify=False, json=payload
             )
-            
+
             print(response, response.status_code)
             if response.status_code in [200, 201]:
 
@@ -154,8 +153,8 @@ class PreocupacionalService:
                 timeout=30,
             )
             print(f"Código de estado: {response.status_code}")
-            print(f"Respuesta: {response.text}")    
-            
+            print(f"Respuesta: {response.text}")
+
             if response.status_code == 200:
                 return {"success": True, "message": "Formulario enviado correctamente"}
             else:

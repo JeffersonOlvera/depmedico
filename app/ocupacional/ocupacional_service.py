@@ -1,3 +1,4 @@
+import os
 from flask import jsonify
 import requests
 from datetime import datetime
@@ -5,10 +6,11 @@ from datetime import datetime
 
 class OcupacionalService:
 
-    API_GUARDAR = "https://192.168.137.16:47096/FormDepMedico/Guardar/fichaOcupacional"
-    API_ACTUALIZAR = "https://192.168.137.16:47096/FormDepMedico/Actualizar/fichaOcupacional"
-    API_CARGAR = "https://192.168.137.16:47096/FormDepMedico/Cargar/fichaOcupacional"
-    API_LISTAR = "https://192.168.137.16:47096/FormDepMedico/Listar/fichaOcupacional"
+    BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+    API_GUARDAR = f"{BASE_URL}/FormDepMedico/Guardar/fichaOcupacional"
+    API_ACTUALIZAR = f"{BASE_URL}/FormDepMedico/Actualizar/fichaOcupacional"
+    API_CARGAR = f"{BASE_URL}/FormDepMedico/Cargar/fichaOcupacional"
+    API_LISTAR = f"{BASE_URL}/FormDepMedico/Listar/fichaOcupacional"
 
     HEADERS = {
         "AuthKey": "jV+lYdQlv2IO0Gc1vZOeFomzl8eEt79s",
@@ -102,7 +104,6 @@ class OcupacionalService:
                 500,
             )
 
-
     def obtener_por_ced(self, cedula):
         try:
             print("CEDULA RECIBIDAAAA: " + cedula)
@@ -152,8 +153,8 @@ class OcupacionalService:
                 timeout=30,
             )
             print(f"Código de estado: {response.status_code}")
-            print(f"Respuesta: {response.text}")    
-            
+            print(f"Respuesta: {response.text}")
+
             if response.status_code == 200:
                 return {"success": True, "message": "Formulario enviado correctamente"}
             else:
@@ -171,5 +172,3 @@ class OcupacionalService:
             }
         except Exception as e:
             return {"success": False, "message": f"Error inesperado: {str(e)}"}
-
-
