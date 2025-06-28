@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ocupacionales</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    /* Sidebar Styles */
+    #sidebar {
+      background-color: #007bff;
+      /* Cambia el color a azul Bootstrap */
+      color: white;
+      width: 80px;
+      height: 100vh;
+      transition: width 0.5s ease;
+      /* Solo transiciona el ancho */
+      overflow-x: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Expanding Sidebar */
+    #sidebar:hover {
+      width: 186px;
+    }
+
+    /* Logo Styles */
+    #logo-container {
+      padding: 20px;
+      text-align: center;
+    }
+
+    #sidebar-logo {
+      width: 50px;
+      transition: width 0.5s ease;
+      /* Transición suave para el logo */
+    }
+
+    #sidebar:hover #sidebar-logo {
+      width: 150px;
+    }
+
+    /* Navigation Menu */
+    .nav {
+      flex-grow: 1;
+    }
+
+    .nav a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      transition: background-color 0.3s, padding-left 0.5s ease;
+      /* Transición para color y padding */
+    }
+
+    .nav a:hover {
+      background-color: #0056b3;
+    }
+
+    .nav i {
+      font-size: 24px;
+      margin-right: 0;
+      transition: font-size 0.3s ease, margin-right 0.5s ease;
+      /* Transición suave para el tamaño y margen */
+    }
+
+    #sidebar:hover .nav i {
+      margin-right: 10px;
+    }
+
+    .sidebar-text {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      /* Transición suave para opacidad y transformaciones */
+    }
+
+    #sidebar:hover .sidebar-text {
+      display: inline;
+      opacity: 1;
+      transform: translateX(0);
+      /* Asegura que el texto esté visible y no se desplace */
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 80px;
+      /* Espacio para el sidebar minimizado */
+      padding: 20px;
+      transition: margin-left 0.5s ease, width 0.5s ease;
+      /* Transición para margin-left y width */
+      width: calc(100vw - 80px);
+      /* Ancho del 90% de la ventana menos el sidebar minimizado */
+    }
+
+    #sidebar:hover~.main-content {
+      margin-left: 186px;
+      /* Espacio para el sidebar expandido */
+      width: calc(100vw - 186px);
+      /* Ajusta el ancho cuando el sidebar está expandido */
+    }
+
+    /* Footer Styles */
+    .logout-small i {
+      font-size: 24px;
+    }
+
+    #sidebar:hover .logout-small i {
+      margin-right: 10px;
+    }
+
+    .logo-item {
+      width: 27px;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" style="height: 100vh;">
+      <div id="logo-container">
+        <img src="https://intranet.americancallcenter.com/wp-content/uploads/2021/11/LOGO-ACC_cclaros.svg"
+          title="Logo Acc" alt="Logo Acc" id="sidebar-logo">
+      </div>
+
+      <!-- NAVIGATION MENU -->
+      <nav class="nav bg-primary flex-column">
+        <a href="{{ url_for('depmedico.dashboard') }}" class="nav-item active ">
+          <i class="fas fa-tachometer-alt logo-item"></i>
+          <span class="sidebar-text">Dashboard</span>
+        </a>
+        <a href="{{ url_for('depmedico.dashboard_ocupacionales') }}" class="nav-item">
+          <i class="fas fa-clipboard-list logo-item"></i>
+          <span class="sidebar-text">Ocupacionales</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-user-md logo-item"></i>
+          <span class="sidebar-text">Preocupacional</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-file-signature logo-item"></i>
+          <span class="sidebar-text">Consentimiento informado</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-certificate logo-item"></i>
+          <span class="sidebar-text">Certificado Ocupacional</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-pills logo-item"></i>
+          <span class="sidebar-text">Seguimiento de drogas</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-capsules logo-item"></i>
+          <span class="sidebar-text">Consumo drogas</span>
+        </a>
+
+      </nav>
+
+      <!-- ASIDE Footer -->
+      <div class="mt-auto pt-5 px-2 mt-2">
+        <div class="d-flex align-items-center flex-column">
+          <a href="#" class="btn btn-danger w-100 mb-4 logout-small">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="sidebar-text">Cerrar sesión</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div>
+        <header class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="h3">Ocupacionales</h1>
+          <div class="d-flex align-items-center justify-content-center">
+            <!-- Buscar -->
+            <input type="search" id="busqueda" class="form-control me-4" placeholder="Buscar" style="width: 300px" />
+            <!-- Filtro de Estado -->
+            <label for="filtroEstado" class="form-label m-0 mx-2">Filtro:</label>
+            <select id="filtroEstado" class="form-select" style="width: 165px">
+              <option value="">Todos</option>
+              <option value="Pendiente">Pendientes</option>
+              <option value="Completada">Completadas</option>
+            </select>
+            <!-- NOMBRE COLABORADOR-->
+            <span class="d-flex justify-content-center align-items-center">
+              <p class="m-0 fw-bold text-end" style="width: 350px;">{{ session['nombreColaborador'] }}</p>
+            </span>
+          </div>
+        </header>
+
+        <!-- Cards -->
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="card text-center h-100">
+              <div class="card-body">
+                <i class="bi bi-bar-chart-line-fill display-6"></i>
+                <h2 class="card-title" id="total-registros"></h2>
+                <p class="card-text">Total recibidas</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card text-center h-100">
+              <div class="card-body">
+                <i class="bi bi-hourglass-split display-6"></i>
+                <h2 class="card-title" id="total-pendientes"></h2>
+                <p class="card-text">Total pendientes</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card text-center h-100">
+              <div class="card-body">
+                <i class="bi bi-check-circle-fill display-6"></i>
+                <h2 class="card-title" id="total-completados"></h2>
+                <p class="card-text">Total completadas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="min-width: 360px; max-width: 360px;">Nombre</th>
+                      <th>CI</th>
+                      <th class="text-center">Estado</th>
+                      <th class="text-center">Fecha Creación</th>
+                      <th class="text-center">Fecha Actualización</th>
+                      <th style="width: 230px;">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabla-datos"></tbody>
+                </table>
+
+                <!-- Controles de Paginación -->
+                <nav aria-label="Page navigation">
+                  <ul class="pagination justify-content-center" id="pagination"></ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formularios ocultos para enviar la cédula -->
+        <form id="edit-form" action="{{ url_for('preocupacional.cargar') }}" method="POST" style="display: none;">
+          <input type="hidden" name="cedula" id="cedula-input">
+        </form>
+        <form id="download-form" action="{{ url_for('preocupacional.pdf') }}" method="POST" style="display: none;">
+          <input type="hidden" name="cedula" id="cedula-input2">
+        </form>
+      </div>
+    </main>
+
+  </div>
+  <script>
+    const registrosPorPagina = 7; // Número de registros por página
+    let datos = [];
+    let datosFiltrados = [];
+    let paginaActual = 1;
+
+    fetch('http://127.0.0.1:6002/depmedico/cargar_fichas', {
+      method: 'GET', // Usa el método GET
+
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error en la respuesta de la API: ' + response.statusText);
+        }
+        return response.json(); // Parsear la respuesta como JSON
+      })
+      .then((data) => {
+        // Aquí procesas los datos recibidos
+        console.log(data); // Muestra los datos en la consola (para depuración)
+        datos = data;
+        datosFiltrados = data; // Inicialmente, los datos filtrados son todos los datos
+        mostrarPagina(paginaActual);
+        actualizarContadores(); // Actualiza los contadores cuando se cargan los datos
+      })
+      .catch((error) => {
+        console.error('Error al consumir la API:', error);
+      });
+
+    // Muestra los registros de la página actual
+    function mostrarPagina(pagina) {
+      const tablaCuerpo = document.getElementById('tabla-datos');
+      const pagination = document.getElementById('pagination');
+      tablaCuerpo.innerHTML = ''; // Limpia la tabla
+      pagination.innerHTML = ''; // Limpia la paginación
+
+      // Calcula el índice inicial y final de los registros para la página actual
+      const inicio = (pagina - 1) * registrosPorPagina;
+      const fin = Math.min(
+        inicio + registrosPorPagina,
+        datosFiltrados.length
+      );
+
+      // Agrega filas a la tabla
+      for (let i = inicio; i < fin; i++) {
+        const item = datosFiltrados[i];
+        const fila = document.createElement('tr');
+
+        // Añade las celdas a la fila
+        fila.innerHTML = `
+          <td>${item.NombreColaborador || 'N/A'}</td>
+          <td>${item.CiColaborador || 'N/A'}</td>
+          <td class="text-center">${item.Estatus || 'N/A'}</td>
+          <td class="text-center">${new Date(item['FechaRegistro']).toLocaleDateString("es-CL") || ''}</td>
+          <td class="text-center">
+              ${isNaN(new Date(item['FechaActualización'])) ? '' : new Date(item['FechaActualización']).toLocaleDateString("es-CL")}
+          </td>
+              <td class="d-flex justify-content-end">
+                  <button class="btn btn-primary btn-sm editar-btn me-2" data-cedula="${item.CiColaborador}">
+                      <i class="fas fa-edit" style="color: white;"></i> Editar
+                  </button>
+                  <button class="btn btn-danger btn-sm download-btn me-2" data-cedula="${item.CiColaborador}" ${item.Estatus === 'Pendiente' ? 'style="pointer-events: none; opacity: 0.6;"' : ''}>
+                      <i class="fas fa-file-pdf fa-lg" style="color: white"></i> PDF
+                  </button>
+                  <button class="btn btn-success btn-sm download-btn-excel" data-cedula="${item.CiColaborador}" ${item.Estatus === 'Pendiente' ? 'style="pointer-events: none; opacity: 0.6;"' : ''}>
+                      <i class="fas fa-file-excel fa-lg" style="color: white"></i> Excel
+                  </button>
+              </td>
+      `;
+
+        tablaCuerpo.appendChild(fila);
+      }
+
+
+      // Crea los botones de paginación
+      const totalPaginas = Math.ceil(
+        datosFiltrados.length / registrosPorPagina
+      );
+      for (let i = 1; i <= totalPaginas; i++) {
+        const paginaItem = document.createElement('li');
+        paginaItem.className =
+          'page-item' + (i === pagina ? ' active' : '');
+        paginaItem.innerHTML = `<a class="page-link" href="#" onclick="mostrarPagina(${i})">${i}</a>`;
+        pagination.appendChild(paginaItem);
+      }
+
+      // Agrega el evento click a los botones de editar
+      document.querySelectorAll('.editar-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const cedula = this.getAttribute('data-cedula');
+          document.getElementById('cedula-input').value = cedula;
+          document.getElementById('edit-form').submit(); // Envía el formulario
+        });
+      });
+      // Agrega el evento click a los botones de descargar
+      document.querySelectorAll('.download-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const cedula = this.getAttribute('data-cedula');
+          document.getElementById('cedula-input2').value = cedula;
+          document.getElementById('download-form').submit(); // Envía el formulario
+        });
+      });
+    }
+  </script>
+
+
+  <script>
+
+
+    // Aplica el filtro basado en el estado seleccionado
+    function aplicarFiltro() {
+      const estadoSeleccionado =
+        document.getElementById('filtroEstado').value;
+
+      // Filtra los datos según el estado seleccionado
+      datosFiltrados = estadoSeleccionado
+        ? datos.filter((item) => item.Estatus === estadoSeleccionado)
+        : datos;
+
+      // Aplica la búsqueda después del filtro
+      aplicarBusqueda();
+    }
+
+    // Aplica la búsqueda basada en el texto ingresado
+    function aplicarBusqueda() {
+      const textoBusqueda = document
+        .getElementById('busqueda')
+        .value.toLowerCase();
+
+      if (textoBusqueda === '') {
+        // Si el campo de búsqueda está vacío, usa los datos filtrados por estado
+        // Aplica la búsqueda solo sobre los datos filtrados por estado
+        datosFiltrados = datos.filter(
+          (item) =>
+            item.Estatus ===
+            document.getElementById('filtroEstado').value ||
+            document.getElementById('filtroEstado').value === ''
+        );
+      } else {
+        // Aplica la búsqueda sobre los datos filtrados por estado
+        datosFiltrados = datosFiltrados.filter(
+          (item) =>
+            item.CiColaborador.toLowerCase().includes(textoBusqueda) ||
+            item.NombreColaborador.toLowerCase().includes(textoBusqueda)
+        );
+      }
+
+      paginaActual = 1; // Reinicia a la primera página
+      mostrarPagina(paginaActual);
+    }
+    // Agrega event listeners
+    document
+      .getElementById('filtroEstado')
+      .addEventListener('change', aplicarFiltro);
+    document
+      .getElementById('busqueda')
+      .addEventListener('input', aplicarBusqueda);
+
+    // Actualiza el total de registros y los contadores de estado
+    function actualizarContadores() {
+      const totalRegistros = datos.length;
+      const pendientes = datos.filter(item => item.Estatus === 'Pendiente').length;
+      const completados = datos.filter(item => item.Estatus === 'Completada').length;
+
+      document.getElementById('total-registros').textContent = totalRegistros;
+      document.getElementById('total-pendientes').textContent = pendientes;
+      document.getElementById('total-completados').textContent = completados;
+    }
+  </script>
+
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+</body>
+
+</html>

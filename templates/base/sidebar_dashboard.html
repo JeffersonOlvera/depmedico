@@ -1,0 +1,39 @@
+
+<aside id="sidebar">
+  <div id="logo-container">
+    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo" id="sidebar-logo"/>
+  </div>
+
+  {% set menu_items = [
+      {'url': url_for('ocupacional.dashboard'), 'icon': 'fas fa-clipboard-list', 'text': 'Ocupacionales'},
+      {'url': url_for('preocupacional.dashboard'), 'icon': 'fas fa-user-md', 'text': 'Preocupacional'},
+      {'url': url_for('consentimiento.dashboard'), 'icon': 'fas fa-file-signature', 'text': 'Consentimiento informado'},
+      {'url': url_for('certificado.dashboard'), 'icon': 'fas fa-certificate', 'text': 'Certificado Ocupacional'},
+      {'url': url_for('seguimiento.dashboard'), 'icon': 'fas fa-pills', 'text': 'Seguimiento drogas'},
+      {'url': url_for('droga.dashboard'), 'icon': 'fas fa-capsules', 'text': 'Consumo drogas'}
+  ] %}
+
+  {% set doctora_items = [
+      {'url': url_for('preocupacional.dashboard'), 'icon': 'fas fa-user-md', 'text': 'Preocupacional'},
+      {'url': url_for('droga.dashboard'), 'icon': 'fas fa-capsules', 'text': 'Consumo drogas'},
+      {'url': url_for('consentimiento.dashboard'), 'icon': 'fas fa-file-signature', 'text': 'Consentimiento informado'},
+  ] %}
+
+  {% set filtered_items = doctora_items if session['rol'] == 'doctora2' else menu_items %}
+
+  <nav class="nav">
+    {% for item in filtered_items %}
+      <a href="{{ item.url }}" class="nav-item">
+        <i class="{{ item.icon }}"></i>
+        <span class="sidebar-text">{{ item.text }}</span>
+      </a>
+    {% endfor %}
+  </nav>
+
+  <div class="mt-auto p-3">
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger logout-btn d-flex align-items-center">
+      <i class="fas fa-sign-out-alt me-2"></i>
+      <span class="sidebar-text">Cerrar sesión</span>
+    </a>
+  </div>
+</aside>

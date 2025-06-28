@@ -1,0 +1,201 @@
+<!-- templates/depmedico/signature_component.html -->
+<style>
+    /* Estilos previos */
+    .signature-container {
+        max-width: 650px;
+        width: 100%;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 0 auto;
+
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .signature-pad-container {
+        position: relative;
+        background-color: #ffffff;
+        border-radius: 4px;
+        overflow: hidden;
+
+    }
+
+    #signaturePad {
+        width: 100%;
+        height: 300px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+    }
+
+    #clearButton {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        background-color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #clearButton svg {
+        width: 30px;
+        height: 30px;
+        color: hsl(0, 0%, 40%);
+    }
+
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+</style>
+<legend class="d-block form-label">Firma del colaborador:</legend>
+<small class="d-block mb-3">Por favor, ingrese su firma en el recuadro de abajo o cargue una imagen de su firma.</small>
+<div class="mb-3 signature-container">
+
+
+
+    <!-- Opción 1: Dibujar firma -->
+    <div class="signature-pad-container">
+        <canvas id="signaturePad"></canvas>
+        <button id="clearButton" aria-label="Limpiar firma" type="button">
+            <i class="fas fa-eraser"></i>
+        </button>
+    </div>
+
+
+    <!-- Opción 2: Subir imagen de firma -->
+    <small class="d-block mb-3">En caso de que tenga dificultades para realizar la firma, puede subir una
+        imagen.</small>
+    <small class="d-block mb-3">Formatos admitidos: PNG, JPG.</small>
+
+    <input type="file" id="uploadSignature" accept="image/png, image/jpeg" class="form-control mb-3">
+
+    <!-- Campo oculto para almacenar la firma en base64 -->
+    <!-- <input type="hidden" id="signature" name="firma_colaborador" value="{{ form_data.get('firma_colaborador', '') }}"> -->
+
+    <!-- Mensaje de error -->
+    <div id="error-message" class="error-message"></div>
+</div>
+
+<script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+
+<script>
+    var canvas = document.getElementById('signaturePad');
+    var ctx = canvas.getContext('2d');
+    var signaturePad = new SignaturePad(canvas);
+    var inputSignature = document.getElementById('signature');
+    var errorMessage = document.getElementById('error-message');
+
+    // Variable para guardar la firma en base64
+    var savedSignature = inputSignature.value;
+
+    // Establece el tamaño real del canvas en píxeles
+    function resizeCanvas() {
+        var ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.scale(ratio, ratio);
+    }
+
+    // Función para redibujar la firma después de un cambio de tamaño
+    function redrawSignature() {
+        if (savedSignature) {
+            var image = new Image();
+            image.src = savedSignature;
+            image.onload = function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
+                ctx.drawImage(image, 0, 0); // Redibujar la firma
+            };
+        }
+    }
+
+    // Cargar la firma guardada si existe y centrarla
+    // var base64FirmaGuardada = "{{ form_data.get('firma_colaborador', firma_colaborador | default('')) }}";
+    if (base64FirmaGuardada) {
+        savedSignature = base64FirmaGuardada; // Guardar la firma
+        var image = new Image();
+        image.src = savedSignature;
+        image.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
+            ctx.drawImage(image, 0, 0); // Redibujar la firma
+        };
+    }
+
+    // Ajustar tamaño del canvas al cargar la página
+    window.onresize = function () {
+        resizeCanvas();
+        redrawSignature(); // Redibujar la firma después de redimensionar
+    };
+    resizeCanvas(); // Ajustar tamaño al cargar la página
+
+    // Limpiar la firma
+    document.getElementById('clearButton').addEventListener('click', function () {
+        signaturePad.clear(); // Limpiar el canvas
+        inputSignature.value = ''; // Limpiar el campo oculto
+        errorMessage.textContent = ''; // Limpiar cualquier error previo
+        savedSignature = ''; // Limpiar la firma guardada
+        console.log("Firma limpiada"); // Imprimir mensaje de limpieza
+    });
+
+    // Actualiza el campo oculto con la firma en base64
+    function updateSignature() {
+        if (!signaturePad.isEmpty()) {
+            var base64Signature = signaturePad.toDataURL();
+            inputSignature.value = base64Signature;
+            savedSignature = base64Signature; // Guardar la firma en la variable
+            console.log(savedSignature); // Imprimir la firma en la consola
+        }
+    }
+
+    // Evento para actualizar la firma automáticamente al dibujar
+    canvas.addEventListener('mousemove', updateSignature);
+    canvas.addEventListener('touchmove', updateSignature);
+
+    // Validar tamaño de imagen al subirla
+    document.getElementById('uploadSignature').addEventListener('change', function (event) {
+        var file = event.target.files[0];
+
+        // Límite de tamaño de imagen (1 MB)
+        var maxSizeInBytes = 1 * 1024 * 1024; // 1 MB
+
+        if (file && (file.type === 'image/png') || (file.type === 'image/jpeg')) {
+            if (file.size > maxSizeInBytes) {
+                errorMessage.textContent = 'El archivo supera el tamaño máximo permitido de 1 MB.';
+                event.target.value = ''; // Limpiar el input de archivo
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = new Image();
+                img.onload = function () {
+                    // Limpiar el canvas y mostrar la imagen subida
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    inputSignature.value = canvas.toDataURL(); // Guardar la imagen en base64
+                    savedSignature = inputSignature.value; // Guardar la firma
+                    console.log("Imagen cargada:", savedSignature); // Imprimir la firma en la consola
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            errorMessage.textContent = ''; // Limpiar cualquier error previo
+        } else {
+            errorMessage.textContent = 'Por favor, suba un archivo válido.';
+            event.target.value = ''; // Limpiar el input de archivo
+        }
+    });
+</script>

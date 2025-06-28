@@ -1,0 +1,62 @@
+<header class="bg-primary text-white py-2">
+  <div class="container-fluid d-flex justify-content-between align-items-center flex-wrap">
+    <div class="d-flex align-items-center mb-2 mb-sm-0">
+        <a href=" {{ url_for('auth.home_gth') }}">
+      <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo ACC" width="100" height="40" class="me-3" />
+      </a>
+      <h1 class="h5 mb-0 d-none d-sm-block">
+        {{ titulo_header if titulo_header else 'Sistema de Registro de Fichas' }}
+      </h1>
+    </div>
+    
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge rounded-pill bg-light text-danger border d-none d-md-inline-block px-3 py-2 fw-semibold">
+        {{ session['rol'] | upper }}
+      </span>
+
+      {% if session['nombreColaborador'] %}
+      <div class="dropdown">
+        <button class="btn btn-link text-white dropdown-toggle d-flex align-items-center text-decoration-none"
+                id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-user-circle me-2"></i>
+          <span class="d-none d-sm-inline">{{ session['nombreColaborador'] }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <!-- Nombre del colaborador en mobile -->
+          <li class="d-block d-sm-none px-3 py-2 text-muted">
+            <i class="fas fa-user-circle me-2"></i>{{ session['nombreColaborador'] }}
+          </li>
+          <li><hr class="dropdown-divider d-block d-sm-none"></li>
+          <li>
+              <a class="dropdown-item" href="{{ url_for('auth.home_gth') }}">
+              <i class="fas fa-home me-2"></i>Inicio
+              </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          {% if session['rol'] in ['admin', 'GTH'] %}
+          <li>
+            <a class="dropdown-item" href="{{ url_for('auth.view_tokens') }}">
+              <i class="fas fa-key me-2"></i>Generar Tokens
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          {% endif %}
+          {% if session['rol'] == 'admin' %}
+          <li>
+            <a class="dropdown-item" href="{{ url_for('ocupacional.dashboard') }}">
+              <i class="fas fa-clipboard-list me-2"></i>Dashboard
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          {% endif %}
+          <li>
+            <a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">
+              <i class="fas fa-sign-out-alt me-2 text-danger"></i>Cerrar Sesión
+            </a>
+          </li>
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</header>

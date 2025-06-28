@@ -1,0 +1,45 @@
+:root {
+  --blue: #0d6efd;
+  --blue_dark: #0e44e7;
+}
+
+body {
+  background-color: #f4f4f4;
+}
+
+.header {
+  background-color: var(--blue);
+  color: #ffffff;
+  padding: 20px;
+  text-align: left;
+}
+
+.brand-logo {
+  height: auto;
+  margin-top: 20px;
+}
+
+.login-container {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-button {
+  background-color: var(--blue);
+  border-color: var(--blue_dark);
+}
+
+.login-button:hover {
+  background-color: var(--blue_dark);
+}

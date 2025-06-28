@@ -1,0 +1,752 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{%block ficha_name%}FICHA PREOCUPACIONAL - ACC{%endblock%}
+{%block form %}
+
+<form method="POST" id="myForm" action="{{ url_for('preocupacional.guardar') }}">
+  <!-- 1. Datos de Afiliacion -->
+  <h4>1. Datos de Afiliación</h4>
+  <div class="mb-3">
+    <label for="Nombre" class="form-label">Nombre Completo</label>
+    <input type="text" class="form-control" id="Nombre" name="Nombre"
+      value="" placeholder="Nombre Completo" />
+  </div>
+
+
+
+  <div class="row mb-3 align-content-center">
+    <div class="col-md-4">
+      <label for="Edad" class="form-label">Edad</label>
+      <input type="number" class="form-control" id="Edad" name="Edad"
+        value="{{ form_data.get('edad', edad | default('')) }}" placeholder="Edad" />
+    </div>
+    <div class="col-md-4">
+        <label for="Cedula" class="form-label">N° Cédula</label>
+        <input type="text" class="form-control" id="Cedula" name="Cedula"
+          value=""  placeholder="N° Cédula" />
+    </div>
+
+
+    <div class="col-md-4">
+      <label for="Grupo_sanguineo" class="form-label">Tipo de Sangre:</label>
+      <select class="form-select" id="Grupo_sanguineo" name="Grupo_sanguineo" required>
+        <option value="" disabled {{ 'selected' if not form_data.get('Grupo_Sanguineo') }}>Selecciona tu tipo de
+          sangre</option>
+        <option value="A+" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='A+' }}>A+</option>
+        <option value="A-" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='A-' }}>A-</option>
+        <option value="B+" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='B+' }}>B+</option>
+        <option value="B-" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='B-' }}>B-</option>
+        <option value="AB+" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='AB+' }}>AB+</option>
+        <option value="AB-" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='AB-' }}>AB-</option>
+        <option value="O+" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='O+' }}>O+</option>
+        <option value="O-" {{ 'selected' if form_data.get('Grupo_Sanguineo')=='O-' }}>O-</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="Religion" class="form-label">Religión</label>
+      <input type="text" class="form-control" id="Religion" name="Religion"
+        value="{{ form_data.get('religion', religion | default('')) }}" placeholder="Religión" />
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="Puesto_Trabajo" class="form-label">Puesto de Trabajo</label>
+      <input type="text" class="form-control" id="Puesto_Trabajo" name="Puesto_Trabajo"
+        value="{{ form_data.get('puesto_trabajo', puesto_trabajo | default('')) }}" placeholder="Puesto de Trabajo" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="Discapacidad" class="form-label">Discapacidad</label>
+      <input type="text" name="Discapacidad" value="{{ form_data.get('discapacidad', discapacidad | default('')) }}"
+        class="form-control" id="Discapacidad" placeholder="Discapacidad" />
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="Porc_Discapacidad" class="form-label">Porcentaje de Discapacidad:</label>
+      <select class="form-control" id="Porc_Discapacidad" name="Porc_Discapacidad">
+        <option value="" disabled {% if not form_data.get('porc_discapacidad') %} selected {% endif %}>
+          Seleccione un porcentaje</option>
+        <option value="30" {% if form_data.get('porc_discapacidad')=='30' %} selected {% endif %}>30%</option>
+        <option value="40" {% if form_data.get('porc_discapacidad')=='40' %} selected {% endif %}>40%</option>
+        <option value="50" {% if form_data.get('porc_discapacidad')=='50' %} selected {% endif %}>50%</option>
+        <option value="60" {% if form_data.get('porc_discapacidad')=='60' %} selected {% endif %}>60%</option>
+        <option value="70" {% if form_data.get('porc_discapacidad')=='70' %} selected {% endif %}>70%</option>
+        <option value="80" {% if form_data.get('porc_discapacidad')=='80' %} selected {% endif %}>80%</option>
+        <option value="90" {% if form_data.get('porc_discapacidad')=='90' %} selected {% endif %}>90%</option>
+        <option value="100" {% if form_data.get('porc_discapacidad')=='100' %} selected {% endif %}>100%
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <label for="Activ_Relevante" class="form-label">Actividades relevantes</label>
+    <textarea class="form-control" id="Activ_Relevante" name="Activ_Relevante"
+      placeholder="Actividad relevante">{{ form_data.get('activ_relevante', activ_relevante | default('')) }}</textarea>
+  </div>
+
+
+  <section class="d-flex justify-content-between w-75">
+    <!-- Orientación sexual -->
+    <div class=" mb-3">
+      <label>Orientación sexual</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="Ori_Lesbiana" id="Ori_Lesbiana" value="X" {% if
+          form_data.get('ori_lesbiana')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Ori_Lesbiana">Lesbiana</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="Ori_Gay" id="Ori_Gay" value="X" {% if
+          form_data.get('ori_gay')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Ori_Gay">Gay</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="Ori_Bisexual" id="Ori_Bisexual" value="X" {% if
+          form_data.get('ori_bisexual')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Ori_Bisexual">Bisexual</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="Ori_Hetero" id="Ori_Hetero" value="X" {% if
+          form_data.get('ori_hetero')=='Sí' or form_data.get('ori_hetero')=='X' %}checked{% endif %} />
+        <label class="form-check-label" for="Ori_Hetero">Heterosexual</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="Ori_Omitir" id="Ori_Omitir" value="X" {% if
+          form_data.get('ori_omitir')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Ori_Omitir">Omitir información</label>
+      </div>
+    </div>
+
+    <!-- Identidad de Género -->
+    <div class="mb-3 px-5">
+      <label>Identidad de Género</label>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="Iden_Fem" id="femenino" value="X" {% if
+          form_data.get('iden_fem')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Iden_Fem">Femenino</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="Iden_Masc" id="masculino" value="X" {% if
+          form_data.get('iden_masc')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Iden_Masc">Masculino</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="Iden_Transg" id="transgenero" value="X" {% if
+          form_data.get('iden_transg')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Iden_Transg">Transgénero</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="Iden_Omitir" id="omite_genero" value="X" {% if
+          form_data.get('iden_omitir')=='X' %} checked {% endif %} />
+        <label class="form-check-label" for="Iden_Omitir">Omitir información</label>
+      </div>
+    </div>
+  </section>
+
+
+  <h4>Antecedentes personales</h4>
+  <div class="mb-3">
+    <label for="Antced_Clin_Quir">Clinicos - Quirurgicos</label>
+    <textarea class="form-control" id="Antced_Clin_Quir" name="Antced_Clin_Quir" rows="3"
+      placeholder="Escriba sus antecedentes"></textarea>
+  </div>
+
+
+  <fieldset class="mb-3">
+    <legend>Gineco-Obstétricos</legend>
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Menarquia" class="form-label">Menarquia</label>
+        <input type="text" class="form-control" id="Gin_Menarquia" name="Gin_Menarquia" placeholder="Menarquia"
+          value="{{ form_data.get('gin_menarquia', gin_menarquia | default('')) }}" />
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="ciclos" class="form-label">Ciclos</label>
+        <div class="d-flex">
+          <div class="form-check me-3">
+            <input class="form-check-input" type="radio" name="Gin_Ciclos_R" id="Gin_Ciclos_R" value="X" {% if
+              form_data.get('gin_ciclos_r')=='X' %} checked {% endif %}>
+            <label class="form-check-label" for="Gin_Ciclos_R">Regul.</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="Gin_Ciclos_I" id="Gin_Ciclos_I" value="X" {% if
+              form_data.get('gin_ciclos_i')=='X' %} checked {% endif %}>
+            <label class="form-check-label" for="Gin_Ciclos_I">Irregul.</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Fum" class="form-label">FUM</label>
+        <input type="text" class="form-control" id="Gin_Fum" name="Gin_Fum" placeholder="FUM"
+          value="{{ form_data.get('gin_fum', gin_fum | default('')) }}" />
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Gestas" class="form-label">Gestas</label>
+        <input type="text" class="form-control" id="Gin_Gestas" name="Gin_Gestas" placeholder="Nº Gestas"
+          value="{{ form_data.get('gin_gestas', gin_gestas | default('')) }}" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Partos" class="form-label">Partos</label>
+        <input type="text" class="form-control" id="Gin_Partos" name="Gin_Partos" placeholder="N° Partos"
+          value="{{ form_data.get('gin_partos', gin_partos | default('')) }}" />
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Cesarea" class="form-label">Cesarea</label>
+        <input type="text" class="form-control" id="Gin_Cesarea" name="Gin_Cesarea" placeholder="Cesarea"
+          value="{{ form_data.get('gin_cesarea', gin_cesarea | default('')) }}" />
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Aborto" class="form-label">Abortos</label>
+        <input type="text" class="form-control" id="Gin_Aborto" name="Gin_Aborto" placeholder="Abortos"
+          value="{{ form_data.get('gin_aborto', gin_aborto | default('')) }}" />
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="hijos" class="form-label">Hijos</label>
+        <div class="d-flex">
+          <div class="form-check me-3">
+            <input class="form-check-input" type="checkbox" id="Gin_Hijos_V" name="Gin_Hijos_V" value="X" {% if
+              form_data.get('gin_hijos_v')=='X' %} checked {% endif %}>
+            <label class="form-check-label" for="Gin_Hijos_V">Varón</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="Gin_Hjos_M" name="Gin_Hjos_M" value="X" {% if
+              form_data.get('gin_hjos_m')=='X' %} checked {% endif %}>
+            <label class="form-check-label" for="Gin_Hjos_M">Mujer</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Vsa" class="form-label">VSA</label>
+        <select class="form-select" id="Gin_Vsa" name="Gin_Vsa">
+          <option value="" disabled selected>Seleccione</option>
+          <option value="Si" {{ 'selected' if form_data.get('gin_vsa', gin_vsa | default(''))=='Si' else '' }}>Sí
+          </option>
+          <option value="No" {{ 'selected' if form_data.get('gin_vsa', gin_vsa | default(''))=='No' else '' }}>No
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Mpf" class="form-label">MPF</label>
+        <select class="form-select" id="Gin_Mpf" name="Gin_Mpf">
+          <option value="" disabled selected>Seleccione</option>
+          <option value="Si" {{ 'selected' if form_data.get('gin_mpf', gin_mpf | default(''))=='Si' else '' }}>Sí
+          </option>
+          <option value="No" {{ 'selected' if form_data.get('gin_mpf', gin_mpf | default(''))=='No' else '' }}>No
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Pap" class="form-label">PAP</label>
+        <input type="text" class="form-control" id="Gin_Pap" name="Gin_Pap" placeholder="PAP"
+          value="{{ form_data.get('gin_pap', gin_pap | default('')) }}" />
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Colpos" class="form-label">Colpos</label>
+        <input type="text" class="form-control" id="Gin_Colpos" name="Gin_Colpos" placeholder="Colpos"
+          value="{{ form_data.get('gin_colpos', gin_colpos | default('')) }}" />
+      </div>
+
+    </div>
+
+    <div class="row">
+
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Eco_Mama" class="form-label">Eco Mama</label>
+        <input type="text" class="form-control" id="Gin_Eco_Mama" name="Gin_Eco_Mama" placeholder="Eco mama"
+          value="{{ form_data.get('gin_eco_mama', gin_eco_mama | default('')) }}" />
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="Gin_Mamografia" class="form-label">Mamografia</label>
+        <input type="text" class="form-control" id="Gin_Mamografia" name="Gin_Mamografia" placeholder="Mamografia"
+          value="{{ form_data.get('gin_mamografia', gin_mamografia | default('')) }}" />
+      </div>
+
+    </div>
+
+  </fieldset>
+
+  <fieldset class="form-row">
+    <legend>AP Masculino</legend>
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="Ap_Ag_Prost">Ag Prost.</label>
+        <input type="text" class="form-control" id="Ap_Ag_Prost" name="Ap_Ag_Prost"
+          value="{{ form_data.get('ap_ag_prost', ap_ag_prost | default('')) }}" />
+      </div>
+
+      <div class="mb-3 col-md-6">
+        <label for="Ap_Eco_Prost">Eco Prost.</label>
+        <input type="text" class="form-control" id="Ap_Eco_Prost" name="Ap_Eco_Prost"
+          value="{{ form_data.get('ap_eco_prost', ap_eco_prost | default('')) }}" />
+      </div>
+
+    </div>
+
+    <div class="mb-3 col-md-12">
+      <label for="Ap_Obsv">Observación</label>
+      <textarea class="form-control" id="Ap_Obsv" rows="4" name="Ap_Obsv"
+        placeholder="Escribe aquí...">{{ form_data.get('ap_obsv', '') }}</textarea>
+    </div>
+  </fieldset>
+
+
+  <!-- ANTECENDENTES -->
+  <div class="mb-3">
+    <label for="Act_Fisica" class="form-label">Actividad Fisica:</label>
+    <select class="form-control" id="Act_Fisica" name="Act_Fisica" onchange="handleStatusChangeactfisic()">
+      <option value="SI" {{ 'selected' if form_data.get('Act_Fisica', Act_Fisica | default(''))=='SI' else '' }}>SI
+      </option>
+      <option value="NO" {{ 'selected' if form_data.get('Act_Fisica', Act_Fisica | default(''))=='NO' else '' }}>NO
+      </option>
+    </select>
+
+    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+    <div id="additionalField_motivo_actfisic" style="display: none;">
+      <label for="Act_Fisica_Obsv" class="form-label">Cual: (Actividad Fisica)</label>
+      <input type="text" class="form-control {% if errores.get('Act_Fisica_Obsv') %}is-invalid{% endif %}"
+        id="Act_Fisica_Obsv" name="Act_Fisica_Obsv"
+        value="{{ form_data.get('Act_Fisica_Obsv', Act_Fisica_Obsv | default('')) }}" required>
+      {% if errores.get('Act_Fisica_Obsv') %}
+      <div class="invalid-feedback">{{ errores['Act_Fisica_Obsv'] }}</div>
+      {% endif %}
+    </div>
+    <script>
+      function handleStatusChangeactfisic() {
+        var act_fisica = document.getElementById('Act_Fisica').value;
+        var additionalField_motivo_actfisic = document.getElementById('additionalField_motivo_actfisic');
+        if (act_fisica === 'SI') {
+          additionalField_motivo_actfisic.style.display = 'block';
+          document.getElementById('Act_Fisica_Obsv').setAttribute('required', '');
+          // Mostrar cuando NEGADO
+        } else {
+          additionalField_motivo_actfisic.style.display = 'none';
+          document.getElementById('Act_Fisica_Obsv').removeAttribute('required');
+          // Ocultar en cualquier otro caso
+        }
+      }
+
+      // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+      document.addEventListener('DOMContentLoaded', function () {
+        handleStatusChangeactfisic();
+      });
+    </script>
+
+    <label for="Medi_Actual" class="form-label">Medicacion Actual:</label>
+    <select class="form-control" id="Medi_Actual" name="Medi_Actual" onchange="handleStatusChangemediactual()">
+      <option value="SI" {{ 'selected' if form_data.get('Medi_Actual', Medi_Actual | default(''))=='SI' else '' }}>SI
+      </option>
+      <option value="NO" {{ 'selected' if form_data.get('Medi_Actual', Medi_Actual | default(''))=='NO' else '' }}>NO
+      </option>
+    </select>
+
+
+
+    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+    <div id="additionalField_motivo_mediactual" style="display: none;">
+      <label for="Medi_Actual_Obsv" class="form-label">Cual: (Medicacion Actual)</label>
+      <input type="text" class="form-control" id="Medi_Actual_Obsv" name="Medi_Actual_Obsv"
+        value="{{ form_data.get('Medi_Actual_Obsv', Medi_Actual_Obsv | default('')) }}" required>
+
+    </div>
+    <script>
+      function handleStatusChangemediactual() {
+        var medi_actual = document.getElementById('Medi_Actual').value;
+        var additionalField_motivo_mediactual = document.getElementById('additionalField_motivo_mediactual');
+        if (medi_actual === 'SI') {
+          additionalField_motivo_mediactual.style.display = 'block'; // Mostrar cuando NEGADO
+          document.getElementById('Medi_Actual_Obsv').setAttribute('required', '');
+
+        } else {
+          additionalField_motivo_mediactual.style.display = 'none'; // Ocultar en cualquier otro caso
+          document.getElementById('Medi_Actual_Obsv').removeAttribute('required');
+        }
+
+
+      }
+
+      // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+      document.addEventListener('DOMContentLoaded', function () {
+        handleStatusChangemediactual();
+      });
+    </script>
+
+    <label for="Alcohol" class="form-label">Alcohol:</label>
+    <select class="form-control" id="Alcohol" name="Alcohol" onchange="handleStatusChangeAlcohol()">
+      <option value="SI" {{ 'selected' if form_data.get('Alcohol', Alcohol | default(''))=='SI' else '' }}>SI</option>
+      <option value="NO" {{ 'selected' if form_data.get('Alcohol', Alcohol | default(''))=='NO' else '' }}>NO</option>
+    </select>
+
+    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+    <div id="additionalField_motivo_Alcohol" style="display: none;">
+      <label for="Alcohol_Obsv" class="form-label">Cual: (Alcohol)</label>
+      <input type="text" class="form-control " id="Alcohol_Obsv" name="Alcohol_Obsv"
+        value="{{ form_data.get('Alcohol_Obsv', Alcohol_Obsv | default('')) }}">
+
+    </div>
+    <script>
+      function handleStatusChangeAlcohol() {
+        var alcohol = document.getElementById('Alcohol').value;
+        var additionalField_motivo_Alcohol = document.getElementById('additionalField_motivo_Alcohol');
+        if (alcohol === 'SI') {
+          additionalField_motivo_Alcohol.style.display = 'block'; // Mostrar cuando NEGADO
+          document.getElementById('Alcohol_Obsv').setAttribute('required', '');
+        } else {
+          additionalField_motivo_Alcohol.style.display = 'none'; // Ocultar en cualquier otro caso
+          document.getElementById('Alcohol_Obsv').removeAttribute('required');
+        }
+      }
+
+      // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+      document.addEventListener('DOMContentLoaded', function () {
+        handleStatusChangeAlcohol();
+      });
+    </script>
+
+    <label for="Tabaco" class="form-label">Tabaco:</label>
+    <select class="form-control" id="Tabaco" name="Tabaco" onchange="handleStatusChangeTabaco()">
+      <option value="SI" {{ 'selected' if form_data.get('Tabaco', Tabaco | default(''))=='SI' else '' }}>SI</option>
+      <option value="NO" {{ 'selected' if form_data.get('Tabaco', Tabaco | default(''))=='NO' else '' }}>NO</option>
+    </select>
+
+    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+    <div id="additionalField_motivo_Tabaco" style="display: none;">
+      <label for="Tabaco_Obsv" class="form-label">Cual: (tabaco)</label>
+      <input type="text" class="form-control {% if errores.get('Tabaco_Obsv') %}is-invalid{% endif %}" id="Tabaco_Obsv"
+        name="Tabaco_Obsv" value="{{ form_data.get('Tabaco_Obsv', Tabaco_Obsv | default('')) }}" required>
+      {% if errores.get('Tabaco_Obsv') %}
+      <div class="invalid-feedback">{{ errores['Tabaco_Obsv'] }}</div>
+      {% endif %}
+    </div>
+    <script>
+      function handleStatusChangeTabaco() {
+        var tabaco = document.getElementById('Tabaco').value;
+        var additionalField_motivo_Tabaco = document.getElementById('additionalField_motivo_Tabaco');
+        if (tabaco === 'SI') {
+          additionalField_motivo_Tabaco.style.display = 'block'; // Mostrar cuando NEGADO
+          document.getElementById('Tabaco_Obsv').setAttribute('required', '');
+        } else {
+          additionalField_motivo_Tabaco.style.display = 'none'; // Ocultar en cualquier otro caso
+          document.getElementById('Tabaco_Obsv').removeAttribute('required');
+        }
+      }
+
+      // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+      document.addEventListener('DOMContentLoaded', function () {
+        handleStatusChangeTabaco();
+      });
+    </script>
+    <!-- OTROS -->
+    <label for="Otros" class="form-label">Otros:</label>
+    <select class="form-control" id="Otros" name="Otros" onchange="handleStatusChangeotros()">
+      <option value="SI" {{ 'selected' if form_data.get('Otros', Otros | default(''))=='SI' else '' }}>SI</option>
+      <option value="NO" {{ 'selected' if form_data.get('Otros', Otros | default(''))=='NO' else '' }}>NO</option>
+    </select>
+
+    <!-- MOTIVO OTROS -->
+    <div id="additionalField_motivo_otros" style="display: none;">
+      <label for="Otros_Obsv" class="form-label">Cual: (Otros)</label>
+      <input type="text" class="form-control {% if errores.get('Otros_Obsv') %}is-invalid{% endif %}" id="Otros_Obsv"
+        name="Otros_Obsv" value="{{ form_data.get('Otros_Obsv', Otros_Obsv | default('')) }}" required>
+      {% if errores.get('Otros_Obsv') %}
+      <div class="invalid-feedback">{{ errores['Otros_Obsv'] }}</div>
+      {% endif %}
+    </div>
+    <script>
+      function handleStatusChangeotros() {
+        var otros = document.getElementById('Otros').value;
+        var additionalField_motivo_otros = document.getElementById('additionalField_motivo_otros');
+        if (otros === 'SI') {
+          additionalField_motivo_otros.style.display = 'block'; // Mostrar cuando NEGADO
+          document.getElementById('Otros_Obsv').setAttribute('required', '');
+        } else {
+          additionalField_motivo_otros.style.display = 'none'; // Ocultar en cualquier otro caso
+          document.getElementById('Otros_Obsv').removeAttribute('required');
+        }
+      }
+
+      // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+      document.addEventListener('DOMContentLoaded', function () {
+        handleStatusChangeotros();
+      });
+    </script>
+  </div>
+
+  <fieldset>
+    <legend>Antecedentes Laborales</legend>
+    <div class="alert alert-info">
+      <h5>Instrucciones:</h5>
+      <ul>
+        <li>¿Tienes experiencia laboral? Si la respuesta es sí, haz clic en el botón "Agregar Experiencia".</li>
+        <li>Completa el formulario con la información requerida.</li>
+        <li>Puedes agregar un máximo de 4 experiencias laborales.</li>
+      </ul>
+    </div>
+    <button type="button" class="btn btn-primary" id="agregarBtn" onclick="agregarExperiencia()">Agregar
+      Experiencia</button>
+
+    <div id="experiencias" class="row mt-3">
+      <!-- La experiencia inicial y las nuevas experiencias se agregarán aquí -->
+    </div>
+
+  </fieldset>
+
+  <script>
+    const MAX_EXPERIENCIAS = 4;
+    let experienciaCount = 0;
+
+    function inicializarExperiencias() {
+      agregarExperiencia(true); // Agrega una experiencia inicial por defecto
+      actualizarEstadoBoton();
+    }
+
+    function agregarExperiencia(esInicial = false) {
+      if (!esInicial && experienciaCount >= MAX_EXPERIENCIAS) return;
+
+      experienciaCount++;
+      const experienciasDiv = document.getElementById('experiencias');
+
+      const nuevaExperienciaDiv = document.createElement('div');
+      nuevaExperienciaDiv.classList.add('col-md-3');
+      nuevaExperienciaDiv.innerHTML = `
+                    <div class="mb-3 experiencia">
+                        <label for="Empresa_${experienciaCount}">Empresa:</label>
+                        <input type="text" class="form-control" id="Empresa_${experienciaCount}" name="Empresa_${experienciaCount}" placeholder="Nombre de la empresa">
+                        <label for="Puesto_${experienciaCount}" class="mt-2">Puesto:</label>
+                        <input type="text" class="form-control" id="Puesto_${experienciaCount}" name="Puesto_${experienciaCount}" placeholder="Puesto">
+                        <label for="Actividad_${experienciaCount}" class="mt-2">Actividad:</label>
+                        <input type="text" class="form-control" id="Actividad_${experienciaCount}" name="Actividad_${experienciaCount}" placeholder="Actividad realizada">
+                        <label for="Tiempo_${experienciaCount}" class="mt-2">Tiempo:</label>
+                        <input type="text" class="form-control" id="Tiempo_${experienciaCount}" name="Tiempo_${experienciaCount}" placeholder="Tiempo en la posición">
+                        <label for="Riego_${experienciaCount}" class="mt-2">Riesgo:</label>
+                        <input type="text" class="form-control" id="Riego_${experienciaCount}" name="Riego_${experienciaCount}" placeholder="Riesgo asociado">
+                        <label for="Antc_Observ_${experienciaCount}" class="mt-2">Observación:</label>
+                        <textarea class="form-control" id="Antc_Observ_${experienciaCount}" name="Antc_Observ_${experienciaCount}" placeholder="Observaciones" rows="6"></textarea>
+                        <button type="button" class="btn btn-danger mt-2" onclick="eliminarExperiencia(this)">Eliminar</button>
+                    </div>
+                `;
+
+      experienciasDiv.appendChild(nuevaExperienciaDiv);
+      actualizarEstadoBoton();
+    }
+
+    function eliminarExperiencia(button) {
+      const experienciaDiv = button.closest('.col-md-3');
+      if (experienciaDiv) {
+        experienciaDiv.remove();
+        experienciaCount--;
+        actualizarEstadoBoton();
+      }
+    }
+
+    function actualizarEstadoBoton() {
+      const agregarBtn = document.getElementById('agregarBtn');
+      if (experienciaCount >= MAX_EXPERIENCIAS) {
+        agregarBtn.disabled = true;
+      } else {
+        agregarBtn.disabled = false;
+      }
+    }
+
+    // Inicializar con una experiencia predefinida
+
+  </script>
+
+  <fieldset>
+    <legend>Información ocupacional</legend>
+    <div class="mb-3">
+
+      <label for="Accidente_Trabajo" class="form-label">Accidente de trabajo:</label>
+      <select class="form-control" id="Accidente_Trabajo" name="Accidente_Trabajo" onchange="handleStatusChange1()">
+        <option value="SI" {{ 'selected' if form_data.get('Accidente_Trabajo', estatus | default(''))=='SI' else '' }}>
+          SI</option>
+        <option value="NO" {{ 'selected' if form_data.get('Accidente_Trabajo', estatus | default(''))=='NO' else '' }}>
+          NO</option>
+      </select>
+
+    </div>
+
+    <div id="additionalField1" style="display: none;">
+      <label for="Accidente_Trabajo_Calf_1" class="form-label">Descripcion del accidente de trabajo :</label>
+      <input type="text" class="form-control {% if errores.get('Accidente_Trabajo_Calf_1') %}is-invalid{% endif %}"
+        id="Accidente_Trabajo_Calf_1" name="Accidente_Trabajo_Calf_1"
+        value="{{ form_data.get('Accidente_Trabajo_Calf_1', Accidente_Trabajo_Calf_1 | default('')) }}" required>
+      {% if errores.get('Accidente_Trabajo_Calf_1') %}
+      <div class="invalid-feedback">{{ errores['Accidente_Trabajo_Calf_1'] }}</div>
+      {% endif %}
+
+      <label for="Accidente_Trabajo_Fecha" class="form-label">Fecha del Accidente:</label>
+      <input type="date" class="form-control {% if errores.get('Accidente_Trabajo_Fecha') %}is-invalid{% endif %}"
+        id="Accidente_Trabajo_Fecha" name="Accidente_Trabajo_Fecha"
+        value="{{ form_data.get('Accidente_Trabajo_Fecha', fecha_ingreso | default('')) }}" required>
+      {% if errores.get('Accidente_Trabajo_Fecha') %}
+      <div class="invalid-feedback">{{ errores['Accidente_Trabajo_Fecha'] }}</div>
+      {% endif %}
+    </div>
+    <script>
+      function handleStatusChange1() {
+        var status1 = document.getElementById('Accidente_Trabajo').value;
+        var additionalField1 = document.getElementById('additionalField1');
+        if (status1 === 'SI') {
+          additionalField1.style.display = 'block'; // Mostrar cuando NEGADO
+          document.getElementById('Accidente_Trabajo_Calf_1').setAttribute('required', '');
+          document.getElementById('Accidente_Trabajo_Fecha').setAttribute('required', '');
+        } else {
+          additionalField1.style.display = 'none'; // Ocultar en cualquier otro caso
+          document.getElementById('Accidente_Trabajo_Calf_1').removeAttribute('required');
+          document.getElementById('Accidente_Trabajo_Fecha').removeAttribute('required');
+        }
+      }
+
+      // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+      document.addEventListener('DOMContentLoaded', function () {
+        handleStatusChange1();
+      });
+    </script>
+
+
+    <div class="mb-3">
+      <label for="Enfermedad_Prof" class="form-label">Enfermedad profesional:</label>
+      <select class="form-control" id="Enfermedad_Prof" name="Enfermedad_Prof" onchange="handleStatusChange2()">
+        <option value="SI" {{ 'selected' if form_data.get('Enfermedad_Prof', estatus | default(''))=='SI' else '' }}>SI
+        </option>
+        <option value="NO" {{ 'selected' if form_data.get('Enfermedad_Prof', estatus | default(''))=='NO' else '' }}>NO
+        </option>
+      </select>
+    </div>
+
+    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+    <div id="additionalField2" style="display: none;">
+      <label for="Enfermedad_Prof_Calf_1" class="form-label">Descripcion de la Enfermedad profesional:</label>
+      <input type="text" class="form-control {% if errores.get('Enfermedad_Prof_Calf_1') %}is-invalid{% endif %}"
+        id="Enfermedad_Prof_Calf_1" name="Enfermedad_Prof_Calf_1"
+        value="{{ form_data.get('Enfermedad_Prof_Calf_1', Enfermedad_Prof_Calf_1 | default('')) }}" required>
+      {% if errores.get('Enfermedad_Prof_Calf_1') %}
+      <div class="invalid-feedback">{{ errores['Enfermedad_Prof_Calf_1'] }}</div>
+      {% endif %}
+      <label for="Enfermedad_Prof_Fecha" class="form-label">Fecha de la Enfermedad profesional:</label>
+      <input type="date" class="form-control {% if errores.get('Enfermedad_Prof_Fecha') %}is-invalid{% endif %}"
+        id="Enfermedad_Prof_Fecha" name="Enfermedad_Prof_Fecha"
+        value="{{ form_data.get('Enfermedad_Prof_Fecha', fecha_ingreso | default('')) }}" required>
+      {% if errores.get('Enfermedad_Prof_Fecha') %}
+      <div class="invalid-feedback">{{ errores['Enfermedad_Prof_Fecha'] }}</div>
+      {% endif %}
+    </div>
+
+    <script>
+      function handleStatusChange2() {
+        var status2 = document.getElementById('Enfermedad_Prof').value;
+        var additionalField2 = document.getElementById('additionalField2');
+        if (status2 === 'SI') {
+          additionalField2.style.display = 'block'; // Mostrar cuando NEGADO
+          document.getElementById('Enfermedad_Prof_Calf_1').setAttribute('required', '');
+          document.getElementById('Enfermedad_Prof_Fecha').setAttribute('required', '');
+        } else {
+          additionalField2.style.display = 'none'; // Ocultar en cualquier otro caso
+          document.getElementById('Enfermedad_Prof_Calf_1').removeAttribute('required');
+          document.getElementById('Enfermedad_Prof_Fecha').removeAttribute('required');
+        }
+      }
+
+      // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+      document.addEventListener('DOMContentLoaded', function () {
+        handleStatusChange2();
+      });
+    </script>
+
+  </fieldset>
+  <fieldset>
+    <legend>Antecedentes familiares</legend>
+    <label class="form-label">Antecedentes Familiares:</label>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="Car_Vasc" name="Car_Vasc" value="X">
+      <label class="form-check-label" for="Car_Vasc">Cardio-vascular</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="Metabolica" name="Metabolica" value="X">
+      <label class="form-check-label" for="Metabolica">Metabólica</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="Neurologica" name="Neurologica" value="X">
+      <label class="form-check-label" for="Neurologica">Neurológica</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="Onco" name="Onco" value="X">
+      <label class="form-check-label" for="Onco">Oncológica</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="Infec" name="Infec" value="X">
+      <label class="form-check-label" for="Infec">Infecciosa</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="Hereditaria" name="Hereditaria" value="X">
+      <label class="form-check-label" for="Hereditaria">Hereditaria</label>
+    </div>
+    <div class="mb-3">
+      <label for="Antc_Descrip" class="form-label">Observación</label>
+      <textarea class="form-control" id="Antc_Descrip" name="Antc_Descrip" rows="2"></textarea>
+    </div>
+  </fieldset>
+
+
+  <fieldset>
+    <legend>Actividades extralaborales</legend>
+    <div class="mb-3">
+      <textarea class="form-control" id="Act_Extralaborales" name="Act_Extralaborales" maxlength="250"
+        rows="2"></textarea>
+    </div>
+
+  </fieldset>
+
+    <div class="col-md-md-12">
+        <div class="signature-pad" id="signature-pad">
+            <label class="form-label">Firma:</label>
+            <canvas id="signature-canvas"></canvas>
+            <div class="btn-group">
+                <button type="button" id="clear-signature" class="btn btn-secondary">
+                    Limpiar
+                </button>
+
+            </div>
+        </div>
+
+        <input type="hidden" id="Firma_Colaborador" name="Firma_Colaborador">
+    </div>
+
+  
+
+  <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+
+</form>
+{%endblock%}
+
+{%block scripts%}
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/firma_colaborador.js') }}"></script>
+<script src="{{ url_for('static', filename='js/radio_btn.js') }}"></script>
+
+{%endblock%}

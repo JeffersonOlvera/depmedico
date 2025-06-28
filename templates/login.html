@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio de Sesión - Acc</title>
+  <!-- Bootstrap CSS -->
+  <!-- <link
+      href="{{ url_for('static', filename='css/bootstrap/bootstrap.css') }}"
+      rel="stylesheet"
+    /> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo-min.png') }}">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --blue: #0d6efd;
+      --blue_dark: #0b5ed7;
+      --blue_hover: #0a58ca;
+      --light-gray: #f8f9fa;
+    }
+
+    body {
+      background-color: var(--light-gray);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--blue);
+      color: #ffffff;
+      padding: 15px 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .brand-logo {
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .brand-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .login-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 400px;
+      transition: all 0.3s ease;
+    }
+
+    .login-box:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .login-button {
+      background-color: var(--blue);
+      border-color: var(--blue);
+      font-weight: 500;
+      padding: 10px 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    .login-button:hover {
+      background-color: var(--blue_hover);
+    }
+
+    .login-button:active::after {
+      animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: scale(40, 40);
+        opacity: 0;
+      }
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px 15px;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .form-control {
+      padding: 12px 15px;
+      border-radius: 6px;
+      border: 1px solid #dee2e6;
+      transition: all 0.3s ease;
+      font-size: 16px;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+      border-color: var(--blue);
+    }
+
+    .form-label {
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #495057;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 25px;
+    }
+
+    .switch-container {
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .switch-button {
+      background-color: #e9ecef;
+      border-radius: 10px;
+      padding: 4px;
+      display: flex;
+      width: 100%;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .switch-option {
+      flex: 1;
+      text-align: center;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      color: #6c757d;
+      user-select: none;
+    }
+
+    .switch-option.active {
+      background-color: var(--blue);
+      color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .switch-option:not(.active):hover {
+      background-color: #dee2e6;
+      color: #495057;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: #6c757d;
+      z-index: 10;
+      transition: color 0.3s ease;
+    }
+
+    .form-control:focus+.input-icon,
+    .form-control:focus~.input-icon {
+      color: var(--blue);
+    }
+
+    .icon-input {
+      padding-left: 45px;
+    }
+
+    .page-title {
+      color: #212529;
+      position: relative;
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .page-title::after {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 3px;
+      background-color: var(--blue);
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 3px;
+    }
+
+    .alert {
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      animation: shake 0.5s linear;
+    }
+
+    @keyframes shake {
+      0% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-5px);
+      }
+
+      50% {
+        transform: translateX(5px);
+      }
+
+      75% {
+        transform: translateX(-5px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    .alert i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fadeIn {
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    /* Tooltip personalizado */
+    .tooltip-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-left: 5px;
+      cursor: help;
+    }
+
+    .tooltip-icon {
+      color: #6c757d;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .tooltip-wrapper:hover .tooltip-icon {
+      color: var(--blue);
+    }
+
+    .tooltip-content {
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 220px;
+      text-align: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+    }
+
+    .tooltip-content::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+
+      border-width: 6px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    .tooltip-wrapper:hover .tooltip-content {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Aseguramos que los tooltips funcionen en móviles también */
+    @media (max-width: 576px) {
+      .tooltip-content {
+        width: 200px;
+        left: auto;
+        right: 0;
+        transform: translateX(0);
+      }
+
+      .tooltip-content::after {
+        left: 80%;
+      }
+    }
+
+    /* Transición entre formularios */
+    .form-transition {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .form-slide {
+      transition: transform 0.4s ease;
+    }
+
+    /* Placeholder styling */
+    .form-control::placeholder {
+      color: #adb5bd;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .form-control:focus::placeholder {
+      opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+      .login-box {
+        padding: 25px 20px;
+      }
+
+      .login-container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container d-flex align-items-center">
+      <img src="{{ url_for('static', filename='img/logo.svg') }}" title="American Call Center" alt="Logo ACC"
+        width="100" height="50" class="brand-logo" />
+
+    </div>
+  </header>
+
+  <div class="container login-container">
+    <div class="login-box fadeIn">
+      <h2 class="page-title fw-bold">Inicio de Sesión</h2>
+
+      <!-- Mensajes flash con animación -->
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+          <i class="fas fa-exclamation-circle"></i>
+          <div>{{ message }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Selector de tipo de login (solo visible cuando no se está en el formulario completo) -->
+      {% if not show_full_form %}
+      <div class="switch-container">
+        <div class="switch-button">
+          <div class="switch-option active" id="interno-switch">
+            <i class="fas fa-user-tie me-2"></i>Interno
+          </div>
+          <div class="switch-option" id="externo-switch">
+            <i class="fas fa-globe me-2"></i>Externo
+          </div>
+        </div>
+      </div>
+
+      <div class="form-transition">
+        <!-- Formulario de login interno (por defecto) -->
+        <form method="POST" action="{{ url_for('auth.login') }}" id="form-interno" class="fadeIn form-slide">
+          <div class="mb-3">
+            <label for="cedula" class="form-label">
+              Ingresa tu identificación
+              <span class="tooltip-wrapper">
+                <i class="fas fa-info-circle tooltip-icon"></i>
+                <span class="tooltip-content">Ingresa tu número de identificación sin puntos ni
+                  espacios</span>
+              </span>
+            </label>
+            <div class="input-group">
+              <input type="text" class="form-control icon-input" id="cedula" name="cedula"
+                placeholder="Número de identificación" required />
+              <span class="input-icon"><i class="fas fa-id-card"></i></span>
+            </div>
+          </div>
+
+          <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-primary login-button">
+              <i class="fas fa-sign-in-alt me-2"></i>Ingresar
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Formulario de login externo (oculto inicialmente) -->
+        <form method="POST" action="{{ url_for('auth.validate_token') }}" id="form-externo"
+          class="d-none fadeIn form-slide">
+          <div class="mb-3">
+            <label for="token" class="form-label">
+              Ingresa tu token de acceso
+              <span class="tooltip-wrapper">
+                <i class="fas fa-info-circle tooltip-icon"></i>
+                <span class="tooltip-content">Ingresa el token que recibiste por correo electrónico</span>
+              </span>
+            </label>
+            <div class="input-group">
+              <input type="text" class="form-control icon-input" id="token" name="token" placeholder="Token de acceso"
+                required />
+              <span class="input-icon"><i class="fas fa-key"></i></span>
+            </div>
+          </div>
+
+          <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-primary login-button">
+              <i class="fas fa-sign-in-alt me-2"></i>Acceder
+            </button>
+          </div>
+
+        </form>
+      </div>
+      {% endif %}
+
+      <!-- Formulario de verificación cuando show_full_form es true -->
+      {% if show_full_form %}
+      <form method="POST" action="{{ url_for('auth.login', campaign=campaign) }}" class="fadeIn">
+        <div class="mb-4 w-100">
+          <label for="idllamada" class="form-label">
+            Código de verificación
+            <span class="tooltip-wrapper">
+              <i class="fas fa-info-circle tooltip-icon"></i>
+              <span class="tooltip-content">Ingresa el código de verificación que recibiste</span>
+            </span>
+          </label>
+          <div class="input-group">
+            <input type="text" class="form-control icon-input {% if errores.get('idllamada') %}is-invalid{% endif %}"
+              id="idllamada" name="idllamada" value="" placeholder="Ingresa el código de verificación" required />
+            <span class="input-icon"><i class="fas fa-shield-alt"></i></span>
+            {% if errores.get('idllamada') %}
+            <div class="invalid-feedback">{{ errores['idllamada'] }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="button-row">
+          <a href="{{ url_for('auth.logout', campaign=campaign) }}" class="btn btn-light">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+          </a>
+          <button type="submit" class="btn btn-primary login-button">
+            <i class="fas fa-paper-plane me-2"></i>Verificar
+          </button>
+        </div>
+
+        <!-- Contador de expiración -->
+        <div class="text-center mt-4">
+          <small class="text-muted">Tu código expira en: <span id="countdown">05:00</span></small>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+  <!-- Script personalizado -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Referencias a elementos
+      const internoSwitch = document.getElementById("interno-switch");
+      const externoSwitch = document.getElementById("externo-switch");
+      const formInterno = document.getElementById("form-interno");
+      const formExterno = document.getElementById("form-externo");
+
+      if (internoSwitch && externoSwitch) {
+        // Cambiar entre formularios con animación
+        internoSwitch.addEventListener("click", function () {
+          if (!internoSwitch.classList.contains("active")) {
+            internoSwitch.classList.add("active");
+            externoSwitch.classList.remove("active");
+
+            formExterno.classList.add("d-none");
+            formInterno.classList.remove("d-none");
+
+            // Focus en el primer campo
+            setTimeout(() => {
+              document.getElementById("cedula").focus();
+            }, 300);
+          }
+        });
+
+        externoSwitch.addEventListener("click", function () {
+          if (!externoSwitch.classList.contains("active")) {
+            externoSwitch.classList.add("active");
+            internoSwitch.classList.remove("active");
+
+            formInterno.classList.add("d-none");
+            formExterno.classList.remove("d-none");
+
+            // Focus en el primer campo
+            setTimeout(() => {
+              document.getElementById("token").focus();
+            }, 300);
+          }
+        });
+      }
+
+      // Contador de tiempo para el código de verificación
+      const countdownElement = document.getElementById("countdown");
+      if (countdownElement) {
+        let time = 5 * 60; // 5 minutos en segundos
+
+        const updateCountdown = () => {
+          const minutes = Math.floor(time / 60);
+          let seconds = time % 60;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          countdownElement.textContent = `${minutes}:${seconds}`;
+
+          if (time > 0) {
+            time--;
+          } else {
+            clearInterval(interval);
+            countdownElement.innerHTML =
+              '<span class="text-danger">Expirado</span>';
+          }
+        };
+
+        updateCountdown();
+        const interval = setInterval(updateCountdown, 1000);
+      }
+
+      // Efecto de focus en los campos
+      const formControls = document.querySelectorAll(".form-control");
+      formControls.forEach((input) => {
+        input.addEventListener("focus", function () {
+          const icon = this.parentElement.querySelector(".input-icon");
+          if (icon) {
+            icon.style.color = "var(--blue)";
+          }
+        });
+
+        input.addEventListener("blur", function () {
+          const icon = this.parentElement.querySelector(".input-icon");
+          if (icon && !this.value) {
+            icon.style.color = "#6c757d";
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

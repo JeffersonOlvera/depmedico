@@ -1,0 +1,354 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{% block ficha_name %}
+FORMULARIO DE REDUCCIÓN Y PREVENCIÓN DEL CONSUMO DE DROGAS - ACC
+{% endblock %}
+
+{%block form %}
+<form method="POST" id="myForm" action="{{ url_for('droga.guardar') }}">
+
+    <div class="col-md-12 mb-3">
+        <label for="nombre">Nombre Completo:</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre Completo">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="tipo_sangre">Tipo de Sangre:</label>
+            <select class="form-select" id="tipo_sangre" name="tipo_sangre" required>
+                <option value="" disabled selected>Selecciona tu tipo de sangre</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="cedula">No. de Cédula:</label>
+            <input type="text" class="form-control" id="cedula" name="cedula" placeholder="N° Cédula" pattern="^\d{10}$"
+                maxlength="10" required>
+        </div>
+    </div>
+
+    <div class="row">
+
+
+        <div class="col-md-6 mb-3">
+            <label for="fecha_apertura_F_RPD">Fecha de Apertura de F. RPD:</label>
+            <input type="date" class="form-control" id="fecha_apertura_F_RPD" name="fecha_apertura_F_RPD">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="edad">Edad:</label>
+            <input type="number" class="form-control" id="edad" name="edad" placeholder="Edad">
+        </div>
+    </div>
+
+    <!-- Estado civil y domicilio -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="estado_civil">Estado Civil:</label>
+            <select class="form-select" id="estado_civil" name="estado_civil" required>
+                <option value="" disabled selected>Selecciona tu estado civil</option>
+                <option value="soltero">Soltero/a</option>
+                <option value="casado">Casado/a</option>
+                <option value="divorciado">Divorciado/a</option>
+                <option value="viudo">Viudo/a</option>
+                <option value="union libre">Unión libre</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="dimicilio">Domicilio:</label>
+            <input type="text" class="form-control" id="dimicilio" name="dimicilio" placeholder="Domicilio">
+        </div>
+    </div>
+
+    <!-- Cargo, teléfono, profesión -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="cargo">Cargo:</label>
+            <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Cargo">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="profesion">Profesión:</label>
+            <input type="text" class="form-control" id="profesion" name="profesion" placeholder="Profesión">
+        </div>
+    </div>
+
+    <!-- Religión y otros datos -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="religion">Religión:</label>
+            <input type="text" class="form-control" id="religion" name="religion" placeholder="Religión">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="email">E-mail:</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="E-mail">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="nivel_instrucción">Nivel de Instrucción:</label>
+            <select class="form-control" id="nivel_instrucción" name="nivel_instrucción">
+                <option value="basica">Educación Básica</option>
+                <option value="bachiller">Bachiller</option>
+                <option value="tercer_nivel">Tercer Nivel</option>
+                <option value="tecnico_superior">Técnico Superior</option>
+                <option value="tecnologo">Tecnólogo</option>
+                <option value="licenciado">Licenciado</option>
+                <option value="ingeniero">Ingeniero</option>
+                <option value="cuarto_nivel">Cuarto Nivel</option>
+                <option value="especializacion">Especialización</option>
+                <option value="maestria">Maestria</option>
+                <option value="postgrado">Postgrado</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Autoidentificación étnica -->
+    <div class="mb-3">
+        <label for="etnia">Autoidentificación Étnica:</label>
+        <select class="form-control" id="etnia" name="etnia">
+            <option value="mestizo">Mestizo</option>
+            <option value="afro_ecuatoriano">Afro-Ecuatoriano</option>
+            <option value="blanco">Blanco</option>
+            <option value="otro">Otro</option>
+        </select>
+    </div>
+
+    <!-- Discapacidad y porcentaje -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label>Discapacidad:</label><br>
+            <div>
+                <input type="checkbox" id="disca_auditiva" name="disca_auditiva" value="X">
+                <label for="disca_auditiva">Auditiva</label>
+            </div>
+            <div>
+                <input type="checkbox" id="disca_fisica" name="disca_fisica" value="X">
+                <label for="disca_fisica">Física</label>
+            </div>
+            <div>
+                <input type="checkbox" id="disca_intelectual" name="disca_intelectual" value="X">
+                <label for="disca_intelectual">Intelectual</label>
+            </div>
+            <div>
+                <input type="checkbox" id="lenguaje" name="lenguaje" value="X">
+                <label for="lenguaje">Lenguaje</label>
+            </div>
+            <div>
+                <input type="checkbox" id="psico_social" name="psico_social" value="X">
+                <label for="psico_social">Psico-Social</label>
+            </div>
+            <div>
+                <input type="checkbox" id="visual" name="visual" value="X">
+                <label for="visual">Visual</label>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label>Enfermedades Preexistentes:</label><br>
+            <div>
+                <input type="checkbox" id="enfer_catastrofica" name="enfer_catastrofica" value="X">
+                <label for="enfermedad_catastrofica">Catastrófica</label>
+            </div>
+            <div>
+                <input type="checkbox" id="enfer_cron_transmi" name="enfer_cron_transmi" value="X">
+                <label for="enfer_cron_transmi">Crónica Transmisible</label>
+            </div>
+            <div>
+                <input type="checkbox" id="enfer_cron_notransmi" name="enfer_cron_notransmi" value="X">
+                <label for="enfer_cron_notransmi">Crónica No Transmisible</label>
+            </div>
+            <div>
+                <input type="checkbox" id="diag_presuntivo" name="diag_presuntivo" value="X">
+                <label for="diag_presuntivo">Diagnóstico Presuntivo</label>
+            </div>
+        </div>
+
+
+        <div class="col-md-4 mb-3">
+            <label for="porcentaje_disca">Porcentaje de Discapacidad:</label>
+            <select class="form-control" id="porcentaje_disca" name="porcentaje_disca">
+                <option value="" disabled selected>Seleccione un porcentaje</option>
+                <option value="30">30%</option>
+                <option value="40">40%</option>
+                <option value="50">50%</option>
+                <option value="60">60%</option>
+                <option value="70">70%</option>
+                <option value="80">80%</option>
+                <option value="90">90%</option>
+                <option value="100">100%</option>
+            </select>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="droga" class="form-label">Principal Droga que Consume</label>
+            <select class="form-select" id="droga" name="droga" required>
+                <option value="" disabled selected>Seleccione</option>
+                <option value="No Consume">No Consume</option>
+                <option value="Alcohol">Alcohol</option>
+                <option value="Anfetaminas">Anfetaminas</option>
+                <option value="Cigarrillo">Cigarrillo</option>
+                <option value="Marihuana">Marihuana</option>
+                <option value="Base de cocaina">Base de Cocaína</option>
+                <option value="Heroina">Heroína</option>
+                <option value="Tabaco">Tabaco</option>
+                <option value="Morfina">Morfina</option>
+                <option value="Hongos">Hongos</option>
+                <option value="Drogas de sintesis">Drogas de Síntesis</option>
+                <option value="Inhalantes">Inhalantes/Aerosoles</option>
+                <option value="Pegamentos">Pegamentos/Disolventes</option>
+                <option value="Otra">Otra</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="frecuencia_consumo" class="form-label">Frecuencia de Consumo</label>
+            <select class="form-select" id="frecuencia_consumo" name="frecuencia_consumo" required>
+                <option value="" disabled selected>Seleccione</option>
+                <option value="No consume">No Consume</option>
+                <option value="5-7 dias">De 5 a 7 días a la semana</option>
+                <option value="2-4 veces">De 2 a 7 veces a la semana</option>
+                <option value="2-7 veces">De 2 a 4 veces a la semana</option>
+                <option value="1 vez po semana">Al menos una vez a la semana</option>
+                <option value="2-12 veces Año">De 2 a 12 veces al año</option>
+                <option value="1 vez al Año">Una vez al año</option>
+            </select>
+        </div>
+
+
+
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="droga_detalles" class="form-label">
+            En caso de que haya seleccionado otras, detalle cual:
+        </label>
+        <textarea class="form-control" id="droga_detalles" name="droga_detalles" rows="2" maxlength="135"></textarea>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="tratamiento" class="form-label">Tratamiento</label>
+            <select class="form-select" id="tratamiento" name="tratamiento" required>
+                <option value="" disabled selected>Seleccione</option>
+                <option value="No consume">No Consume</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="col-md-12 mb-3">
+        <label for="factores_psicosociales" class="form-label">
+            Factores Psico-sociales relacionados al consumo:
+        </label>
+        <select class="form-control" id="factores_psicosociales" name="factores_psicosociales">
+            <option value="no_aplica">NO APLICA</option>
+            <option value="agobio_tension_trabajo">AGOBIO Y TENSIÓN DEL TRABAJO</option>
+            <option value="acoso_laboral">ACOSO LABORAL</option>
+            <option value="cansancio_intenso">CANSANCIO INTENSO</option>
+            <option value="companeros_consumidores">COMPAÑEROS CONSUMIDORES</option>
+            <option value="contratos_precarios">CONTRATOS PRECARIOS</option>
+            <option value="curiosidad_efectos_drogas">CURIOSIDAD SOBRE LOS EFECTOS DE LAS DROGAS</option>
+            <option value="dificultad_resolucion_problemas">DIFICULTAD EN LA RESOLUCIÓN DE PROBLEMAS</option>
+            <option value="niveles_tension">ELEVADOS NIVELES DE TENSIÓN</option>
+            <option value="expendo_drogas_trabajo">EXISTENCIA DEL EXPENDIO DE DROGAS EN LUGAR DE TRABAJO</option>
+            <option value="familiares_consumidores">FAMILIARES CONSUMIDORES</option>
+            <option value="insatisfaccion_trabajo">INSATISFACCIÓN CON EL TRABAJO QUE SE REALIZA</option>
+            <option value="insatisfaccion_trato_superiores">INSATISFACCIÓN CON EL TIPO DE TRATO QUE RECIBE DE SUS
+                SUPERIORES</option>
+            <option value="inseguridad_futuro_laboral">INSEGURIDAD EN CUANTO AL FUTURO LABORAL</option>
+            <option value="ausencias_hogar_laboral">LARGAS AUSENCIAS DEL HOGAR POR MOTIVOS LABORALES</option>
+            <option value="mala_situacion_economica_familia">MALA SITUACIÓN ECONÓMICA EN LA FAMILIA</option>
+            <option value="conciliacion_tareas_domesticas">PROBLEMAS DE CONCILIACIÓN ENTRE TRABAJO Y TAREAS DOMÉSTICAS
+            </option>
+            <option value="sentimiento_poco_capacitado">SENTIMIENTO DE ESTAR POCO CAPACITADO</option>
+            <option value="tareas_rutinarias">TAREAS RUTINARIAS</option>
+            <option value="trabajos_nocturnos">TRABAJOS NOCTURNOS</option>
+            <option value="turnos_cambiantes">TURNOS CAMBIANTES</option>
+        </select>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label for="factores_psicosociales_otros" class="form-label">
+            Otros factores Psico-sociales relacionados al consumo:
+        </label>
+        <textarea class="form-control" id="factores_psicosociales_otros" name="factores_psicosociales_otros" rows="2"
+            maxlength="75"></textarea>
+    </div>
+
+    <!-- Programa integral -->
+    <div class="mb-3 ">
+        <label>¿El empleado es trabajador sustituto?</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="trabajador_sustituto" id="trabajador_sustitutoSi"
+                value="Si">
+            <label class="form-check-label" for="trabajador_sustituto">
+                Sí
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="trabajador_sustituto" id="trabajador_sustitutoNo"
+                value="No">
+            <label class="form-check-label" for="trabajador_sustituto">
+                No
+            </label>
+        </div>
+    </div>
+
+
+
+
+    <div class="mb-3">
+        <label>¿El empleado cuenta con exámenes pre-ocupacionales?</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exam_preocupacionales" id="trabajador_sustitutoSi"
+                value="Si">
+            <label class="form-check-label" for="exam_preocupacionales">
+                Sí
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exam_preocupacionales" id="trabajador_sustitutoNo"
+                value="No">
+            <label class="form-check-label" for="exam_preocupacionales">
+                No
+            </label>
+        </div>
+    </div>
+
+    <div class="col-md-md-12">
+        <div class="signature-pad" id="signature-pad">
+            <label class="form-label">Firma:</label>
+            <canvas id="signature-canvas"></canvas>
+            <div class="btn-group">
+                <button type="button" id="clear-signature" class="btn btn-secondary">
+                    Limpiar
+                </button>
+
+            </div>
+        </div>
+
+        <input type="hidden" id="firma_colaborador" name="firma_colaborador" />
+    </div>
+    
+
+
+
+
+    <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+</form>
+
+{%endblock%}
+{%block scripts%}
+<script src="{{ url_for('static', filename='js/firma_colaborador.js') }}"></script>
+
+{%endblock%}

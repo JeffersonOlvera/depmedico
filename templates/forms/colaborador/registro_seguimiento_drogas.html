@@ -1,0 +1,154 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{%block ficha_name%}FICHA DE SEGUIMIENTO DE CONSUMO DE DROGAS - ACC{%endblock%}
+{%block form %}
+
+<form method="POST" id="myForm" action="{{ url_for('seguimiento.guardar') }}">
+  <p>Su ayuda con los siguientes datos:</p>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label for="Nombre" class="form-label">Nombre Completo</label>
+      <input type="text" class="form-control" id="Nombre" name="Nombre" value="{{ session['nombreColaborador'] }}" disabled placeholder="Nombre Completo" required />
+    </div>
+    <div class="col-md-6">
+      <label for="Cedula" class="form-label">N° Cédula</label>
+      <input type="text" class="form-control" id="Cedula" name="Cedula" value="{{ session['cedula'] }}" disabled placeholder="N° Cédula" pattern="^\d{10}$"
+        maxlength="10" required />
+    </div>
+    <div class="col-md-6">
+      <label for="Fecha_actualizacion" class="form-label">Fecha de Actualización</label>
+      <input type="date" class="form-control" id="Fecha_actualizacion" disabled value="{{ fecha_actual }}" name="Fecha_actualizacion" required />
+    </div>
+    <div class="col-md-6">
+      <label for="Edad" class="form-label">Edad</label>
+      <input type="number" class="form-control" id="Edad" name="Edad" required />
+    </div>
+    <div class="col-md-6">
+      <label for="Cargo" class="form-label">Cargo</label>
+      <input type="text" class="form-control" id="Cargo" name="Cargo" required />
+    </div>
+    <div class="col-md-6">
+      <label for="Tiempo_cargo" class="form-label">Tiempo en el Cargo</label>
+      <input type="text" class="form-control" id="Tiempo_cargo" name="Tiempo_cargo" required />
+    </div>
+
+    <div class="col-md-6">
+      <label for="Droga" class="form-label">Principal Droga que Consume</label>
+      <select class="form-select" id="Droga" name="Droga" required>
+        <option value="" disabled selected>Seleccione</option>
+        <option value="No Consume">No Consume</option>
+        <option value="Alcohol">Alcohol</option>
+        <option value="Anfetaminas">Anfetaminas</option>
+        <option value="Cigarrillo">Cigarrillo</option>
+        <option value="Marihuana">Marihuana</option>
+        <option value="Base de cocaina">Base de Cocaína</option>
+        <option value="Heroina">Heroína</option>
+        <option value="Tabaco">Tabaco</option>
+        <option value="Morfina">Morfina</option>
+        <option value="Hongos">Hongos</option>
+        <option value="Drogas de sintesis">Drogas de Síntesis</option>
+        <option value="Inhalantes">Inhalantes/Aerosoles</option>
+        <option value="Pegamentos">Pegamentos/Disolventes</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label for="Frecuencia_consumo" class="form-label">Frecuencia de Consumo</label>
+      <select class="form-select" id="Frecuencia_consumo" name="Frecuencia_consumo" required>
+        <option value="" disabled selected>Seleccione</option>
+        <option value="No consume">No Consume</option>
+        <option value="5-7 dias">De 5 a 7 días a la semana</option>
+        <option value="2-4 veces">De 2 a 4 veces a la semana</option>
+        <option value="2-7 veces">De 2 a 7 veces a la semana</option>
+        <option value="1 vez por semana">Al menos una vez a la semana</option>
+        <option value="2-12 veces Año">De 2 a 12 veces al año</option>
+        <option value="1 vez al Año">Una vez al año</option>
+      </select>
+    </div>
+
+    <div class="row g-2">
+      <div class="col-md-6">
+        <label for="Fact_psico_sociales" class="form-label">Factores Psico-sociales relacionados al consumo</label>
+        <div>
+          <select class="form-select" id="Fact_psico_sociales" name="Fact_psico_sociales" required
+            onchange="toggleDetalles()">
+            <option value="No">No aplica</option>
+            <option value="Si">Otro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-6" id="factoresPsicosocialesDetalleContainer" style="display: none;">
+        <label for="Fact_psico_sociales_detalle" class="form-label">
+          Detalles - Factores Psico-sociales
+        </label>
+        <textarea class="form-control" id="Fact_psico_sociales_detalle" name="Fact_psico_sociales_detalle"
+          rows="2"></textarea>
+      </div>
+      <script>
+        function toggleDetalles() {
+          const select = document.getElementById('Fact_psico_sociales');
+          const detallesContainer = document.getElementById('factoresPsicosocialesDetalleContainer');
+          const detallesTextarea = document.getElementById('Fact_psico_sociales_detalle');
+
+          if (select.value === 'Si') {
+            detallesContainer.style.display = 'block';
+          } else {
+            detallesContainer.style.display = 'none';
+            detallesTextarea.value = ''; // Borra el valor del textarea
+          }
+        }
+      </script>
+
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-label">Enfermedades Preexistentes</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="X" id="Enfer_catastrofica" name="Enfer_catastrofica" />
+        <label class="form-check-label" for="Enfer_catastrofica">Catastrófica</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="X" id="Enfer_cron_transmi" name="Enfer_cron_transmi" />
+        <label class="form-check-label" for="Enfer_cron_transmi">
+          Crónica Transmisible
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="X" id="Enfer_cron_notransmi"
+          name="Enfer_cron_notransmi" />
+        <label class="form-check-label" for="Enfer_cron_notransmi">
+          Crónica No Transmisible
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="X" id="Enfer_nodiagnosticada"
+          name="Enfer_nodiagnosticada" />
+        <label class="form-check-label" for="Enfer_nodiagnosticada">
+          No Diagnosticada
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-md-12">
+        <div class="signature-pad" id="signature-pad">
+            <label class="form-label">Firma:</label>
+            <canvas id="signature-canvas"></canvas>
+            <div class="btn-group">
+                <button type="button" id="clear-signature" class="btn btn-secondary">
+                    Limpiar
+                </button>
+
+            </div>
+        </div>
+
+        <input type="hidden" id="firma_colaborador" name="firma_colaborador" />
+    </div>
+
+  <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+</form>
+
+{%endblock%}
+{%block scripts%}
+<script src="{{ url_for('static', filename='js/firma_colaborador.js') }}"></script>
+<script src="{{ url_for('static', filename='js/fecha_actual.js') }}"></script>
+{%endblock%}

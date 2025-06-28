@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Exitoso - Sistema de Gestión Médica ACC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #0d6efd;
+            --blue_dark: #0e44e7;
+            --medical-primary: #0e44e7;
+            --medical-secondary: #0d6efd;
+            --medical-accent: #4285f4;
+            --medical-light: #f0f4ff;
+            --medical-success: #0d6efd;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--medical-light) 0%, #e8f5fe 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--medical-primary), var(--medical-secondary), var(--medical-accent));
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--medical-success), var(--medical-accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: successPulse 2s ease-out;
+        }
+
+        .success-icon i {
+            font-size: 3rem;
+            color: white;
+            animation: checkmark 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes successPulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0) rotate(180deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            color: var(--medical-primary);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .success-subtitle {
+            color: var(--medical-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .info-card {
+            background: var(--medical-light);
+            border: 2px solid var(--medical-accent);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--medical-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .info-icon i {
+            color: white;
+            font-size: 1rem;
+        }
+
+        .info-text {
+            color: var(--medical-primary);
+            font-weight: 500;
+        }
+
+        .btn-group-custom {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+
+        .btn-custom {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .btn-primary-custom {
+            background: var(--blue_dark);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--blue);
+            box-shadow: 0 8px 25px rgba(51, 76, 104, 0.3);
+            color: white;
+        }
+
+        .btn-secondary-custom {
+            background: white;
+            color: var(--medical-secondary);
+            border: 2px solid var(--medical-secondary);
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--medical-secondary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 164, 0.3);
+        }
+
+        .medical-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .medical-logo {
+            font-size: 2.5rem;
+            color: var(--medical-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .medical-subtitle {
+            color: var(--medical-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .success-card {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .success-title {
+                font-size: 1.8rem;
+            }
+            
+            .btn-group-custom {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-custom {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="success-card fade-in">
+
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+
+                        <h1 class="success-title">¡Registro Completado!</h1>
+                        <p class="success-subtitle">
+                            La ficha médica ha sido registrada exitosamente en el sistema. 
+                        </p>
+
+                        <div class="btn-group-custom">
+                            <a href="{{ url_for('auth.home') }}" class="btn btn-primary-custom">
+                                <i class="fas fa-plus-circle"></i>
+                                Registrar Nueva Ficha
+                            </a>
+                            <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary-custom">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mostrar fecha actual
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('current-date').textContent = 
+                now.toLocaleDateString('es-ES', options);
+        });
+
+        // Efecto de confeti al cargar (opcional)
+        function createConfetti() {
+            const colors = ['#2c5530', '#4a90a4', '#68b684', '#28a745'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-10px';
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.transition = 'all 3s ease-out';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.style.top = window.innerHeight + 'px';
+                        confetti.style.transform = 'rotate(720deg)';
+                        confetti.style.opacity = '0';
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+        
+        // Activar confeti después de la animación principal
+        setTimeout(createConfetti, 1000);
+    </script>
+</body>
+</html>

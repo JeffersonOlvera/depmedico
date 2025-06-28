@@ -1,0 +1,21 @@
+from pydantic import BaseModel
+
+class SeguimientoSchema(BaseModel):
+    usuario_actualizacion: str = ""
+    tipo_ficha: str = ""
+    cedula: str = ""
+    nombre: str = ""
+    cargo: str = ""
+    tiempo_cargo: str = ""
+    edad: str = ""
+    enfer_catastrofica: str = ""
+    enfer_cron_transmi: str = ""
+    enfer_cron_notransmi: str = ""
+    enfer_nodiagnosticada: str = ""
+    droga: str = ""
+    frecuencia_consumo: str = ""
+    fact_psico_sociales: str = ""
+    fact_psico_sociales_detalle: str = ""
+    socializacion_personal: str = ""
+    firma_colaborador: str = ""
+    status: str = ""

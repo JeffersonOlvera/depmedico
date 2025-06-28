@@ -1,0 +1,414 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{%block ficha_name%}FICHA OCUPACIONAL - ACC{%endblock%}
+{%block form %}
+<form method="POST" id="myForm" action="{{ url_for('ocupacional.guardar') }}">
+<strong>
+        <p>1. DATOS DE FILIACIÓN</p>
+    </strong>
+    <!-- Nombres -->
+    <div class="mb-3">
+        <label for="nombre_colaborador" class="form-label">Nombres completos:</label>
+        <input type="text" class="form-control " id="nombre_colaborador" name="nombre_colaborador"  value="{{ session['nombreColaborador'] }}" required disabled>
+    </div>
+    <!-- FECHA -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="fecha" class="form-label">Fecha de Actual:</label>
+            <input type="date" class="form-control " id="fecha" name="fecha" value="{{ fecha_actual }}" required disabled>
+        </div>
+
+
+        <div class="col-md-4 mb-3">
+            <label for="ci_colaborador" class="form-label">Número de Cédula*</label>
+            <input type="text" class="form-control" id="ci_colaborador" name="ci_colaborador" value="{{ session['cedula'] }}"
+                pattern="^\d{10}$" title="La cédula debe tener exactamente 10 dígitos" required disabled inputmode="numeric"
+                maxlength="10" oninput="this.value = this.value.replace(/\D/g, '')">
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="edad" class="form-label">Edad*</label>
+            <input type="numeric" class="form-control " id="edad" name="edad" value="" maxlength="3" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="sexo" class="form-label">Sexo:</label>
+            <select class="form-control" id="sexo" name="sexo">
+                <option value="MASCULINO">MASCULINO</option>
+                <option value="FEMENINO">FEMENINO</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="cargo" class="form-label">Cargo:</label>
+            <input type="text" class="form-control " id="cargo" name="cargo" value="" required>
+
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="tiempo_cargo" class="form-label">Tiempo en el cargo: </label>
+            <input type="text" class="form-control " id="tiempo_cargo" name="tiempo_cargo" value="" required>
+        </div>
+    </div>
+
+
+    <!-- ANTECENDENTES -->
+    <div class="mb-3">
+        <strong>
+            <p>2. ANTECEDENTES PERSONALES</p>
+        </strong>
+        <label for="antecep_clinicos" class="form-label">Clínicos/ Quirurgicos:</label>
+        <input type="text" class="form-control " id="antecep_clinicos" name="antecep_clinicos" value="" required>
+
+
+        <label for="act_fisica" class="form-label">Actividad Fisica:</label>
+        <select class="form-control" id="act_fisica" name="act_fisica" onchange="handleStatusChangeactfisic()">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+
+        <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+        <div id="additionalField_motivo_actfisic" style="display: none;">
+            <label for="act_fisica_obser" class="form-label">Cual: (Actividad Fisica)</label>
+            <input type="text" class="form-control " id="act_fisica_obser" name="act_fisica_obser" value="" required>
+
+        </div>
+        <script>
+            function handleStatusChangeactfisic() {
+                var act_fisica = document.getElementById('act_fisica').value;
+                var additionalField_motivo_actfisic = document.getElementById('additionalField_motivo_actfisic');
+                if (act_fisica === 'SI') {
+                    additionalField_motivo_actfisic.style.display = 'block';
+                    document.getElementById('act_fisica_obser').setAttribute('required', '');
+                    // Mostrar cuando NEGADO
+                } else {
+                    additionalField_motivo_actfisic.style.display = 'none';
+                    document.getElementById('act_fisica_obser').removeAttribute('required');
+                    document.getElementById('act_fisica_obser').value = ""
+                    // Ocultar en cualquier otro caso
+                }
+            }
+
+            // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+            document.addEventListener('DOMContentLoaded', function () {
+                handleStatusChangeactfisic();
+            });
+        </script>
+
+        <label for="medi_actual" class="form-label">Medicacion Actual:</label>
+        <select class="form-control" id="medi_actual" name="medi_actual" onchange="handleStatusChangemediactual()">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+
+        <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+        <div id="additionalField_motivo_mediactual" style="display: none;">
+            <label for="medi_actual_obser" class="form-label">Cual: (Medicacion Actual)</label>
+            <input type="text" class="form-control" id="medi_actual_obser" name="medi_actual_obser" value="" required>
+
+        </div>
+        <script>
+            function handleStatusChangemediactual() {
+                var medi_actual = document.getElementById('medi_actual').value;
+                var additionalField_motivo_mediactual = document.getElementById('additionalField_motivo_mediactual');
+                if (medi_actual === 'SI') {
+                    additionalField_motivo_mediactual.style.display = 'block'; // Mostrar cuando NEGADO
+                    document.getElementById('medi_actual_obser').setAttribute('required', '');
+
+                } else {
+                    additionalField_motivo_mediactual.style.display = 'none'; // Ocultar en cualquier otro caso
+                    document.getElementById('medi_actual_obser').removeAttribute('required');
+                    document.getElementById('medi_actual_obser').value = ""
+                }
+
+
+            }
+
+            // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+            document.addEventListener('DOMContentLoaded', function () {
+                handleStatusChangemediactual();
+            });
+        </script>
+
+        <label for="alcohol" class="form-label">Alcohol:</label>
+        <select class="form-control" id="alcohol" name="alcohol" onchange="handleStatusChangeAlcohol()">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+
+        <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+        <div id="additionalField_motivo_Alcohol" style="display: none;">
+            <label for="alcohol_obser" class="form-label">Cual: (Alcohol)</label>
+            <input type="text" class="form-control " id="alcohol_obser" name="alcohol_obser" value="" required>
+
+        </div>
+        <script>
+            function handleStatusChangeAlcohol() {
+                var alcohol = document.getElementById('alcohol').value;
+                var additionalField_motivo_Alcohol = document.getElementById('additionalField_motivo_Alcohol');
+                if (alcohol === 'SI') {
+                    additionalField_motivo_Alcohol.style.display = 'block'; // Mostrar cuando NEGADO
+                    document.getElementById('alcohol_obser').setAttribute('required', '');
+                } else {
+                    additionalField_motivo_Alcohol.style.display = 'none'; // Ocultar en cualquier otro caso
+                    document.getElementById('alcohol_obser').removeAttribute('required');
+                    document.getElementById('alcohol_obser').value = ""
+
+                }
+            }
+
+            // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+            document.addEventListener('DOMContentLoaded', function () {
+                handleStatusChangeAlcohol();
+            });
+        </script>
+
+        <label for="tabaco" class="form-label">Tabaco:</label>
+        <select class="form-control" id="tabaco" name="tabaco" onchange="handleStatusChangeTabaco()">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+
+        <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+        <div id="additionalField_motivo_Tabaco" style="display: none;">
+            <label for="tabaco_obser" class="form-label">Cual: (tabaco)</label>
+            <input type="text" class="form-control " id="tabaco_obser" name="tabaco_obser" value="" required>
+
+        </div>
+        <script>
+            function handleStatusChangeTabaco() {
+                var tabaco = document.getElementById('tabaco').value;
+                var additionalField_motivo_Tabaco = document.getElementById('additionalField_motivo_Tabaco');
+                if (tabaco === 'SI') {
+                    additionalField_motivo_Tabaco.style.display = 'block'; // Mostrar cuando NEGADO
+                    document.getElementById('tabaco_obser').setAttribute('required', '');
+                } else {
+                    additionalField_motivo_Tabaco.style.display = 'none'; // Ocultar en cualquier otro caso
+                    document.getElementById('tabaco_obser').removeAttribute('required');
+                    document.getElementById('tabaco_obser').value = ""
+                }
+            }
+
+            // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+            document.addEventListener('DOMContentLoaded', function () {
+                handleStatusChangeTabaco();
+            });
+        </script>
+        <!-- OTROS -->
+        <label for="otros" class="form-label">Otros:</label>
+        <select class="form-control" id="otros" name="otros" onchange="handleStatusChangeotros()">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+
+        <!-- MOTIVO OTROS -->
+        <div id="additionalField_motivo_otros" style="display: none;">
+            <label for="otros_obser" class="form-label">Cual: (Otros)</label>
+            <input type="text" class="form-control " id="otros_obser" name="otros_obser" value="" required>
+
+        </div>
+        <script>
+            function handleStatusChangeotros() {
+                var otros = document.getElementById('otros').value;
+                var additionalField_motivo_otros = document.getElementById('additionalField_motivo_otros');
+                if (otros === 'SI') {
+                    additionalField_motivo_otros.style.display = 'block'; // Mostrar cuando NEGADO
+                    document.getElementById('otros_obser').setAttribute('required', '');
+                } else {
+                    additionalField_motivo_otros.style.display = 'none'; // Ocultar en cualquier otro caso
+                    document.getElementById('otros_obser').removeAttribute('required');
+                    document.getElementById('otros_obser').value = ""
+                }
+            }
+
+            // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+            document.addEventListener('DOMContentLoaded', function () {
+                handleStatusChangeotros();
+            });
+        </script>
+    </div>
+
+    <!-- Estatus -->
+    <div class="mb-3">
+        <strong>
+            <p>3. INFORMACION OCUPACIONAL</p>
+        </strong>
+
+        <label for="incidente_trabajo" class="form-label">Incidente de trabajo:</label>
+        <input type="text" class="form-control " id="incidente_trabajo" name="incidente_trabajo" value="" required>
+
+
+        <label for="accidente_trabajo" class="form-label">Accidente de trabajo:</label>
+        <select class="form-control" id="accidente_trabajo" name="accidente_trabajo" onchange="handleStatusChange1()">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+
+
+
+    </div>
+
+    <div id="additionalField1" style="display: none;">
+        <label for="accidente_trabajo_calif" class="form-label">Descripcion del accidente de trabajo :</label>
+        <input type="text" class="form-control " id="accidente_trabajo_calif" name="accidente_trabajo_calif" value=""
+            required>
+
+        <label for="accidente_trabajo_fecha" class="form-label">Fecha del Accidente:</label>
+        <input type="date" class="form-control " id="accidente_trabajo_fecha" name="accidente_trabajo_fecha" value=""
+            required>
+
+    </div>
+    <script>
+        function handleStatusChange1() {
+            var status1 = document.getElementById('accidente_trabajo').value;
+            var additionalField1 = document.getElementById('additionalField1');
+            if (status1 === 'SI') {
+                additionalField1.style.display = 'block'; // Mostrar cuando NEGADO
+                document.getElementById('accidente_trabajo_calif').setAttribute('required', '');
+                document.getElementById('accidente_trabajo_fecha').setAttribute('required', '');
+            } else {
+                additionalField1.style.display = 'none'; // Ocultar en cualquier otro caso
+                document.getElementById('accidente_trabajo_calif').removeAttribute('required');
+                document.getElementById('accidente_trabajo_fecha').removeAttribute('required');
+                document.getElementById('accidente_trabajo_calif').value = ""
+                document.getElementById('accidente_trabajo_fecha').value = ""
+            }
+        }
+
+        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+        document.addEventListener('DOMContentLoaded', function () {
+            handleStatusChange1();
+        });
+    </script>
+
+
+    <div class="mb-3">
+        <label for="enfermedad_prof" class="form-label">Enfermedad profesional:</label>
+        <select class="form-control" id="enfermedad_prof" name="enfermedad_prof" onchange="handleStatusChange2()">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+    </div>
+
+    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+    <div class="mb-3" id="additionalField2" style="display: none;">
+        <label for="enfermedad_prof_calif" class="form-label">Descripcion de la Enfermedad profesional:</label>
+        <input type="text" class="form-control " id="enfermedad_prof_calif" name="enfermedad_prof_calif" value=""
+            required>
+
+        <label for="enfermedad_prof_fecha" class="form-label">Fecha de la Enfermedad profesional:</label>
+        <input type="date" class="form-control " id="enfermedad_prof_fecha" name="enfermedad_prof_fecha" value=""
+            required>
+
+    </div>
+
+    <script>
+        function handleStatusChange2() {
+            var status2 = document.getElementById('enfermedad_prof').value;
+            var additionalField2 = document.getElementById('additionalField2');
+            if (status2 === 'SI') {
+                additionalField2.style.display = 'block'; // Mostrar cuando NEGADO
+                document.getElementById('enfermedad_prof_calif').setAttribute('required', '');
+                document.getElementById('enfermedad_prof_fecha').setAttribute('required', '');
+            } else {
+                additionalField2.style.display = 'none'; // Ocultar en cualquier otro caso
+                document.getElementById('enfermedad_prof_calif').removeAttribute('required');
+                document.getElementById('enfermedad_prof_fecha').removeAttribute('required');
+                document.getElementById('enfermedad_prof_calif').value = ""
+                document.getElementById('enfermedad_prof_fecha').value = ""
+            }
+        }
+
+        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+        document.addEventListener('DOMContentLoaded', function () {
+            handleStatusChange2();
+        });
+    </script>
+    <!-- Antecedentes Familiares -->
+    <div class="mb-3">
+        <strong>
+            <p>4. ANTECEDENTES FAMILIARES</p>
+        </strong>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="antecf_cardio_vas" name="antecf_cardio_vas" value="X">
+            <label class="form-check-label" for="antecf_cardio_vas">Cardio-vascular</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="antecf_metabotica" name="antecf_metabotica" value="X">
+            <label class="form-check-label" for="antecf_metabotica">Metabólica</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="antecf_neurologica" name="antecf_neurologica" value="X">
+            <label class="form-check-label" for="antecf_neurologica">Neurológica</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="antecf_oncologica" name="antecf_oncologica" value="X">
+            <label class="form-check-label" for="antecf_oncologica">Oncológica</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="antecf_infecciosa" name="antecf_infecciosa" value="X">
+            <label class="form-check-label" for="antecf_infecciosa">Infecciosa</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="antecf_hereditario" name="antecf_hereditario" value="X">
+            <label class="form-check-label" for="antecf_hereditario">Hereditaria</label>
+        </div>
+        <div class="mb-3">
+            <label for="antecf_observacion" class="form-label">Observación</label>
+            <textarea class="form-control" id="antecf_observacion" name="antecf_observacion" rows="2"></textarea>
+        </div>
+    </div>
+
+    <!-- Inmunización -->
+    <div class="mb-3">
+        <strong>
+            <p>5. INMUNIZACIÓN</p>
+        </strong>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="inmuni_influenza" name="inmuni_influenza" value="X">
+            <label class="form-check-label" for="inmuni_influenza">Influenza</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="inmuni_tetano" name="inmuni_tetano" value="X">
+            <label class="form-check-label" for="inmuni_tetano">Tétano</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="inmuni_hepatitisB" name="inmuni_hepatitisB" value="X">
+            <label class="form-check-label" for="inmuni_hepatitisB">Hepatitis B</label>
+        </div>
+        <div class="mb-3">
+            <label for="inmuni_coviddosis" class="form-label">COVID Dosis #:</label>
+            <input type="number" class="form-control" id="inmuni_coviddosis" name="inmuni_coviddosis" pattern="^\d{2}$"
+                title="Cantidad incorrecta" required inputmode="numeric" maxlength="2">
+        </div>
+    </div>
+
+    <div class="col-md-md-12">
+        <div class="signature-pad" id="signature-pad">
+            <label class="form-label">Firma:</label>
+            <canvas id="signature-canvas"></canvas>
+            <div class="btn-group">
+                <button type="button" id="clear-signature" class="btn btn-secondary">
+                    Limpiar
+                </button>
+
+            </div>
+        </div>
+
+        <input type="hidden" id="firma_colaborador" name="firma_colaborador">
+    </div>
+
+    
+
+
+    <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+
+
+    </div>
+    </div>
+</form>
+{%endblock%}
+
+{%block scripts%}
+<script src="{{ url_for('static', filename='js/firma_colaborador.js') }}"></script>
+<script src="{{ url_for('static', filename='js/fecha_actual.js') }}"></script>
+{%endblock%}

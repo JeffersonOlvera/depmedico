@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Fichas - ACC</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/colaborador/home.css') }}">
+  
+</head>
+
+<body>
+
+  <!-- Header -->
+  
+  {% include 'base/header_colaborador.html' %}
+
+  <!-- Mensajes Flash con mejor estilo -->
+  <div class="main-container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      {% for message in messages %}
+      <p class="mb-0"><i class="fas fa-exclamation-circle me-2"></i>{{ message }}</p>
+      {% endfor %}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Título principal -->
+    <h2 class="page-title">REGISTRO DE FICHAS</h2>
+    <!-- Área para posible contenido adicional -->
+    <div class="content-area">
+      <!-- Aquí se podría incluir algún mensaje o imagen de bienvenida -->
+      <div class="card border-0 shadow-sm p-4 text-center ">
+        <div class="card-body">
+          <i class="fas fa-clipboard-check text-primary mb-3" style="font-size: 2.5rem;"></i>
+          <h5 class="card-title">Bienvenido al Sistema de Registro</h5>
+          <p class="card-text text-muted">Seleccione una opción del menú para continuar con el proceso de registro.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Navegación de fichas mejorada -->
+    <nav class="nav-menu">
+      <ul class="list-unstyled mb-0">
+        <li class="nav-item">
+          <a href="{{ url_for('auth.index') }}" class="nav-link">
+            <i class="fas fa-home"></i> Inicio
+          </a>
+        </li>
+
+        {% if session['externo'] %}
+<li class="nav-item">
+          <a href="{{ url_for('preocupacional.form') }}" class="nav-link">
+            <i class="fas fa-user-md"></i> Ficha Preocupacional
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ url_for('consentimiento.form') }}" class="nav-link">
+            <i class="fas fa-file-signature"></i> Consentimiento Informado
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ url_for('droga.form') }}" class="nav-link">
+            <i class="fas fa-capsules"></i> Ficha de Consumo de Drogas
+          </a>
+        </li>
+
+
+        
+        {% else %}
+        <li class="nav-item">
+          <a href="{{ url_for('ocupacional.form') }}" class="nav-link">
+            <i class="fas fa-clipboard-list"></i> Ficha Ocupacional
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ url_for('seguimiento.form') }}" class="nav-link">
+            <i class="fas fa-pills"></i> Ficha Seguimiento de Consumo de Drogas
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ url_for('certificado.form') }}" class="nav-link">
+            <i class="fas fa-certificate"></i> Certificado Ocupacional
+          </a>
+        </li>
+        {% endif %}
+<!-- 
+        <li class="nav-item">
+          <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </a>
+        </li> -->
+      </ul>
+    </nav>
+
+
+  </div>
+
+  <!-- Footer -->
+  <!-- <footer>
+    <div class="container">
+      <p class="mb-0">&copy; 2025 American Call Center. Todos los derechos reservados.</p>
+    </div>
+  </footer> -->
+
+  <!-- Toast de bienvenida mejorado -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="welcomeToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i class="fas fa-bell me-2"></i>
+        <strong class="me-auto">Bienvenido a ACC</strong>
+        <small>Ahora</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <p class="mb-1"><strong>¡Hola {{ session.get('nombreColaborador', 'Usuario') }}! 👋</strong></p>
+        <p class="mb-0">
+          Gracias por visitar nuestra página de registro de fichas. Esperamos
+          que puedas completar el proceso con éxito.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/colaborador/welcome_toast.js') }}"></script>
+
+</body>
+
+</html>

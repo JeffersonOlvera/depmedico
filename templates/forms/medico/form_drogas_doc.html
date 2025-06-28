@@ -1,0 +1,527 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{% block ficha_name %}
+FORMULARIO DE REDUCCIÓN Y PREVENCIÓN DEL CONSUMO DE DROGAS - ACC
+{% endblock %}
+
+{%block form %}
+<form method="POST" id="myForm" action="{{ url_for('droga.actualizar') }}">
+
+    <div class="col-md-12 mb-3">
+        <label for="nombre">Nombre Completo:</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre Completo"
+            value="{{ form_data.get('Nombre', Nombre | default('')) }}">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="tipo_sangre">Tipo de Sangre:</label>
+            <select class="form-select" id="tipo_sangre" name="tipo_sangre" required>
+                <option value="" disabled {{ 'selected' if not form_data.get('Tipo_sangre') }}>Selecciona tu tipo de
+                    sangre</option>
+                <option value="A+" {{ 'selected' if form_data.get('Tipo_sangre')=='A+' }}>A+</option>
+                <option value="A-" {{ 'selected' if form_data.get('Tipo_sangre')=='A-' }}>A-</option>
+                <option value="B+" {{ 'selected' if form_data.get('Tipo_sangre')=='B+' }}>B+</option>
+                <option value="B-" {{ 'selected' if form_data.get('Tipo_sangre')=='B-' }}>B-</option>
+                <option value="AB+" {{ 'selected' if form_data.get('Tipo_sangre')=='AB+' }}>AB+</option>
+                <option value="AB-" {{ 'selected' if form_data.get('Tipo_sangre')=='AB-' }}>AB-</option>
+                <option value="O+" {{ 'selected' if form_data.get('Tipo_sangre')=='O+' }}>O+</option>
+                <option value="O-" {{ 'selected' if form_data.get('Tipo_sangre')=='O-' }}>O-</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="cedula">No. de Cédula:</label>
+            <input type="text" class="form-control" id="cedula" name="cedula" placeholder="N° Cédula" pattern="^\d{10}$"
+                maxlength="10" value="{{form_data.get('Cedula', Cedula | default('')) }}" required>
+        </div>
+    </div>
+
+    <div class="row">
+
+
+        <div class="col-md-6 mb-3">
+            <label for="fecha_apertura_F_RPD">Fecha de Apertura de F. RPD:</label>
+            <input type="date" class="form-control" id="fecha_apertura_F_RPD" name="fecha_apertura_F_RPD"
+                value="{{form_data.get('Fecha_apertura_F_RPD', Fecha_apertura_F_RPD | default('')) }}">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="edad">Edad:</label>
+            <input type="number" class="form-control" id="edad" name="edad" placeholder="Edad"
+                value="{{form_data.get('Edad', Edad | default('')) }}">
+        </div>
+
+    </div>
+
+    <!-- Estado civil y domicilio -->
+    <div class="row">
+        <!-- Estado Civil -->
+        <div class="col-md-6 mb-3">
+            <label for="estado_civil">Estado Civil:</label>
+            <select class="form-select" id="estado_civil" name="estado_civil" required>
+                <option value="" disabled {% if not form_data.get('Estado_civil') %} selected {% endif %}>Selecciona tu
+                    estado civil</option>
+                <option value="soltero" {% if form_data.get('Estado_civil')=='soltero' %} selected {% endif %}>Soltero/a
+                </option>
+                <option value="casado" {% if form_data.get('Estado_civil')=='casado' %} selected {% endif %}>Casado/a
+                </option>
+                <option value="divorciado" {% if form_data.get('Estado_civil')=='divorciado' %} selected {% endif %}>
+                    Divorciado/a</option>
+                <option value="viudo" {% if form_data.get('Estado_civil')=='viudo' %} selected {% endif %}>Viudo/a
+                </option>
+                <option value="union libre" {% if form_data.get('Estado_civil')=='union libre' %} selected {% endif %}>
+                    Unión libre</option>
+            </select>
+        </div>
+
+        <!-- Domicilio -->
+        <div class="col-md-6 mb-3">
+            <label for="dimicilio">Domicilio:</label>
+            <input type="text" class="form-control" id="dimicilio" name="dimicilio" placeholder="Domicilio"
+                value="{{form_data.get('Dimicilio', Dimicilio | default('')) }}">
+        </div>
+    </div>
+
+    <!-- Cargo, teléfono, profesión -->
+    <div class="row">
+        <!-- Cargo -->
+        <div class="col-md-4 mb-3">
+            <label for="cargo">Cargo:</label>
+            <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Cargo"
+                value="{{form_data.get('Cargo', Cargo | default('')) }}">
+        </div>
+        <!-- Teléfono -->
+        <div class="col-md-4 mb-3">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono"
+                value="{{form_data.get('Telefono', Telefono | default('')) }}">
+        </div>
+        <!-- Profesión -->
+        <div class="col-md-4 mb-3">
+            <label for="profesion">Profesión:</label>
+            <input type="text" class="form-control" id="profesion" name="profesion" placeholder="Profesión"
+                value="{{form_data.get('Profesion', Profesion | default('')) }}">
+        </div>
+    </div>
+
+
+    <!-- Religión y otros datos -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="religion">Religión:</label>
+            <input type="text" class="form-control" id="religion" name="religion" placeholder="Religión"
+            value="{{form_data.get('Religion', Religion | default('')) }}">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="email">E-mail:</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="E-mail"
+            value="{{form_data.get('Email', Email | default('')) }}">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="nivel_instrucción">Nivel de Instrucción:</label>
+            <select class="form-control" id="nivel_instrucción" name="nivel_instrucción">
+                <option value="basica" {% if form_data.get('Nivel_instrucción')=='basica' %} selected {% endif %}>
+                    Educación Básica
+                </option>
+                <option value="bachiller" {% if form_data.get('Nivel_instrucción')=='bachiller' %} selected {% endif %}>
+                    Bachiller
+                </option>
+                <option value="tercer_nivel" {% if form_data.get('Nivel_instrucción')=='tercer_nivel' %} selected {%
+                    endif %}>Tercer
+                    Nivel</option>
+                <option value="tecnico_superior" {% if form_data.get('Nivel_instrucción')=='tecnico_superior' %}
+                    selected {% endif %}>Técnico
+                    Superior</option>
+                <option value="tecnologo" {% if form_data.get('Nivel_instrucción')=='tecnologo' %} selected {% endif %}>
+                    Tecnólogo
+                </option>
+                <option value="licenciado" {% if form_data.get('Nivel_instrucción')=='licenciado' %} selected {% endif
+                    %}>
+                    Licenciado
+                </option>
+                <option value="ingeniero" {% if form_data.get('Nivel_instrucción')=='ingeniero' %} selected {% endif %}>
+                    Ingeniero
+                </option>
+                <option value="cuarto_nivel" {% if form_data.get('Nivel_instrucción')=='cuarto_nivel' %} selected {%
+                    endif %}>Cuarto
+                    Nivel</option>
+                <option value="especializacion" {% if form_data.get('Nivel_instrucción')=='especializacion' %} selected
+                    {% endif %}>
+                    Especialización</option>
+                <option value="maestria" {% if form_data.get('Nivel_instrucción')=='maestria' %} selected {% endif %}>
+                    Maestria
+                </option>
+                <option value="postgrado" {% if form_data.get('Nivel_instrucción')=='postgrado' %} selected {% endif %}>
+                    Postgrado
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Autoidentificación étnica -->
+    <div class="mb-3">
+        <label for="etnia">Autoidentificación Étnica:</label>
+        <select class="form-control" id="etnia" name="etnia">
+            <option value="mestizo" {% if form_data.get('Etnia')=='mestizo' %} selected {% endif %}>Mestizo</option>
+            <option value="afro_ecuatoriano" {% if form_data.get('Etnia')=='afro_ecuatoriano' %} selected {% endif %}>
+                Afro-Ecuatoriano</option>
+            <option value="blanco" {% if form_data.get('Etnia')=='blanco' %} selected {% endif %}>Blanco</option>
+            <option value="otro" {% if form_data.get('Etnia')=='otro' %} selected {% endif %}>Otro</option>
+        </select>
+    </div>
+
+    <!-- Discapacidad y porcentaje -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label>Discapacidad:</label><br>
+            <div>
+                <input type="checkbox" id="disca_auditiva" name="disca_auditiva" value="X" {% if
+                    form_data.get('Disca_auditiva')=='X' %} checked {% endif %}>
+                <label for="disca_auditiva">Auditiva</label>
+            </div>
+            <div>
+                <input type="checkbox" id="disca_fisica" name="disca_fisica" value="X" {% if
+                    form_data.get('Disca_fisica')=='X' %} checked {% endif %}>
+                <label for="disca_fisica">Física</label>
+            </div>
+            <div>
+                <input type="checkbox" id="disca_intelectual" name="disca_intelectual" value="X" {% if
+                    form_data.get('Disca_intelectual')=='X' %} checked {% endif %}>
+                <label for="disca_intelectual">Intelectual</label>
+            </div>
+            <div>
+                <input type="checkbox" id="lenguaje" name="lenguaje" value="X" {% if form_data.get('Lenguaje')=='X' %}
+                    checked {% endif %}>
+                <label for="lenguaje">Lenguaje</label>
+            </div>
+            <div>
+                <input type="checkbox" id="psico_social" name="psico_social" value="X" {% if
+                    form_data.get('Psico_social')=='X' %} checked {% endif %}>
+                <label for="psico_social">Psico-Social</label>
+            </div>
+            <div>
+                <input type="checkbox" id="visual" name="visual" value="X" {% if form_data.get('Visual')=='X' %} checked
+                    {% endif %}>
+                <label for="visual">Visual</label>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="porcentaje_disca">Porcentaje de Discapacidad:</label>
+            <select class="form-control" id="porcentaje_disca" name="porcentaje_disca">
+                <option value="" disabled {% if not form_data.get('Porcentaje_disca') %} selected {% endif %}>Seleccione
+                    un porcentaje</option>
+                <option value="30" {% if form_data.get('Porcentaje_disca')=='30' %} selected {% endif %}>30%</option>
+                <option value="40" {% if form_data.get('Porcentaje_disca')=='40' %} selected {% endif %}>40%</option>
+                <option value="50" {% if form_data.get('Porcentaje_disca')=='50' %} selected {% endif %}>50%</option>
+                <option value="60" {% if form_data.get('Porcentaje_disca')=='60' %} selected {% endif %}>60%</option>
+                <option value="70" {% if form_data.get('Porcentaje_disca')=='70' %} selected {% endif %}>70%</option>
+                <option value="80" {% if form_data.get('Porcentaje_disca')=='80' %} selected {% endif %}>80%</option>
+                <option value="90" {% if form_data.get('Porcentaje_disca')=='90' %} selected {% endif %}>90%</option>
+                <option value="100" {% if form_data.get('Porcentaje_disca')=='100' %} selected {% endif %}>100%</option>
+            </select>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label>Enfermedades Preexistentes:</label><br>
+            <div>
+                <input type="checkbox" id="enfer_catastrofica" name="enfer_catastrofica" value="X" {% if
+                    form_data.get('Enfer_catastrofica')=='X' %} checked {% endif %}>
+                <label for="enfermedad_catastrofica">Catastrófica</label>
+            </div>
+            <div>
+                <input type="checkbox" id="enfer_cron_transmi" name="enfer_cron_transmi" value="X" {% if
+                    form_data.get('Enfer_cron_transmi')=='X' %} checked {% endif %}>
+                <label for="enfer_cron_transmi">Crónica Transmisible</label>
+            </div>
+            <div>
+                <input type="checkbox" id="enfer_cron_notransmi" name="enfer_cron_notransmi" value="X" {% if
+                    form_data.get('Enfer_cron_notransmi')=='X' %} checked {% endif %}>
+                <label for="enfer_cron_notransmi">Crónica No Transmisible</label>
+            </div>
+            <div>
+                <input type="checkbox" id="diag_presuntivo" name="diag_presuntivo" value="X" {% if
+                    form_data.get('Diag_presuntivo')=='X' %} checked {% endif %}>
+                <label for="diag_presuntivo">Diagnóstico Presuntivo</label>
+            </div>
+        </div>
+
+
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="droga" class="form-label">Principal Droga que Consume</label>
+            <select class="form-select" id="droga" name="droga" required>
+                <option value="" disabled {% if not form_data.get('Droga') %} selected {% endif %}>Seleccione</option>
+                <option value="No Consume" {% if form_data.get('Droga')=='No Consume' %} selected {% endif %}>No Consume
+                </option>
+                <option value="Alcohol" {% if form_data.get('Droga')=='Alcohol' %} selected {% endif %}>Alcohol</option>
+                <option value="Anfetaminas" {% if form_data.get('Droga')=='Anfetaminas' %} selected {% endif %}>
+                    Anfetaminas</option>
+                <option value="Cigarrillo" {% if form_data.get('Droga')=='Cigarrillo' %} selected {% endif %}>Cigarrillo
+                </option>
+                <option value="Marihuana" {% if form_data.get('Droga')=='Marihuana' %} selected {% endif %}>Marihuana
+                </option>
+                <option value="Base de cocaina" {% if form_data.get('Droga')=='Base de cocaina' %} selected {% endif %}>
+                    Base de Cocaína</option>
+                <option value="Heroina" {% if form_data.get('Droga')=='Heroina' %} selected {% endif %}>Heroína</option>
+                <option value="Tabaco" {% if form_data.get('Droga')=='Tabaco' %} selected {% endif %}>Tabaco</option>
+                <option value="Morfina" {% if form_data.get('Droga')=='Morfina' %} selected {% endif %}>Morfina</option>
+                <option value="Hongos" {% if form_data.get('Droga')=='Hongos' %} selected {% endif %}>Hongos</option>
+                <option value="Drogas de sintesis" {% if form_data.get('Droga')=='Drogas de sintesis' %} selected {%
+                    endif %}>Drogas de Síntesis</option>
+                <option value="Inhalantes" {% if form_data.get('Droga')=='Inhalantes' %} selected {% endif %}>
+                    Inhalantes/Aerosoles</option>
+                <option value="Pegamentos" {% if form_data.get('Droga')=='Pegamentos' %} selected {% endif %}>
+                    Pegamentos/Disolventes</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="frecuencia_consumo" class="form-label">Frecuencia de Consumo</label>
+            <select class="form-select" id="frecuencia_consumo" name="frecuencia_consumo" required>
+                <option value="" disabled {% if not form_data.get('Frecuencia_consumo') %} selected {% endif %}>
+                    Seleccione</option>
+                <option value="No consume" {% if form_data.get('Frecuencia_consumo')=='No consume' %} selected {% endif
+                    %}>No Consume</option>
+                <option value="5-7 dias" {% if form_data.get('Frecuencia_consumo')=='5-7 dias' %} selected {% endif %}>
+                    De 5 a 7 días a la semana</option>
+                <option value="2-4 veces" {% if form_data.get('Frecuencia_consumo')=='2-4 veces' %} selected {% endif
+                    %}>De 2 a 4 veces a la semana</option>
+                <option value="1 vez po semana" {% if form_data.get('Frecuencia_consumo')=='1 vez po semana' %} selected
+                    {% endif %}>Al menos una vez a la semana</option>
+                <option value="2-12 veces Año" {% if form_data.get('Frecuencia_consumo')=='2-12 veces Año' %} selected
+                    {% endif %}>De 2 a 12 veces al año</option>
+                <option value="1 vez al Año" {% if form_data.get('Frecuencia_consumo')=='1 vez al Año' %} selected {%
+                    endif %}>Una vez al año</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="droga_detalles" class="form-label">
+            En caso de que haya seleccionado otras, detalle cual:
+        </label>
+        <textarea class="form-control" id="droga_detalles" name="droga_detalles" rows="2"
+            maxlength="135">{{ form_data.get('Droga_detalles', '') }}</textarea>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <label for="tratamiento" class="form-label">Tratamiento</label>
+            <select class="form-select" id="tratamiento" name="tratamiento" required>
+                <option value="" disabled {% if not form_data.get('Tratamiento') %} selected {% endif %}>Seleccione
+                </option>
+                <option value="No consume" {% if form_data.get('Tratamiento')=='No consume' %} selected {% endif %}>No
+                    Consume</option>
+                <option value="Si" {% if form_data.get('Tratamiento')=='Si' %} selected {% endif %}>Si</option>
+                <option value="No" {% if form_data.get('Tratamiento')=='No' %} selected {% endif %}>No</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="col-md-12 mb-3">
+        <label for="factores_psicosociales" class="form-label">
+            Factores Psico-sociales relacionados al consumo:
+        </label>
+        <select class="form-control" id="factores_psicosociales" name="factores_psicosociales">
+            <option value="no_aplica" {% if form_data.get('Factores_psicosociales')=='no_aplica' %} selected {% endif
+                %}>NO APLICA</option>
+            <option value="agobio_tension_trabajo" {% if
+                form_data.get('Factores_psicosociales')=='agobio_tension_trabajo' %} selected {% endif %}>AGOBIO Y
+                TENSIÓN DEL TRABAJO</option>
+            <option value="acoso_laboral" {% if form_data.get('Factores_psicosociales')=='acoso_laboral' %} selected {%
+                endif %}>ACOSO LABORAL</option>
+            <option value="cansancio_intenso" {% if form_data.get('Factores_psicosociales')=='cansancio_intenso' %}
+                selected {% endif %}>CANSANCIO INTENSO</option>
+            <option value="companeros_consumidores" {% if
+                form_data.get('Factores_psicosociales')=='companeros_consumidores' %} selected {% endif %}>COMPAÑEROS
+                CONSUMIDORES</option>
+            <option value="contratos_precarios" {% if form_data.get('Factores_psicosociales')=='contratos_precarios' %}
+                selected {% endif %}>CONTRATOS PRECARIOS</option>
+            <option value="curiosidad_efectos_drogas" {% if
+                form_data.get('Factores_psicosociales')=='curiosidad_efectos_drogas' %} selected {% endif %}>CURIOSIDAD
+                SOBRE LOS EFECTOS DE LAS DROGAS</option>
+            <option value="dificultad_resolucion_problemas" {% if
+                form_data.get('Factores_psicosociales')=='dificultad_resolucion_problemas' %} selected {% endif %}>
+                DIFICULTAD EN LA RESOLUCIÓN DE PROBLEMAS</option>
+            <option value="niveles_tension" {% if form_data.get('Factores_psicosociales')=='niveles_tension' %} selected
+                {% endif %}>ELEVADOS NIVELES DE TENSIÓN</option>
+            <option value="expendo_drogas_trabajo" {% if
+                form_data.get('Factores_psicosociales')=='expendo_drogas_trabajo' %} selected {% endif %}>EXISTENCIA DEL
+                EXPENDIO DE DROGAS EN LUGAR DE TRABAJO</option>
+            <option value="familiares_consumidores" {% if
+                form_data.get('Factores_psicosociales')=='familiares_consumidores' %} selected {% endif %}>FAMILIARES
+                CONSUMIDORES</option>
+            <option value="insatisfaccion_trabajo" {% if
+                form_data.get('Factores_psicosociales')=='insatisfaccion_trabajo' %} selected {% endif %}>INSATISFACCIÓN
+                CON EL TRABAJO QUE SE REALIZA</option>
+            <option value="insatisfaccion_trato_superiores" {% if
+                form_data.get('Factores_psicosociales')=='insatisfaccion_trato_superiores' %} selected {% endif %}>
+                INSATISFACCIÓN CON EL TIPO DE TRATO QUE RECIBE DE SUS SUPERIORES</option>
+            <option value="inseguridad_futuro_laboral" {% if
+                form_data.get('Factores_psicosociales')=='inseguridad_futuro_laboral' %} selected {% endif %}>
+                INSEGURIDAD EN CUANTO AL FUTURO LABORAL</option>
+            <option value="ausencias_hogar_laboral" {% if
+                form_data.get('Factores_psicosociales')=='ausencias_hogar_laboral' %} selected {% endif %}>LARGAS
+                AUSENCIAS DEL HOGAR POR MOTIVOS LABORALES</option>
+            <option value="mala_situacion_economica_familia" {% if
+                form_data.get('Factores_psicosociales')=='mala_situacion_economica_familia' %} selected {% endif %}>MALA
+                SITUACIÓN ECONÓMICA EN LA FAMILIA</option>
+            <option value="conciliacion_tareas_domesticas" {% if
+                form_data.get('Factores_psicosociales')=='conciliacion_tareas_domesticas' %} selected {% endif %}>
+                PROBLEMAS DE CONCILIACIÓN ENTRE TRABAJO Y TAREAS DOMÉSTICAS</option>
+            <option value="sentimiento_poco_capacitado" {% if
+                form_data.get('Factores_psicosociales')=='sentimiento_poco_capacitado' %} selected {% endif %}>
+                SENTIMIENTO DE ESTAR POCO CAPACITADO</option>
+            <option value="tareas_rutinarias" {% if form_data.get('Factores_psicosociales')=='tareas_rutinarias' %}
+                selected {% endif %}>TAREAS RUTINARIAS</option>
+            <option value="trabajos_nocturnos" {% if form_data.get('Factores_psicosociales')=='trabajos_nocturnos' %}
+                selected {% endif %}>TRABAJOS NOCTURNOS</option>
+            <option value="turnos_cambiantes" {% if form_data.get('Factores_psicosociales')=='turnos_cambiantes' %}
+                selected {% endif %}>TURNOS CAMBIANTES</option>
+        </select>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label for="factores_psicosociales_otros" class="form-label">Otros factores Psico-sociales relacionados al
+            consumo:</label>
+        <textarea class="form-control" id="factores_psicosociales_otros" name="factores_psicosociales_otros" rows="2"
+            maxlength="75">{{ form_data.get('Factores_psicosociales_otros', '') }}</textarea>
+    </div>
+
+    <!-- Programa integral -->
+    <div class="mb-3">
+        <label>¿El empleado es trabajador sustituto?</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="trabajador_sustituto" id="trabajador_sustitutoSi"
+                value="Si" {% if form_data.get('Trabajador_sustituto')=='Si' %} checked {% endif %}>
+            <label class="form-check-label" for="trabajador_sustitutoSi">Sí</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="trabajador_sustituto" id="trabajador_sustitutoNo"
+                value="No" {% if form_data.get('Trabajador_sustituto')=='No' %} checked {% endif %}>
+            <label class="form-check-label" for="trabajador_sustitutoNo">No</label>
+        </div>
+    </div>
+
+
+
+
+    <div class="mb-3">
+        <label>¿El empleado cuenta con exámenes pre-ocupacionales?</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exam_preocupacionales" id="exam_preocupacionalesSi"
+                value="Si" {% if form_data.get('Exam_preocupacionales')=='Si' %} checked {% endif %}>
+            <label class="form-check-label" for="exam_preocupacionales">
+                Sí
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exam_preocupacionales" id="exam_preocupacionalesNo"
+                value="No" {% if form_data.get('Exam_preocupacionales')=='No' %} checked {% endif %}>
+            <label class="form-check-label" for="exam_preocupacionales">
+                No
+            </label>
+        </div>
+    </div>
+
+    <div class="mb-3" id="signature-pad2">
+        <label class="form-label">Firma Colaborador:</label>
+        <canvas class="firma-canva" id="signature-canvas2"></canvas>
+        <div class="button-group">
+            <button type="button" id="clear-signature2" class="btn btn-clear"> <i class="fa-solid fa-trash"></i> Limpiar
+            </button>
+            <button type="button" id="save-signature2" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar
+            </button>
+        </div>
+    </div>
+
+    <input type="hidden" id="firma_colaborador" name="firma_colaborador" />
+
+    <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+
+
+
+</form>
+
+{%endblock%}
+{%block scripts%}
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById('signature-canvas2');
+        var context = canvas.getContext('2d');
+        var signaturePad = new SignaturePad(canvas);
+
+        // Redimensiona el canvas según la ventana
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            context.scale(ratio, ratio);
+        }
+
+        // Ajustar tamaño del canvas al cargar la página
+        window.onresize = resizeCanvas;
+        resizeCanvas();
+
+        // Función para centrar y escalar la imagen en el canvas
+        function drawCenteredImage(image) {
+            var canvasAspect = canvas.width / canvas.height;
+            var imageAspect = image.width / image.height;
+            var renderableWidth, renderableHeight, xStart, yStart;
+
+            // Ajustar el tamaño de la imagen para que encaje en el canvas
+            if (imageAspect < canvasAspect) {
+                // La imagen es más alta que el canvas, ajustar el ancho
+                renderableHeight = canvas.height;
+                renderableWidth = image.width * (canvas.height / image.height);
+                xStart = (canvas.width - renderableWidth) / 2;
+                yStart = 0;
+            } else {
+                // La imagen es más ancha que el canvas, ajustar la altura
+                renderableWidth = canvas.width;
+                renderableHeight = image.height * (canvas.width / image.width);
+                xStart = 0;
+                yStart = (canvas.height - renderableHeight) / 2;
+            }
+
+            // Dibujar la imagen centrada
+            context.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas antes de dibujar
+            context.drawImage(image, xStart, yStart, renderableWidth, renderableHeight);
+        }
+
+        // Cargar la firma guardada si existe y centrarla
+        var base64FirmaGuardada = "{{ form_data.get('firma_colaborador', firma_colaborador | default('')) }}";
+        if (base64FirmaGuardada) {
+            var image = new Image();
+            image.src = base64FirmaGuardada;
+            image.onload = function () {
+                drawCenteredImage(image); // Llamar a la función para dibujar la imagen centrada
+            };
+        }
+
+        // Limpiar firma
+        document.getElementById('clear-signature2').addEventListener('click', function () {
+            signaturePad.clear();
+        });
+
+        // Guardar firma
+        document.getElementById('save-signature2').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevenir comportamiento por defecto
+
+            if (signaturePad.isEmpty()) {
+                alert("Por favor, realiza una firma.");
+            } else {
+                var dataURL = signaturePad.toDataURL('image/png');
+                document.getElementById('firma_colaborador').value = dataURL; // Guardar en el campo oculto
+                alert("Firma guardada");
+            }
+        });
+    };
+
+</script>
+
+{%endblock%}

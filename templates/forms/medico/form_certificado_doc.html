@@ -1,0 +1,250 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{%block ficha_name%}CERTIFICADO OCUPACIONAL - ACC{%endblock%}
+{%block form %}
+<form method="POST" id="myForm" action="{{ url_for('certificado.actualizar') }}">
+    <div class="col-md-12 mb-3">
+        <label for="nombre" class="form-label">Nombre Completo</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" pattern="^[a-zA-Z\s]+$"
+            placeholder="Nombre completo" value="{{ form_data.get('nombre', nombre | default('')) }}" required>
+        <div class="form-text">Solo letras y espacios.</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="cedula" class="form-label">Cédula</label>
+            <input type="text" class="form-control" id="cedula" name="cedula" pattern="^\d{10}$"
+                placeholder="0999999999" maxlength="10" value="{{ form_data.get('cedula', cedula | default('')) }}"
+                required>
+            <div class="form-text">Debe tener exactamente 10 dígitos.</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="nhc" class="form-label">NHC</label>
+            <input type="text" class="form-control" id="nhc" name="nhc" pattern="^\d+$"
+                placeholder="Número de Historia Clínica" value="{{ form_data.get('nhc', nhc | default('')) }}" required>
+            <div class="form-text">Solo números.</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input type="text" class="form-control" id="edad" name="edad" pattern="^\d+$" placeholder="Edad"
+                value="{{ form_data.get('edad', edad | default('')) }}" required>
+            <div class="form-text">Solo números.</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="sexo" class="form-label">Sexo</label>
+            <select class="form-select" id="sexo" name="sexo" required>
+                <option value="" disabled>Seleccione el sexo</option>
+                <option value="Femenino" {% if form_data.get('sexo')=='Femenino' %}selected{% endif %}>Femenino</option>
+                <option value="Masculino" {% if form_data.get('sexo')=='Masculino' %}selected{% endif %}>Masculino
+                </option>
+            </select>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="cargo" class="form-label">Cargo</label>
+            <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Cargo del empleado"
+                value="{{ form_data.get('cargo', cargo | default('')) }}" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="tiempo_cargo" class="form-label">Tiempo en el Cargo</label>
+            <input type="text" class="form-control" id="tiempo_cargo" name="tiempo_cargo"
+                placeholder="Tiempo en el cargo" value="{{ form_data.get('tiempo_cargo', tiempo_cargo | default('')) }}"
+                required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="fecha_emision" class="form-label">Fecha de Emisión</label>
+            <input type="date" class="form-control" id="fecha_emision" name="fecha_emision"
+                value="{{ form_data.get('fecha_emision', '') | default('') }}" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Evaluación:</label>
+            <div class="d-flex">
+                <div class="form-check me-3">
+                    <input type="hidden" name="ingreso" value="">
+                    <input class="form-check-input" type="checkbox" id="ingreso" name="ingreso" value="X"
+                        {% if form_data.get('ingreso') == 'Sí' or form_data.get('ingreso') == 'X' %}checked{% endif %}>
+                    <label class="form-check-label" for="ingreso">Ingreso</label>
+                </div>
+                <div class="form-check me-3">
+                    <input type="hidden" name="periodico" value="">
+                    <input class="form-check-input" type="checkbox" id="periodico" name="periodico" value="X"
+                        {% if form_data.get('periodico') == 'Sí' or form_data.get('periodico') == 'X' %}checked{% endif %}>
+                    <label class="form-check-label" for="periodico">Periódico</label>
+                </div>
+                <div class="form-check">
+                    <input type="hidden" name="reintegro" value="">
+                    <input class="form-check-input" type="checkbox" id="reintegro" name="reintegro" value="X"
+                        {% if form_data.get('reintegro') == 'Sí' or form_data.get('reintegro') == 'X' %}checked{% endif %}>
+                    <label class="form-check-label" for="reintegro">Reintegro</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Aptitud</label>
+        <div class="d-flex">
+            <div class="form-check me-3">
+                <input class="form-check-input" type="radio" name="apto" id="apto" value="X" {% if
+                    form_data.get('apto')=='Sí' or form_data.get('apto')=='X' %}checked{% endif %}>
+                <label class="form-check-label" for="apto">Apto</label>
+            </div>
+            <div class="form-check me-3">
+                <input class="form-check-input" type="radio" name="apto_observacion" id="apto_observacion" value="X" {%
+                    if form_data.get('apto_observacion')=='Sí' or form_data.get('apto_observacion')=='X' %}checked{%
+                    endif %}>
+                <label class="form-check-label" for="apto_observacion">Apto con Observación</label>
+            </div>
+            <div class="form-check me-3">
+                <input class="form-check-input" type="radio" name="apto_limitaciones" id="apto_limitaciones" value="X"
+                    {% if form_data.get('apto_limitaciones')=='Sí' or form_data.get('apto_limitaciones')=='X'
+                    %}checked{% endif %}>
+                <label class="form-check-label" for="apto_limitaciones">Apto con Limitaciones</label>
+            </div>
+            <div class="form-check me-3">
+                <input class="form-check-input" type="radio" name="no_apto" id="no_apto" value="X" {% if
+                    form_data.get('no_apto')=='Sí' or form_data.get('no_apto')=='X' %}checked{% endif %}>
+                <label class="form-check-label" for="no_apto">No Apto</label>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="mb-3">
+        <label for="apto_detalles" class="form-label">Detalles de Observación/Limitaciones</label>
+        <textarea class="form-control" id="apto_detalles" name="apto_detalles"
+            placeholder="Ingrese detalles (si es necesario)">{{ form_data.get('apto_detalles', '') }}
+            </textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="recomendaciones" class="form-label">Recomendaciones</label>
+        <textarea class="form-control" id="recomendaciones" name="recomendaciones" placeholder="Recomendaciones"
+            required>{{ form_data.get('recomendaciones', '') }}
+            </textarea>
+    </div>
+
+    <p>
+        Con este documento certifico que el trabajador se ha sometido a la evaluación medica requerida ingreso periódico
+        retiro para puesto laboral y se ha informado sobre los riesgos relacionados con el trabajo emitiendo
+        recomendaciones con su estado de salud.
+    </p>
+
+
+    <!-- Firma Colaborador -->
+    <div class="mb-3" id="signature-pad2">
+        <label class="form-label">Firma Colaborador:</label>
+        <canvas class="firma-canva" id="signature-canvas2"></canvas>
+        <div class="button-group">
+            <button type="button" id="clear-signature2" class="btn btn-clear"> <i class="fa-solid fa-trash"></i> Limpiar
+            </button>
+            <button type="button" id="save-signature2" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar
+            </button>
+        </div>
+    </div>
+
+
+    <input type="hidden" id="firma_colaborador" name="firma_colaborador">
+
+    <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+</form>
+
+{%endblock%}
+{%block scripts%}
+<script>
+
+    window.onload = function () {
+        var canvas = document.getElementById('signature-canvas');
+        var signaturePad = new SignaturePad(canvas);
+
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+        }
+
+        window.onresize = resizeCanvas;
+        resizeCanvas();
+
+        document.getElementById('clear-signature').addEventListener('click', function () {
+            signaturePad.clear();
+        });
+
+        document.getElementById('save-signature').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto
+
+            if (signaturePad.isEmpty()) {
+                alert("Por favor, realiza una firma.");
+            } else {
+                var dataURL = signaturePad.toDataURL('image/png');
+                document.getElementById('firma_colaborador').value = dataURL;
+                console.log(document.getElementById('firma_colaborador').value);
+                alert("Firma guardada");
+            }
+        });
+    };
+
+    function showModal(message, callback) {
+        event.preventDefault();
+        document.getElementById('messageModalBody').textContent = message;
+        const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+        messageModal.show();
+
+        const modalElement = document.getElementById('messageModal');
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            if (callback) {
+                callback();
+            }
+        }, { once: true });
+    }
+</script>
+
+<script>
+    window.onload = function () {
+
+
+        // Configuración de la firma del Colaborador
+        var canvas2 = document.getElementById('signature-canvas2');
+        var signaturePad2 = new SignaturePad(canvas2);
+
+        resizeCanvas(canvas2);
+
+        document.getElementById('clear-signature2').addEventListener('click', function () {
+            signaturePad2.clear();
+        });
+
+        document.getElementById('save-signature2').addEventListener('click', function (event) {
+            event.preventDefault();
+
+            if (signaturePad2.isEmpty()) {
+                alert("Por favor, realiza una firma.");
+            } else {
+                var dataURL = signaturePad2.toDataURL('image/png');
+                document.getElementById('firma_colaborador').value = dataURL;
+                alert("Firma del colaborador guardada");
+                console.log('firma cola', dataURL);
+            }
+        });
+
+        // Redimensionar los canvas cuando la ventana cambie de tamaño
+        window.onresize = function () {
+            resizeCanvas(canvas1);
+            resizeCanvas(canvas2);
+        };
+    };
+</script>
+
+{%endblock%}

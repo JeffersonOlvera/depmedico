@@ -1,0 +1,269 @@
+{% extends 'base/base_dashboard.html' %}
+{%block title%}ACC - Consumo Drogas{%endblock%}
+{%block dash_title%}Consumo Drogas{%endblock%}
+{% block actions %}
+<form id="edit-form" action="{{ url_for('droga.cargar') }}" method="POST" style="display: none">
+  <input type="hidden" name="cedula" id="cedula-input" />
+</form>
+<form id="download-form" action="{{ url_for('droga.pdf') }}" method="POST" style="display: none">
+  <input type="hidden" name="cedula" id="cedula-input2" />
+</form>
+<form id="download-form-excel" action="{{ url_for('droga.excel') }}" method="POST" style="display: none">
+  <input type="hidden" name="cedula" id="cedula-input3" />
+</form>
+{%endblock%}
+
+{% block script_api%}
+<script>
+  const registrosPorPagina = 8; // Número de registros por página
+  let datos = [];
+  let datosFiltrados = [];
+  let paginaActual = 1;
+
+  fetch('{{ url_for("droga.listar") }}', {
+    method: 'POST', // Usa el método GET
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          'Error en la respuesta de la API: ' + response.statusText
+        );
+      }
+      return response.json(); // Parsear la respuesta como JSON
+    })
+    .then((data) => {
+      // Aquí procesas los datos recibidos
+      console.log(data); // Muestra los datos en la consola (para depuración)
+      datos = data;
+      datosFiltrados = data; // Inicialmente, los datos filtrados son todos los datos
+      mostrarPagina(paginaActual);
+      actualizarContadores(); // Actualiza los contadores cuando se cargan los datos
+    })
+    .catch((error) => {
+      console.error('Error al consumir la API:', error);
+    });
+</script>
+<script>
+  // Muestra los registros de la página actual
+  function mostrarPagina(pagina) {
+    const tablaCuerpo = document.getElementById('tabla-datos');
+    const pagination = document.getElementById('pagination');
+    tablaCuerpo.innerHTML = ''; // Limpia la tabla
+    pagination.innerHTML = ''; // Limpia la paginación
+
+    // Calcula el índice inicial y final de los registros para la página actual
+    const inicio = (pagina - 1) * registrosPorPagina;
+    const fin = Math.min(
+      inicio + registrosPorPagina,
+      datosFiltrados.length
+    );
+
+    // Agrega filas a la tabla
+    for (let i = inicio; i < fin; i++) {
+      const item = datosFiltrados[i];
+      const fila = document.createElement('tr');
+
+      // Determina la clase del badge según el estado
+      let badgeClass = '';
+      if (item.Status === 'Completada') {
+        badgeClass = 'badge-custom-complete'; // Clase para completada
+      } else if (item.Status === 'Pendiente') {
+        badgeClass = 'badge-custom-pending'; // Clase para pendiente
+      } else {
+        badgeClass = 'badge-custom-pending'; // Clase por defecto
+      }
+
+      // Añade las celdas a la fila
+      fila.innerHTML = `
+            <td>${(item.Nombre || 'N/A').trim()}</td>
+
+            <td >${item.Cedula || 'N/A'}</td>
+            <td class="text-center" > <span class="badge ${badgeClass} rounded-pill px-3 py-2">${item.Status || 'N/A'} </span> </td>
+            <td class="text-center">${new Date(item['Fecha_registro']).toLocaleDateString('es-CL') ||
+        ''
+        }</td>
+            <td class="text-center">
+              ${isNaN(new Date(item['Fecha_actualización']))
+          ? ''
+          : new Date(item['Fecha_actualización']).toLocaleDateString(
+            'es-CL'
+          )
+        }
+            </td>
+
+            <td class="d-flex justify-content-end">
+                <button class="btn btn-primary btn-sm editar-btn me-2" data-cedula="${item.Cedula
+        }" >
+                    <i class="fas fa-edit" style="color: white;"></i> Editar
+                </button>
+                <button class="btn btn-danger btn-sm download-btn me-2" data-cedula="${item.Cedula
+        }" >
+                    <i class="fas fa-file-pdf fa-lg" style="color: white"></i> PDF
+                </button>
+                <button class="btn btn-success btn-sm download-btn-excel" data-cedula="${item.Cedula
+        }" >
+                    <i class="fas fa-file-excel fa-lg" style="color: white"></i> Excel
+                </button>
+            </td>
+
+              `;
+
+      tablaCuerpo.appendChild(fila);
+    }
+
+    // Crea los botones de paginación con límite
+    const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
+    const maxPaginasVisibles = 8; // Número máximo de páginas a mostrar
+
+    // Botón "Anterior"
+    if (pagina > 1) {
+      const anteriorItem = document.createElement('li');
+      anteriorItem.className = 'page-item';
+      anteriorItem.innerHTML = `<a class="page-link" href="#" onclick="mostrarPagina(${pagina - 1})">&laquo; Anterior</a>`;
+      pagination.appendChild(anteriorItem);
+    }
+
+    // Calcula el rango de páginas a mostrar
+    let paginaInicio = Math.max(1, pagina - Math.floor(maxPaginasVisibles / 2));
+    let paginaFin = Math.min(totalPaginas, paginaInicio + maxPaginasVisibles - 1);
+
+    // Ajusta el inicio si estamos cerca del final
+    if (paginaFin - paginaInicio + 1 < maxPaginasVisibles) {
+      paginaInicio = Math.max(1, paginaFin - maxPaginasVisibles + 1);
+    }
+
+    // Botón "Primera página" si no está visible
+    if (paginaInicio > 1) {
+      const primeraItem = document.createElement('li');
+      primeraItem.className = 'page-item';
+      primeraItem.innerHTML = `<a class="page-link" href="#" onclick="mostrarPagina(1)">1</a>`;
+      pagination.appendChild(primeraItem);
+
+      if (paginaInicio > 2) {
+        const puntosItem = document.createElement('li');
+        puntosItem.className = 'page-item disabled';
+        puntosItem.innerHTML = `<span class="page-link">...</span>`;
+        pagination.appendChild(puntosItem);
+      }
+    }
+
+    // Crea los botones de páginas visibles
+    for (let i = paginaInicio; i <= paginaFin; i++) {
+      const paginaItem = document.createElement('li');
+      paginaItem.className = 'page-item' + (i === pagina ? ' active' : '');
+      paginaItem.innerHTML = `<a class="page-link" href="#" onclick="mostrarPagina(${i})">${i}</a>`;
+      pagination.appendChild(paginaItem);
+    }
+
+    // Botón "Última página" si no está visible
+    if (paginaFin < totalPaginas) {
+      if (paginaFin < totalPaginas - 1) {
+        const puntosItem = document.createElement('li');
+        puntosItem.className = 'page-item disabled';
+        puntosItem.innerHTML = `<span class="page-link">...</span>`;
+        pagination.appendChild(puntosItem);
+      }
+
+      const ultimaItem = document.createElement('li');
+      ultimaItem.className = 'page-item';
+      ultimaItem.innerHTML = `<a class="page-link" href="#" onclick="mostrarPagina(${totalPaginas})">${totalPaginas}</a>`;
+      pagination.appendChild(ultimaItem);
+    }
+
+    // Botón "Siguiente"
+    if (pagina < totalPaginas) {
+      const siguienteItem = document.createElement('li');
+      siguienteItem.className = 'page-item';
+      siguienteItem.innerHTML = `<a class="page-link" href="#" onclick="mostrarPagina(${pagina + 1})">Siguiente &raquo;</a>`;
+      pagination.appendChild(siguienteItem);
+    }
+
+    // Agrega el evento click a los botones de editar
+    document.querySelectorAll('.editar-btn').forEach((button) => {
+      button.addEventListener('click', function () {
+        const cedula = this.getAttribute('data-cedula');
+        document.getElementById('cedula-input').value = cedula;
+        document.getElementById('edit-form').submit(); // Envía el formulario
+      });
+    });
+    // Agrega el evento click a los botones de descargar
+    document.querySelectorAll('.download-btn').forEach((button) => {
+      button.addEventListener('click', function () {
+        const cedula = this.getAttribute('data-cedula');
+        document.getElementById('cedula-input2').value = cedula;
+        document.getElementById('download-form').submit(); // Envía el formulario
+      });
+    });
+    // Agrega el evento click a los botones de descargar
+    document.querySelectorAll('.download-btn-excel').forEach((button) => {
+      button.addEventListener('click', function () {
+        const cedula = this.getAttribute('data-cedula');
+        document.getElementById('cedula-input3').value = cedula;
+        document.getElementById('download-form-excel').submit(); // Envía el formulario
+      });
+    });
+  }
+  // Aplica el filtro basado en el estado seleccionado
+  function aplicarFiltro() {
+    const estadoSeleccionado =
+      document.getElementById('filtroEstado').value;
+
+    // Filtra los datos según el estado seleccionado
+    datosFiltrados = estadoSeleccionado
+      ? datos.filter((item) => item.Status === estadoSeleccionado)
+      : datos;
+
+    // Aplica la búsqueda después del filtro
+    aplicarBusqueda();
+  }
+
+  // Aplica la búsqueda basada en el texto ingresado
+  function aplicarBusqueda() {
+    const textoBusqueda = document
+      .getElementById('busqueda')
+      .value.toLowerCase();
+
+    if (textoBusqueda === '') {
+      // Si el campo de búsqueda está vacío, usa los datos filtrados por estado
+      // Aplica la búsqueda solo sobre los datos filtrados por estado
+      datosFiltrados = datos.filter(
+        (item) =>
+          item.Status === document.getElementById('filtroEstado').value ||
+          document.getElementById('filtroEstado').value === ''
+      );
+    } else {
+      // Aplica la búsqueda sobre los datos filtrados por estado
+      datosFiltrados = datosFiltrados.filter(
+        (item) =>
+          item.Cedula.toLowerCase().includes(textoBusqueda) ||
+          item.Nombre.toLowerCase().includes(textoBusqueda)
+      );
+    }
+
+    paginaActual = 1; // Reinicia a la primera página
+    mostrarPagina(paginaActual);
+  }
+  // Agrega event listeners
+  document
+    .getElementById('filtroEstado')
+    .addEventListener('change', aplicarFiltro);
+  document
+    .getElementById('busqueda')
+    .addEventListener('input', aplicarBusqueda);
+
+  // Actualiza el total de registros y los contadores de estado
+  function actualizarContadores() {
+    const totalRegistros = datos.length;
+    const pendientes = datos.filter(
+      (item) => item.Status === 'Pendiente'
+    ).length;
+    const completados = datos.filter(
+      (item) => item.Status === 'Completada'
+    ).length;
+
+    document.getElementById('total-registros').textContent = totalRegistros;
+    document.getElementById('total-pendientes').textContent = pendientes;
+    document.getElementById('total-completados').textContent = completados;
+  }
+</script>
+{%endblock%}

@@ -1,0 +1,82 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{%block ficha_name%}CERTIFICADO OCUPACIONAL - ACC{%endblock%} {%block form %}
+<form method="POST" id="myForm" action="{{ url_for('certificado.guardar') }}">
+    <div class="col-md-12 mb-3">
+        <label for="nombre" class="form-label">Nombre Completo</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" pattern="^[a-zA-Z\s]+$"
+            placeholder="Nombre completo" required value="{{ session['nombreColaborador'] }}" disabled>
+        <div class="form-text">Solo letras y espacios.</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="cedula" class="form-label">Cédula</label>
+            <input type="text" class="form-control" id="cedula" name="cedula" pattern="^\d{10}$"
+                placeholder="0999999999" maxlength="10" value="{{ session['cedula'] }}" disabled required>
+            <div class="form-text">Debe tener exactamente 10 dígitos.</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input type="text" class="form-control" id="edad" name="edad" pattern="^\d+$" placeholder="Edad" required>
+            <div class="form-text">Solo números.</div>
+        </div>
+
+        <!-- <div class="col-md-6 mb-3">
+            <label for="nhc" class="form-label">NHC</label>
+            <input type="text" class="form-control" id="nhc" name="nhc" pattern="^\d+$"
+                placeholder="Número de Historia Clínica" required>
+            <div class="form-text">Solo números.</div>
+        </div> -->
+    </div>
+    <div class="row">
+
+
+        <div class="col-md-6 mb-3">
+            <label for="sexo" class="form-label">Sexo</label>
+            <select class="form-select" id="sexo" name="sexo" required>
+                <option value="">Seleccione el sexo</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="cargo" class="form-label">Cargo</label>
+            <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Cargo del empleado" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="tiempo_cargo" class="form-label">Tiempo en el Cargo</label>
+            <input type="text" class="form-control" id="tiempo_cargo" name="tiempo_cargo"
+                placeholder="Tiempo en el cargo" required>
+        </div>
+    </div>
+    <p>
+        Con este documento certifico que el trabajador se ha sometido a la evaluación medica requerida ingreso periódico
+        retiro para puesto laboral y se ha informado sobre los riesgos relacionados con el trabajo emitiendo
+        recomendaciones con su estado de salud.
+    </p>
+    <div class="col-md-md-12">
+        <div class="signature-pad" id="signature-pad">
+            <label class="form-label">Firma:</label>
+            <canvas id="signature-canvas"></canvas>
+            <div class="btn-group">
+                <button type="button" id="clear-signature" class="btn btn-secondary">
+                    Limpiar
+                </button>
+
+            </div>
+        </div>
+
+        <input type="hidden" id="firma_colaborador" name="firma_colaborador" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+</form>
+{%endblock%}
+{%block scripts%}
+<script src="{{ url_for('static', filename='js/firma_colaborador.js') }}"></script>
+
+{%endblock%}

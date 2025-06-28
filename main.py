@@ -1,0 +1,41 @@
+# main.py
+import logging
+from app.core.utils.logging import setup_logging
+from flask import Flask, redirect, url_for
+from app.core.auth.cotrollers import auth_routes
+from app.colaborador.colaborador_routes import colaborador_routes
+from app.ocupacional.ocupacional_routes import ocupacional_routes
+from app.preocupacional.preocupacional_routes import preocupacional_routes
+from app.seguimiento.seguimiento_routes import seguimiento_routes
+from app.drogas.drogas_routes import drogas_routes
+from app.consentimiento.consentimiento_routes import consentimiento_routes
+from app.certificado.certificado_routes import certificado_routes
+
+
+def create_app():
+    app = Flask(__name__)
+    app.secret_key = 'tu_clave_secreta'
+    setup_logging(app, log_level=logging.DEBUG)
+
+    # Registrar blueprints
+    app.register_blueprint(auth_routes, url_prefix='/')
+    
+    app.register_blueprint(colaborador_routes, url_prefix='/colaborador')
+    app.register_blueprint(ocupacional_routes, url_prefix='/ocupacional')
+    app.register_blueprint(preocupacional_routes, url_prefix='/preocupacional')
+    app.register_blueprint(seguimiento_routes, url_prefix='/seguimiento')
+    app.register_blueprint(drogas_routes, url_prefix='/drogas')
+    app.register_blueprint(consentimiento_routes, url_prefix='/consentimiento')
+    app.register_blueprint(certificado_routes, url_prefix='/certificado')
+
+    # Manejador de error 404
+    @app.errorhandler(404)
+    def pagina_no_encontrada(e):
+        return redirect(url_for('auth.login'))  # Cambia 'auth.login' por la vista deseada
+
+    
+    return app
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=True)

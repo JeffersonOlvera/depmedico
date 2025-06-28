@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}FICHA OCUPACION DE COLABORADOR/ DOC - ACC{%endblock%}</title>
+    <!-- Bootstrap CSS -->
+    <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/static/img/logo-min.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script> -->
+
+
+    <style>
+        :root {
+            --blue: #0d6efd
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #ffffff;
+            /* Cambia esto al color de fondo deseado */
+        }
+
+        header {
+            background-color: var(--blue);
+            /* Rojo Claro */
+            color: #ffffff;
+            /* Blanco */
+
+            text-align: left;
+        }
+
+        .brand-logo {
+            height: auto;
+            margin-top: 20px;
+            /* Ajusta el margen superior si es necesario */
+        }
+
+        .login-container {
+            min-height: calc(100vh - 60px);
+            /* Ajusta esto para tomar en cuenta la altura del header */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Sombra suave para el contenedor */
+            width: 100%;
+            /* Ajusta según la anchura deseada */
+            max-width: 400px;
+            /* Máxima anchura del contenedor */
+        }
+
+        .login-button {
+            background-color: #ff0000;
+            /* Rojo Claro */
+            border-color: #ff0000;
+            /* Para mantener el color al hacer hover */
+        }
+
+        .login-button:hover {
+            background-color: #e60000;
+            /* Un rojo ligeramente más oscuro al hacer hover */
+        }
+
+        .firma-canva {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+        }
+
+        .a {
+            text-align: center;
+            display: flex;
+        }
+
+        .header-row {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        #suggestions {
+            border: 1px solid #ccc;
+            display: none;
+            position: absolute;
+            background-color: white;
+            z-index: 1000;
+        }
+
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* CSS para hacer el botón sticky */
+        .sticky-menu {
+            position: sticky;
+            top: 0;
+            right: 0;
+            /* Coloca el contenedor en la derecha */
+            z-index: 1000;
+            /* Asegúrate de que esté por encima de otros elementos */
+            background-color: #ffffff;
+            /* Fondo blanco o el color que prefieras */
+            padding: 15px;
+            /* Añadir algo de espacio alrededor del botón */
+            text-align: right;
+            /* Alinea el contenido (botón) a la derecha */
+        }
+
+        .btn-clear {
+            background-color: #dc3545;
+            /* Rojo */
+            color: white;
+
+        }
+
+        div label:first-child {
+            font-weight: 500;
+        }
+
+
+        #signature-canvas {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<header class="text-center">
+    <img src="{{ url_for('static', filename='img/logo.svg') }}" title="Logo Acc"
+        alt="Logo Acc" class="img-fluid" style="max-width: 150px;" />
+</header>
+
+<!-- Menú sticky para navegación -->
+<div class="sticky-top bg-light py-2">
+    <div class="container d-flex justify-content-between">
+        <a href="{{ url_for('colaborador.home') }}" class="btn btn-primary">
+            Menú Principal
+        </a>
+        <a href="#final" class="btn btn-secondary">
+            Ir al final
+        </a>
+    </div>
+</div>
+
+<!-- Contenido principal con formulario responsivo -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <h2 class="mb-4 text-center">{% block ficha_name %}FICHA PREOCUPACIONAL - ACC{% endblock %}</h2>
+            {% block form %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{%block scripts%}
+{%endblock%}
+<footer id="final">
+</footer>
+<!-- Bootstrap JS y tus scripts personalizados -->
+<script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+
+
+
+</body>
+
+</html>

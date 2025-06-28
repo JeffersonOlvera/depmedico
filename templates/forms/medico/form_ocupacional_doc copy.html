@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FICHA OCUPACIONAL</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Tu hoja de estilos personalizada -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #ffffff;
+            /* Cambia esto al color de fondo deseado */
+        }
+
+        .header {
+            background-color: #0d6efd;
+            /* Rojo Claro */
+            color: #ffffff;
+            /* Blanco */
+            padding: 20px;
+            text-align: left;
+        }
+
+        .brand-logo {
+            height: auto;
+            margin-top: 20px;
+            /* Ajusta el margen superior si es necesario */
+        }
+
+        .login-container {
+            min-height: calc(100vh - 60px);
+            /* Ajusta esto para tomar en cuenta la altura del header */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Sombra suave para el contenedor */
+            width: 100%;
+            /* Ajusta según la anchura deseada */
+            max-width: 400px;
+            /* Máxima anchura del contenedor */
+        }
+
+        .login-button {
+            background-color: #ff0000;
+            /* Rojo Claro */
+            border-color: #ff0000;
+            /* Para mantener el color al hacer hover */
+        }
+
+        .login-button:hover {
+            background-color: #e60000;
+            /* Un rojo ligeramente más oscuro al hacer hover */
+        }
+
+        .firma-canva {
+            border: 1px solid #000;
+            border-radius: 5px;
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+        }
+
+        .a {
+            text-align: center;
+            display: flex;
+        }
+
+        .header-row {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        #suggestions {
+            border: 1px solid #ccc;
+            display: none;
+            position: absolute;
+            background-color: white;
+            z-index: 1000;
+        }
+
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* CSS para hacer el botón sticky */
+        .sticky-menu {
+            position: sticky;
+            top: 0;
+            right: 0;
+            /* Coloca el contenedor en la derecha */
+            z-index: 1000;
+            /* Asegúrate de que esté por encima de otros elementos */
+            background-color: #ffffff;
+            /* Fondo blanco o el color que prefieras */
+            padding: 10px;
+            /* Añadir algo de espacio alrededor del botón */
+            text-align: right;
+            /* Alinea el contenido (botón) a la derecha */
+        }
+
+        .btn-clear {
+            background-color: #dc3545;
+            /* Rojo */
+            color: white;
+
+        }
+    </style>
+</head>
+
+<div class="header">
+    <div class="header">
+        <a href="{{ url_for('auth.home') }}">
+            <img src="https://intranet.americancallcenter.com/wp-content/uploads/2021/11/LOGO-ACC_cclaros.svg" title="Logo Acc"
+        alt="Logo Acc" class="img-fluid" style="max-width: 150px;" />
+        </a>
+    </div>
+</div>
+<!--Botón para volver al menú del colaborador-->
+<div class="sticky-menu">
+    <a href="{{ url_for('auth.home') }}" class="btn btn-primary">Menú Principal</a>
+</div>
+
+
+<div class="container my-5">
+    <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+    <!-- Mostrar mensajes flash aquí -->
+    <h2 class="mb-4">FICHA OCUPACIONAL - ACC</h2>
+
+    <p>Su ayuda con los siguientes datos:</p>
+    <form method="POST" action="{{ url_for('ocupacional.actualizar')}}">
+
+        <div class="row">
+            <div class="col-md-6">
+                <p>1. DATOS DE FILIACION</p>
+                <!-- FECHA -->
+                <div class="mb-3">
+                    <label for="fecha" class="form-label">Fecha Actual:</label>
+                    <input type="date" class="form-control {% if errores.get('fecha') %}is-invalid{% endif %}"
+                        id="fecha" name="fecha" value="{{ form_data.get('Fecha_registro', Fecha_registro | default('')) }}" required>
+                    {% if errores.get('fecha') %}
+                    <div class="invalid-feedback">{{ errores['fecha'] }}</div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Número cedula -->
+                <div class="mb-3">
+                    <label for="ci_colaborador" class="form-label">Número de Cédula*</label>
+                    <input type="text" class="form-control {% if errores.get('ci_colaborador') %}is-invalid{% endif %}"
+                        id="ci_colaborador" name="ci_colaborador"
+                        value="{{ form_data.get('Ci_colaborador', Ci_colaborador | default('')) }}" readonly
+                        pattern="^\d{10}$" title="La cédula debe tener exactamente 10 dígitos" required>
+                    {% if errores.get('ci_colaborador') %}
+                    <div class="invalid-feedback">{{ errores['ci_colaborador'] }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Nombre del cliente -->
+                <div class="mb-3">
+                    <label for="nombre_colaborador" class="form-label">Nombres completos:</label>
+                    <input readonly type="text"
+                        class="form-control {% if errores.get('nombre_colaborador') %}is-invalid{% endif %}"
+                        id="nombre_colaborador" name="nombre_colaborador"
+                        value="{{ form_data.get('Nombre_colaborador', Nombre_colaborador | default('')) }}" required>
+                    {% if errores.get('nombre_colaborador') %}
+                    <div class="invalid-feedback">{{ errores['nombre_colaborador'] }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- EDAD -->
+                <div class="mb-3">
+                    <label for="edad" class="form-label">Edad*</label>
+                    <input type="number" class="form-control {% if errores.get('edad') %}is-invalid{% endif %}"
+                        id="edad" name="edad" value="{{ form_data.get('Edad', Edad | default('')) }}" required>
+                    {% if errores.get('edad') %}
+                    <div class="invalid-feedback">{{ errores['edad'] }}</div>
+                    {% endif %}
+                </div>
+
+
+                <!-- TSEXO -->
+                <div class="mb-3">
+                    <label for="sexo" class="form-label">Sexo:</label>
+                    <select class="form-control" id="sexo" name="sexo">
+                        <option value="MASCULINO" {{ 'selected' if form_data.get('Sexo', Sexo | default(''))=='MASCULINO' else '' }}>MASCULINO</option>
+                        <option value="FEMENINO" {{ 'selected' if form_data.get('Sexo', Sexo | default(''))=='FEMENINO' else '' }}>FEMENINO</option>
+                    </select>
+                </div>
+
+                <!-- cargo -->
+                <div class="mb-3">
+                    <label for="cargo" class="form-label">Cargo:</label>
+                    <input type="text" class="form-control {% if errores.get('cargo') %}is-invalid{% endif %}"
+                        id="cargo" name="cargo" value="{{ form_data.get('Cargo', Cargo | default('')) }}" required>
+                    {% if errores.get('cargo') %}
+                    <div class="invalid-feedback">{{ errores['cargo'] }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Tiempo Cargo -->
+                <div class="mb-3">
+                    <label for="tiempo_cargo" class="form-label">Tiempo de cargo:</label>
+                    <input type="text" class="form-control {% if errores.get('tiempo_cargo') %}is-invalid{% endif %}"
+                        id="tiempo_cargo" name="tiempo_cargo"
+                        value="{{ form_data.get('Tiempo_cargo', Tiempo_cargo | default('')) }}" required>
+                    {% if errores.get('tiempo_cargo') %}
+                    <div class="invalid-feedback">{{ errores['tiempo_cargo'] }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- ANTECENDENTES -->
+                <div class="mb-3">
+                    <p>ANTECEDENTES PERSONALES</p>
+                    <label for="antecep_clinicos" class="form-label">Clínicos/ Quirurgicos:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('antecep_clinicos') %}is-invalid{% endif %}"
+                        id="antecep_clinicos" name="antecep_clinicos"
+                        value="{{ form_data.get('antecep_clinicos', antecep_clinicos | default('')) }}" required>
+                    {% if errores.get('antecep_clinicos') %}
+                    <div class="invalid-feedback">{{ errores['antecep_clinicos'] }}</div>
+                    {% endif %}
+
+
+                    <label for="act_fisica" class="form-label">Actividad Fisica:</label>
+                    <select class="form-control" id="act_fisica" name="act_fisica"
+                        onchange="handleStatusChangeactfisic()">
+                        <option value="SI" {{ 'selected' if form_data.get('act_fisica', act_fisica | default(''))=='SI'
+                            else '' }}>SI</option>
+                        <option value="NO" {{ 'selected' if form_data.get('act_fisica', act_fisica | default(''))=='NO'
+                            else '' }}>NO</option>
+                    </select>
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_actfisic" style="display: none;">
+                        <label for="act_fisica_obser" class="form-label">Cual: (Actividad Fisica)</label>
+                        <input type="text"
+                            class="form-control {% if errores.get('act_fisica_obser') %}is-invalid{% endif %}"
+                            id="act_fisica_obser" name="act_fisica_obser"
+                            value="{{ form_data.get('act_fisica_obser', act_fisica_obser | default('')) }}" required>
+                        {% if errores.get('act_fisica_obser') %}
+                        <div class="invalid-feedback">{{ errores['act_fisica_obser'] }}</div>
+                        {% endif %}
+                    </div>
+                    <script>
+                        function handleStatusChangeactfisic() {
+                            var act_fisica = document.getElementById('act_fisica').value;
+                            var additionalField_motivo_actfisic = document.getElementById('additionalField_motivo_actfisic');
+                            if (act_fisica === 'SI') {
+                                additionalField_motivo_actfisic.style.display = 'block';
+                                document.getElementById('act_fisica_obser').setAttribute('required', '');
+                                // Mostrar cuando NEGADO
+                            } else {
+                                additionalField_motivo_actfisic.style.display = 'none';
+                                document.getElementById('act_fisica_obser').removeAttribute('required');
+                                // Ocultar en cualquier otro caso
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeactfisic();
+                        });
+                    </script>
+
+                    <label for="medi_actual" class="form-label">Medicacion Actual:</label>
+                    <select class="form-control" id="medi_actual" name="medi_actual"
+                        onchange="handleStatusChangemediactual()">
+                        <option value="SI" {{ 'selected' if form_data.get('medi_actual', medi_actual |
+                            default(''))=='SI' else '' }}>SI</option>
+                        <option value="NO" {{ 'selected' if form_data.get('medi_actual', medi_actual |
+                            default(''))=='NO' else '' }}>NO</option>
+                    </select>
+
+
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_mediactual" style="display: none;">
+                        <label for="medi_actual_obser" class="form-label">Cual: (Medicacion Actual)</label>
+                        <input type="text"
+                            class="form-control {% if errores.get('medi_actual_obser') %}is-invalid{% endif %}"
+                            id="medi_actual_obser" name="medi_actual_obser"
+                            value="{{ form_data.get('medi_actual_obser', medi_actual_obser | default('')) }}" required>
+
+                    </div>
+                    <script>
+                        function handleStatusChangemediactual() {
+                            var medi_actual = document.getElementById('medi_actual').value;
+                            var additionalField_motivo_mediactual = document.getElementById('additionalField_motivo_mediactual');
+                            if (medi_actual === 'SI') {
+                                additionalField_motivo_mediactual.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('medi_actual_obser').setAttribute('required', '');
+
+                            } else {
+                                additionalField_motivo_mediactual.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('medi_actual_obser').removeAttribute('required');
+                            }
+
+
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangemediactual();
+                        });
+                    </script>
+
+                    <label for="alcohol" class="form-label">Alcohol:</label>
+                    <select class="form-control" id="alcohol" name="alcohol" onchange="handleStatusChangeAlcohol()">
+                        <option value="SI" {{ 'selected' if form_data.get('alcohol', alcohol | default(''))=='SI'
+                            else '' }}>SI</option>
+                        <option value="NO" {{ 'selected' if form_data.get('alcohol', alcohol | default(''))=='NO'
+                            else '' }}>NO</option>
+                    </select>
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_Alcohol" style="display: none;">
+                        <label for="alcohol_obser" class="form-label">Cual: (Alcohol)</label>
+                        <input type="text" class="form-control " id="alcohol_obser" name="alcohol_obser"
+                            value="{{ form_data.get('alcohol_obser', alcohol_obser | default('')) }}">
+
+                    </div>
+                    <script>
+                        function handleStatusChangeAlcohol() {
+                            var alcohol = document.getElementById('alcohol').value;
+                            var additionalField_motivo_Alcohol = document.getElementById('additionalField_motivo_Alcohol');
+                            if (alcohol === 'SI') {
+                                additionalField_motivo_Alcohol.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('alcohol_obser').setAttribute('required', '');
+                            } else {
+                                additionalField_motivo_Alcohol.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('alcohol_obser').removeAttribute('required');
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeAlcohol();
+                        });
+                    </script>
+
+                    <label for="tabaco" class="form-label">tabaco:</label>
+                    <select class="form-control" id="tabaco" name="tabaco" onchange="handleStatusChangeTabaco()">
+                        <option value="SI" {{ 'selected' if form_data.get('tabaco', tabaco | default(''))=='SI' else ''
+                            }}>SI</option>
+                        <option value="NO" {{ 'selected' if form_data.get('tabaco', tabaco | default(''))=='NO' else ''
+                            }}>NO</option>
+                    </select>
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_Tabaco" style="display: none;">
+                        <label for="tabaco_obser" class="form-label">Cual: (tabaco)</label>
+                        <input type="text"
+                            class="form-control {% if errores.get('tabaco_obser') %}is-invalid{% endif %}"
+                            id="tabaco_obser" name="tabaco_obser"
+                            value="{{ form_data.get('tabaco_obser', tabaco_obser | default('')) }}" required>
+                        {% if errores.get('tabaco_obser') %}
+                        <div class="invalid-feedback">{{ errores['tabaco_obser'] }}</div>
+                        {% endif %}
+                    </div>
+                    <script>
+                        function handleStatusChangeTabaco() {
+                            var tabaco = document.getElementById('tabaco').value;
+                            var additionalField_motivo_Tabaco = document.getElementById('additionalField_motivo_Tabaco');
+                            if (tabaco === 'SI') {
+                                additionalField_motivo_Tabaco.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('tabaco_obser').setAttribute('required', '');
+                            } else {
+                                additionalField_motivo_Tabaco.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('tabaco_obser').removeAttribute('required');
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeTabaco();
+                        });
+                    </script>
+                    <!-- OTROS -->
+                    <label for="otros" class="form-label">Otros:</label>
+                    <select class="form-control" id="otros" name="otros" onchange="handleStatusChangeotros()">
+                        <option value="SI" {{ 'selected' if form_data.get('otros', otros | default(''))=='SI' else ''
+                            }}>SI</option>
+                        <option value="NO" {{ 'selected' if form_data.get('otros', otros | default(''))=='NO' else ''
+                            }}>NO</option>
+                    </select>
+
+                    <!-- MOTIVO OTROS -->
+                    <div id="additionalField_motivo_otros" style="display: none;">
+                        <label for="otros_obser" class="form-label">Cual: (Otros)</label>
+                        <input type="text" class="form-control {% if errores.get('otros_obser') %}is-invalid{% endif %}"
+                            id="otros_obser" name="otros_obser"
+                            value="{{ form_data.get('otros_obser', otros_obser | default('')) }}" required>
+                        {% if errores.get('otros_obser') %}
+                        <div class="invalid-feedback">{{ errores['otros_obser'] }}</div>
+                        {% endif %}
+                    </div>
+                    <script>
+                        function handleStatusChangeotros() {
+                            var otros = document.getElementById('otros').value;
+                            var additionalField_motivo_otros = document.getElementById('additionalField_motivo_otros');
+                            if (otros === 'SI') {
+                                additionalField_motivo_otros.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('otros_obser').setAttribute('required', '');
+                            } else {
+                                additionalField_motivo_otros.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('otros_obser').removeAttribute('required');
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeotros();
+                        });
+                    </script>
+                </div>
+
+                <!-- Estatus -->
+                <div class="mb-3">
+                    <p>INFORMACION OCUPACIONAL</p>
+                    <label for="incidente_trabajo" class="form-label">Incidente de trabajo:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('incidente_trabajo') %}is-invalid{% endif %}"
+                        id="incidente_trabajo" name="incidente_trabajo"
+                        value="{{ form_data.get('incidente_trabajo', incidente_trabajo | default('')) }}" required>
+                    {% if errores.get('incidente_trabajo') %}
+                    <div class="invalid-feedback">{{ errores['incidente_trabajo'] }}</div>
+                    {% endif %}
+
+                    <label for="accidente_trabajo" class="form-label">Accidente de trabajo:</label>
+                    <select class="form-control" id="accidente_trabajo" name="accidente_trabajo"
+                        onchange="handleStatusChange1()">
+                        <option value="SI" {{ 'selected' if form_data.get('accidente_trabajo', estatus |
+                            default(''))=='SI' else '' }}>SI</option>
+                        <option value="NO" {{ 'selected' if form_data.get('accidente_trabajo', estatus |
+                            default(''))=='NO' else '' }}>NO</option>
+                    </select>
+
+
+
+                </div>
+
+                <div id="additionalField1" style="display: none;">
+                    <label for="accidente_trabajo_calif" class="form-label">Descripcion del accidente de trabajo
+                        :</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('accidente_trabajo_calif') %}is-invalid{% endif %}"
+                        id="accidente_trabajo_calif" name="accidente_trabajo_calif"
+                        value="{{ form_data.get('accidente_trabajo_calif', accidente_trabajo_calif | default('')) }}"
+                        required>
+                    {% if errores.get('accidente_trabajo_calif') %}
+                    <div class="invalid-feedback">{{ errores['accidente_trabajo_calif'] }}</div>
+                    {% endif %}
+                    <label for="accidente_trabajo_fecha" class="form-label">Fecha del Accidente:</label>
+                    <input type="date"
+                        class="form-control {% if errores.get('accidente_trabajo_fecha') %}is-invalid{% endif %}"
+                        id="accidente_trabajo_fecha" name="accidente_trabajo_fecha"
+                        value="{{ form_data.get('accidente_trabajo_fecha', fecha_ingreso | default('')) }}" required>
+                    {% if errores.get('accidente_trabajo_fecha') %}
+                    <div class="invalid-feedback">{{ errores['accidente_trabajo_fecha'] }}</div>
+                    {% endif %}
+                </div>
+                <script>
+                    function handleStatusChange1() {
+                        var status1 = document.getElementById('accidente_trabajo').value;
+                        var additionalField1 = document.getElementById('additionalField1');
+                        if (status1 === 'SI') {
+                            additionalField1.style.display = 'block'; // Mostrar cuando NEGADO
+                            document.getElementById('accidente_trabajo_calif').setAttribute('required', '');
+                            document.getElementById('accidente_trabajo_fecha').setAttribute('required', '');
+                        } else {
+                            additionalField1.style.display = 'none'; // Ocultar en cualquier otro caso
+                            document.getElementById('accidente_trabajo_calif').removeAttribute('required');
+                            document.getElementById('accidente_trabajo_fecha').removeAttribute('required');
+                        }
+                    }
+
+                    // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                    document.addEventListener('DOMContentLoaded', function () {
+                        handleStatusChange1();
+                    });
+                </script>
+
+
+                <div class="mb-3">
+                    <label for="enfermedad_prof" class="form-label">Enfermedad profesional:</label>
+                    <select class="form-control" id="enfermedad_prof" name="enfermedad_prof"
+                        onchange="handleStatusChange2()">
+                        <option value="SI" {{ 'selected' if form_data.get('enfermedad_prof', estatus |
+                            default(''))=='SI' else '' }}>SI</option>
+                        <option value="NO" {{ 'selected' if form_data.get('enfermedad_prof', estatus |
+                            default(''))=='NO' else '' }}>NO</option>
+                    </select>
+                </div>
+
+                <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                <div id="additionalField2" style="display: none;">
+                    <label for="enfermedad_prof_calif" class="form-label">Descripcion de la Enfermedad
+                        profesional:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('enfermedad_prof_calif') %}is-invalid{% endif %}"
+                        id="enfermedad_prof_calif" name="enfermedad_prof_calif"
+                        value="{{ form_data.get('enfermedad_prof_calif', enfermedad_prof_calif | default('')) }}"
+                        required>
+                    {% if errores.get('enfermedad_prof_calif') %}
+                    <div class="invalid-feedback">{{ errores['enfermedad_prof_calif'] }}</div>
+                    {% endif %}
+                    <label for="enfermedad_prof_fecha" class="form-label">Fecha de la Enfermedad profesional:</label>
+                    <input type="date"
+                        class="form-control {% if errores.get('enfermedad_prof_fecha') %}is-invalid{% endif %}"
+                        id="enfermedad_prof_fecha" name="enfermedad_prof_fecha"
+                        value="{{ form_data.get('enfermedad_prof_fecha', fecha_ingreso | default('')) }}" required>
+                    {% if errores.get('enfermedad_prof_fecha') %}
+                    <div class="invalid-feedback">{{ errores['enfermedad_prof_fecha'] }}</div>
+                    {% endif %}
+                </div>
+
+                <script>
+                    function handleStatusChange2() {
+                        var status2 = document.getElementById('enfermedad_prof').value;
+                        var additionalField2 = document.getElementById('additionalField2');
+                        if (status2 === 'SI') {
+                            additionalField2.style.display = 'block'; // Mostrar cuando NEGADO
+                            document.getElementById('enfermedad_prof_calif').setAttribute('required', '');
+                            document.getElementById('enfermedad_prof_fecha').setAttribute('required', '');
+                        } else {
+                            additionalField2.style.display = 'none'; // Ocultar en cualquier otro caso
+                            document.getElementById('enfermedad_prof_calif').removeAttribute('required');
+                            document.getElementById('enfermedad_prof_fecha').removeAttribute('required');
+                        }
+                    }
+
+                    // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                    document.addEventListener('DOMContentLoaded', function () {
+                        handleStatusChange2();
+                    });
+                </script>
+
+                <!-- Antecedentes Familiares -->
+                <div class="mb-3">
+                    <label class="form-label">Antecedentes Familiares:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_cardio_vas" name="antecf_cardio_vas"
+                            value="X" {% if form_data.get('antecf_cardio_vas')=='Sí' or
+                            form_data.get('antecf_cardio_vas')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="antecf_cardio_vas">Cardio-vascular</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_metabotica" name="antecf_metabotica"
+                            value="X" {% if form_data.get('antecf_metabotica')=='Sí' or
+                            form_data.get('antecf_metabotica')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="antecf_metabotica">Metabólica</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_neurologica"
+                            name="antecf_neurologica" value="X" {% if form_data.get('antecf_neurologica')=='Sí' or
+                            form_data.get('antecf_neurologica')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="antecf_neurologica">Neurológica</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_oncologica" name="antecf_oncologica"
+                            value="X" {% if form_data.get('antecf_oncologica')=='Sí' or
+                            form_data.get('antecf_oncologica')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="antecf_oncologica">Oncológica</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_infecciosa" name="antecf_infecciosa"
+                            value="X" {% if form_data.get('antecf_infecciosa')=='Sí' or
+                            form_data.get('antecf_infecciosa')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="antecf_infecciosa">Infecciosa</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_hereditario"
+                            name="antecf_hereditario" value="X" {% if form_data.get('antecf_hereditario')=='Sí' or
+                            form_data.get('antecf_hereditario')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="antecf_hereditario">Hereditaria</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="antecf_observacion" class="form-label">Observación</label>
+                        <input class="form-control {% if errores.get('antecf_observacion') %}is-invalid{% endif %}"
+                            name="antecf_observacion" id="antecf_observacion" rows="2"
+                            value="{{ form_data.get('antecf_observacion', antecf_observacion | default('')) }}">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">6. FACTORES DE RIESGOS DEL PUESTO DE TRABAJO:</label>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Seleccionar</th>
+                                <th>Si</th>
+                                <th>Seleccionar</th>
+                                <th>Si</th>
+                                <th>Seleccionar</th>
+                                <th>Si</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ruido</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_ruido"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_ruido')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_ruido')=='X' %}checked{% endif %}></td>
+                                <td>Polvos</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_polvos"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_polvos')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_polvos')=='X' %}checked{% endif %}></td>
+                                <td>Alta respons.</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_alta_respo"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_alta_respo')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_alta_respo')=='X' %}checked{% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Iluminacion</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_iluminacion"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_iluminacion')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_iluminacion')=='X' %}checked{% endif %}></td>
+                                <td>Líquidos</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_liquidos"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_liquidos')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_liquidos')=='X' %}checked{% endif %}></td>
+                                <td>Conflicto de Rol</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_conflic_rol"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_conflic_rol')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_conflic_rol')=='X' %}checked{% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Ventilacion</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_ventilacion"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_ventilacion')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_ventilacion')=='X' %}checked{% endif %}></td>
+                                <td>Virus/Bacterias</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_virus"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_virus')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_virus')=='X' %}checked{% endif %}></td>
+                                <td>Sobrecarga lab.</td>
+                                <td><input class="form-check-input" type="checkbox"
+                                        name="fact_risg_trabajo_sobrecarga_lab" value="X" {% if
+                                        form_data.get('fact_risg_trabajo_sobrecarga_lab')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_sobrecarga_lab')=='X' %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Caídas mismo nivel</td>
+                                <td><input class="form-check-input" type="checkbox"
+                                        name="fact_risg_trabajo_caidas_mismonivel" value="X" {% if
+                                        form_data.get('fact_risg_trabajo_caidas_mismonivel')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_caidas_mismonivel')=='X' %}checked{% endif %}>
+                                </td>
+                                <td>Posturas Forz.</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_posturas"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_posturas')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_posturas')=='X' %}checked{% endif %}></td>
+                                <td>Inestabilidad lab.</td>
+                                <td><input class="form-check-input" type="checkbox"
+                                        name="fact_risg_trabajo_inestabilidad_lab" value="X" {% if
+                                        form_data.get('fact_risg_trabajo_inestabilidad_lab')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_inestabilidad_lab')=='X' %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Atropellamientos por vehículos</td>
+                                <td><input class="form-check-input" type="checkbox"
+                                        name="fact_risg_trabajo_atropellamiento_vehi" value="X" {% if
+                                        form_data.get('fact_risg_trabajo_atropellamiento_vehi')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_atropellamiento_vehi')=='X' %}checked{% endif
+                                        %}></td>
+                                <td>Movimientos Repetitivos</td>
+                                <td><input class="form-check-input" type="checkbox"
+                                        name="fact_risg_trabajo_mov_repetitivo" value="X" {% if
+                                        form_data.get('fact_risg_trabajo_mov_repetitivo')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_mov_repetitivo')=='X' %}checked{% endif %}>
+                                </td>
+                                <td>Relaciones Interper.</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_rela_interp"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_rela_interp')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_rela_interp')=='X' %}checked{% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Caídas Desnivel</td>
+                                <td><input class="form-check-input" type="checkbox"
+                                        name="fact_risg_trabajo_caidas_desnivel" value="X" {% if
+                                        form_data.get('fact_risg_trabajo_caidas_desnivel')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_caidas_desnivel')=='X' %}checked{% endif %}>
+                                </td>
+                                <td>Monotomia</td>
+                                <td><input class="form-check-input" type="checkbox" name="fact_risg_trabajo_monotomia"
+                                        value="X" {% if form_data.get('fact_risg_trabajo_monotomia')=='Sí' or
+                                        form_data.get('fact_risg_trabajo_monotomia')=='X' %}checked{% endif %}></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">7. SSO:</label>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="bold-text">Seleccionar</th>
+                                <th>SI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Salud Mental (Actividades)</td>
+                                <td><input class="form-check-input" type="checkbox" name="sso_salud_mental" value="X" {%
+                                        if form_data.get('sso_salud_mental')=='Sí' or
+                                        form_data.get('sso_salud_mental')=='X' %}checked{% endif %}
+                                        onclick="toggleCheckbox(this, 'sso_salud_mental')"></td>
+                            </tr>
+                            <tr>
+                                <td>Riesgos Laborales</td>
+                                <td><input class="form-check-input" type="checkbox" name="sso_riesgo_lab" value="X" {%
+                                        if form_data.get('sso_riesgo_lab')=='Sí' or form_data.get('sso_riesgo_lab')=='X'
+                                        %}checked{% endif %} onclick="toggleCheckbox(this, 'sso_riesgo_lab')"></td>
+                            </tr>
+                            <tr>
+                                <td>Pausas Activas</td>
+                                <td><input class="form-check-input" type="checkbox" name="sso_pausas_activas" value="X"
+                                        {% if form_data.get('sso_pausas_activas')=='Sí' or
+                                        form_data.get('sso_pausas_activas')=='X' %}checked{% endif %}
+                                        onclick="toggleCheckbox(this, 'sso_pausas_activas')"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Inmunización -->
+                <div class="mb-3">
+                    <label class="form-label">8. Inmunización:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inmuni_influenza" name="inmuni_influenza"
+                            value="X" {% if form_data.get('inmuni_influenza')=='Sí' or
+                            form_data.get('inmuni_influenza')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="inmuni_influenza">Influenza</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inmuni_tetano" name="inmuni_tetano"
+                            value="X" {% if form_data.get('inmuni_tetano')=='Sí' or form_data.get('inmuni_tetano')=='X'
+                            %}checked{% endif %}>
+                        <label class="form-check-label" for="inmuni_tetano">Tétano</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inmuni_hepatitisB" name="inmuni_hepatitisB"
+                            value="X" {% if form_data.get('inmuni_hepatitisB')=='Sí' or
+                            form_data.get('inmuni_hepatitisB')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="inmuni_hepatitisB">Hepatitis B</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inmuni_coviddosis" class="form-label">COVID Dosis #:</label>
+                        <input type="number" class="form-control" id="inmuni_coviddosis" name="inmuni_coviddosis"
+                            value="{{ form_data.get('inmuni_coviddosis', inmuni_coviddosis | default('')) }}">
+                    </div>
+                </div>
+
+                <!-- Antecedentes Familiares -->
+                <div class="mb-3">
+                    <label class="form-label">9. ORGANOS Y SISTEMAS:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_piel_anexo"
+                            name="organosysis_piel_anexo" value="X" {% if form_data.get('organosysis_piel_anexo')=='Sí'
+                            or form_data.get('organosysis_piel_anexo')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_piel_anexo">Piel y anexo</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_genito_urinario"
+                            name="organosysis_genito_urinario" value="X" {% if
+                            form_data.get('organosysis_piel_anexo')=='Sí' or
+                            form_data.get('organosysis_piel_anexo')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_genito_urinario">Genito-urinario</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_respiratorio"
+                            name="organosysis_respiratorio" value="X" {% if
+                            form_data.get('organosysis_respiratorio')=='Sí' or
+                            form_data.get('organosysis_respiratorio')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_respiratorio">Respiratorio</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_endocrino"
+                            name="organosysis_endocrino" value="X" {% if form_data.get('organosysis_endocrino')=='Sí' or
+                            form_data.get('organosysis_endocrino')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_endocrino">Endocrino</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_digestivo"
+                            name="organosysis_digestivo" value="X" {% if form_data.get('organosysis_digestivo')=='Sí' or
+                            form_data.get('organosysis_digestivo')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_digestivo">Digestivo</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_nervioso"
+                            name="organosysis_nervioso" value="X" {% if form_data.get('organosysis_nervioso')=='Sí' or
+                            form_data.get('organosysis_nervioso')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_nervioso">Nervioso</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_musculo_esqueletico"
+                            name="organosysis_musculo_esqueletico" value="X" {% if
+                            form_data.get('organosysis_musculo_esqueletico')=='Sí' or
+                            form_data.get('organosysis_musculo_esqueletico')=='X' %}checked{% endif %}>
+                        <label class="form-check-label"
+                            for="organosysis_musculo_esqueletico">Musculo-esqueletico</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_cardiovascular"
+                            name="organosysis_cardiovascular" value="X" {% if
+                            form_data.get('organosysis_cardiovascular')=='Sí' or
+                            form_data.get('organosysis_cardiovascular')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_cardiovascular">Cardio-Vascular</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_hemolinf"
+                            name="organosysis_hemolinf" value="X" {% if form_data.get('organosysis_hemolinf')=='Sí' or
+                            form_data.get('organosysis_hemolinf')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_hemolinf">Hemolinf.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="organosysis_orgsentidos"
+                            name="organosysis_orgsentidos" value="X" {% if
+                            form_data.get('organosysis_orgsentidos')=='Sí' or
+                            form_data.get('organosysis_orgsentidos')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="organosysis_orgsentidos">Org. Sentidos</label>
+                    </div>
+
+                    <label for="organosysis_descripcion" class="form-label">Descripcion:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('organosysis_descripcion') %}is-invalid{% endif %}"
+                        id="organosysis_descripcion" name="organosysis_descripcion"
+                        value="{{ form_data.get('organosysis_descripcion', organosysis_descripcion | default('')) }}"
+                        required>
+                    {% if errores.get('organosysis_descripcion') %}
+                    <div class="invalid-feedback">{{ errores['organosysis_descripcion'] }}</div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="mb-3">
+                    <p>11. EXAMEN FISICO REGIONAL</p>
+                    <label for="examn_fis_cabeza" class="form-label">Cabeza:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('examn_fis_cabeza') %}is-invalid{% endif %}"
+                        id="examn_fis_cabeza" name="examn_fis_cabeza"
+                        value="{{ form_data.get('examn_fis_cabeza', examn_fis_cabeza | default('')) }}" required>
+                    {% if errores.get('examn_fis_cabeza') %}
+                    <div class="invalid-feedback">{{ errores['examn_fis_cabeza'] }}</div>
+                    {% endif %}
+
+                    <label for="examn_fis_extremidades" class="form-label">Extremidades:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('examn_fis_extremidades') %}is-invalid{% endif %}"
+                        id="examn_fis_extremidades" name="examn_fis_extremidades"
+                        value="{{ form_data.get('examn_fis_extremidades', examn_fis_extremidades | default('')) }}"
+                        required>
+                    {% if errores.get('examn_fis_extremidades') %}
+                    <div class="invalid-feedback">{{ errores['examn_fis_extremidades'] }}</div>
+                    {% endif %}
+
+                    <!--INCONSISTENCIA-->
+                    <label class="form-label">HERNIAS Y ANILLOS:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_garganta"
+                            name="examn_fis_garganta" value="X" {% if form_data.get('examn_fis_garganta')=='Sí' or
+                            form_data.get('examn_fis_garganta')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_garganta">Garganta</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_ojos" name="examn_fis_ojos"
+                            value="X" {% if form_data.get('examn_fis_ojos')=='Sí' or
+                            form_data.get('examn_fis_ojos')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_ojos">Ojos</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_oidos" name="examn_fis_oidos"
+                            value="X" {% if form_data.get('examn_fis_oidos')=='Sí' or
+                            form_data.get('examn_fis_oidos')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_oidos">Oidos</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_nariz" name="examn_fis_nariz"
+                            value="X" {% if form_data.get('examn_fis_nariz')=='Sí' or
+                            form_data.get('examn_fis_nariz')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_nariz">Nariz</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_boca" name="examn_fis_boca"
+                            value="X" {% if form_data.get('examn_fis_boca')=='Sí' or
+                            form_data.get('examn_fis_boca')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_boca">Boca</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_dentudura"
+                            name="examn_fis_dentudura" value="X" {% if form_data.get('examn_fis_dentudura')=='Sí' or
+                            form_data.get('examn_fis_dentudura')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_dentudura">Dentadura</label>
+                    </div>
+                    <label class="form-label">TORAX:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="hereditaria" name="hereditaria" value="X" {%
+                            if form_data.get('hereditaria')=='Sí' or form_data.get('hereditaria')=='X' %}checked{% endif
+                            %}>
+                        <label class="form-check-label" for="hereditaria">Musculo-esqueletico</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_corazon" name="examn_fis_corazon"
+                            value="X" {% if form_data.get('examn_fis_corazon')=='Sí' or
+                            form_data.get('examn_fis_corazon')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_corazon">Corazón</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_pulmones"
+                            name="examn_fis_pulmones" value="X" {% if form_data.get('examn_fis_pulmones')=='Sí' or
+                            form_data.get('examn_fis_pulmones')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_pulmones">Pulmones</label>
+                    </div>
+                    <label class="form-label">ABDOMEN:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_inspeccion"
+                            name="examn_fis_inspeccion" value="X" {% if form_data.get('examn_fis_inspeccion')=='Sí' or
+                            form_data.get('examn_fis_inspeccion')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_inspeccion">Inspeccion</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_palpacion"
+                            name="examn_fis_palpacion" value="X" {% if form_data.get('examn_fis_palpacion')=='Sí' or
+                            form_data.get('examn_fis_palpacion')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_palpacion">Palpacion</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_percsusion"
+                            name="examn_fis_percsusion" value="X" {% if form_data.get('examn_fis_percsusion')=='Sí' or
+                            form_data.get('examn_fis_percsusion')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_percsusion">Percsusion</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_umbilical"
+                            name="examn_fis_umbilical" value="X" {% if form_data.get('examn_fis_umbilical')=='Sí' or
+                            form_data.get('examn_fis_umbilical')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_umbilical">Umbilical</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_ingual_dere"
+                            name="examn_fis_ingual_dere" value="X" {% if form_data.get('examn_fis_ingual_dere')=='Sí' or
+                            form_data.get('examn_fis_ingual_dere')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_ingual_dere">Inguinal derecho</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_clural_dere"
+                            name="examn_fis_clural_dere" value="X" {% if form_data.get('examn_fis_clural_dere')=='Sí' or
+                            form_data.get('examn_fis_clural_dere')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_clural_dere">Clural derecho</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_inguinal_izquierdo"
+                            name="examn_fis_inguinal_izquierdo" value="X" {% if
+                            form_data.get('examn_fis_inguinal_izquierdo')=='Sí' or
+                            form_data.get('examn_fis_inguinal_izquierdo')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_inguinal_izquierdo">Inguinal izquierdo</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_clural_izq"
+                            name="examn_fis_clural_izq" value="X" {% if form_data.get('examn_fis_clural_izq')=='Sí' or
+                            form_data.get('examn_fis_clural_izq')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_clural_izq">Clural izquierdo</label>
+                    </div>
+                    <label class="form-label">COLUMNA VERTEBRAL:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_movilidad"
+                            name="examn_fis_movilidad" value="X" {% if form_data.get('examn_fis_movilidad')=='Sí' or
+                            form_data.get('examn_fis_movilidad')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_movilidad">Deformaciones</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_deformaciones"
+                            name="examn_fis_deformaciones" value="X" {% if
+                            form_data.get('examn_fis_deformaciones')=='Sí' or
+                            form_data.get('examn_fis_deformaciones')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_deformaciones">Movilidad</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_masas_musculares"
+                            name="examn_fis_masas_musculares" value="X" {% if
+                            form_data.get('examn_fis_masas_musculares')=='Sí' or
+                            form_data.get('examn_fis_masas_musculares')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_masas_musculares">Masas musculares</label>
+                    </div>
+                    <label class="form-label">REGIÓN INGUINO GENITAL:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_tracto_urinario"
+                            name="examn_fis_tracto_urinario" value="X" {% if
+                            form_data.get('examn_fis_tracto_urinario')=='Sí' or
+                            form_data.get('examn_fis_tracto_urinario')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_tracto_urinario">Tracto urinario</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_tracto_genital"
+                            name="examn_fis_tracto_genital" value="X" {% if
+                            form_data.get('examn_fis_tracto_genital')=='Sí' or
+                            form_data.get('examn_fis_tracto_genital')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_tracto_genital">Tracto genital</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_regio_anoperineal"
+                            name="examn_fis_regio_anoperineal" value="X" {% if
+                            form_data.get('examn_fis_regio_anoperineal')=='Sí' or
+                            form_data.get('examn_fis_regio_anoperineal')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_regio_anoperineal">Región ano- perineal</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_sup_izquierda"
+                            name="examn_fis_sup_izquierda" value="X" {% if
+                            form_data.get('examn_fis_sup_izquierda')=='Sí' or
+                            form_data.get('examn_fis_sup_izquierda')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_sup_izquierda">Superior izquierda</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_ingual_dere"
+                            name="examn_fis_ingual_dere" value="X" {% if form_data.get('examn_fis_ingual_dere')=='Sí' or
+                            form_data.get('examn_fis_ingual_dere')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_ingual_dere">Inguinal derecho</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_infer_dere"
+                            name="examn_fis_infer_dere" value="X" {% if form_data.get('examn_fis_infer_dere')=='Sí' or
+                            form_data.get('examn_fis_infer_dere')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_infer_dere">Inferior derecha</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_infer_izquierda"
+                            name="examn_fis_infer_izquierda" value="X" {% if
+                            form_data.get('examn_fis_infer_izquierda')=='Sí' or
+                            form_data.get('examn_fis_infer_izquierda')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_infer_izquierda">Inferior izquierda</label>
+                    </div>
+                    <label class="form-label">EXAMÉN NEUROLOGICO:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_reflejos_tndinosos"
+                            name="examn_fis_reflejos_tndinosos" value="X" {% if
+                            form_data.get('examn_fis_reflejos_tndinosos')=='Sí' or
+                            form_data.get('examn_fis_reflejos_tndinosos')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_reflejos_tndinosos">Reflejos tendinosos</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_sencibilidad_sup"
+                            name="examn_fis_sencibilidad_sup" value="X" {% if
+                            form_data.get('examn_fis_sencibilidad_sup')=='Sí' or
+                            form_data.get('examn_fis_sencibilidad_sup')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_sencibilidad_sup">Sencibilidad
+                            superficial</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_reflejos_pupilares"
+                            name="examn_fis_reflejos_pupilares" value="X" {% if
+                            form_data.get('examn_fis_reflejos_pupilares')=='Sí' or
+                            form_data.get('examn_fis_reflejos_pupilares')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_reflejos_pupilares">Reflejos pupilares</label>
+                    </div>
+                    <label class="form-label">Visual:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_ojo_derecho"
+                            name="examn_fis_ojo_derecho" value="X" {% if form_data.get('examn_fis_ojo_derecho')=='Sí' or
+                            form_data.get('examn_fis_ojo_derecho')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_ojo_derecho">Ojo derecho</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_ojo_izquierdo"
+                            name="examn_fis_ojo_izquierdo" value="X" {% if
+                            form_data.get('examn_fis_ojo_izquierdo')=='Sí' or
+                            form_data.get('examn_fis_ojo_izquierdo')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_ojo_izquierdo">Ojo Izquierdo</label>
+                    </div>
+                    <label class="form-label">OTOSCOPIA:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_oido_derecho"
+                            name="examn_fis_oido_derecho" value="X" {% if form_data.get('examn_fis_oido_derecho')=='Sí'
+                            or form_data.get('examn_fis_oido_derecho')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_oido_derecho">Oido derecho</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="examn_fis_oido_izquierdo"
+                            name="examn_fis_oido_izquierdo" value="X" {% if
+                            form_data.get('examn_fis_oido_izquierdo')=='Sí' or
+                            form_data.get('examn_fis_oido_izquierdo')=='X' %}checked{% endif %}>
+                        <label class="form-check-label" for="examn_fis_oido_izquierdo">Oido Izquierdo</label>
+                    </div>
+                    <label for="examn_fis_descripcion" class="form-label">Descripcion:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('examn_fis_descripcion') %}is-invalid{% endif %}"
+                        id="examn_fis_descripcion" name="examn_fis_descripcion"
+                        value="{{ form_data.get('examn_fis_descripcion', examn_fis_descripcion | default('')) }}"
+                        required>
+                    {% if errores.get('examn_fis_descripcion') %}
+                    <div class="invalid-feedback">{{ errores['examn_fis_descripcion'] }}</div>
+                    {% endif %}
+
+                </div>
+
+                <div class="mb-3">
+                    <p>12. EXAMENES GENERALES</p>
+                    <label for="laboratorio" class="form-label">LABORATORIO:</label>
+                    <input type="text" class="form-control {% if errores.get('laboratorio') %}is-invalid{% endif %}"
+                        id="laboratorio" name="laboratorio"
+                        value="{{ form_data.get('laboratorio', laboratorio | default('')) }}" required>
+                    {% if errores.get('laboratorio') %}
+                    <div class="invalid-feedback">{{ errores['laboratorio'] }}</div>
+                    {% endif %}
+                    <label for="rx" class="form-label">RX:</label>
+                    <input type="text" class="form-control {% if errores.get('rx') %}is-invalid{% endif %}" id="rx"
+                        name="rx" value="{{ form_data.get('rx', rx | default('')) }}" required>
+                    {% if errores.get('rx') %}
+                    <div class="invalid-feedback">{{ errores['rx'] }}</div>
+                    {% endif %}
+                    <label for="audiometria" class="form-label">AUDIOMETRIA:</label>
+                    <input type="text" class="form-control {% if errores.get('audiometria') %}is-invalid{% endif %}"
+                        id="audiometria" name="audiometria"
+                        value="{{ form_data.get('audiometria', audiometria | default('')) }}" required>
+                    {% if errores.get('audiometria') %}
+                    <div class="invalid-feedback">{{ errores['audiometria'] }}</div>
+                    {% endif %}
+                    <label for="optometria" class="form-label">OPTOMETRIA:</label>
+                    <input type="text" class="form-control {% if errores.get('optometria') %}is-invalid{% endif %}"
+                        id="optometria" name="optometria"
+                        value="{{ form_data.get('optometria', optometria | default('')) }}" required>
+                    {% if errores.get('optometria') %}
+                    <div class="invalid-feedback">{{ errores['optometria'] }}</div>
+                    {% endif %}
+                    <label for="ekg" class="form-label">EKG:</label>
+                    <input type="text" class="form-control {% if errores.get('ekg') %}is-invalid{% endif %}" id="ekg"
+                        name="ekg" value="{{ form_data.get('ekg', ekg | default('')) }}" required>
+                    {% if errores.get('ekg') %}
+                    <div class="invalid-feedback">{{ errores['ekg'] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <p>13. DIAGNOSTICOS</p>
+                    <div class="mb-3 ">
+                        <label for="disease-1" class="form-label">Descripción del Diagnostico 1:</label>
+                        <input type="text" class="form-control" id="disease-1" name="diagnostico_1"
+                            value="{{ form_data.get('diagnostico_1', diagnostico_1 | default('')) }}">
+                        <input type="text" class="form-control" id="code-1" name="cie10_1"
+                            value="{{ form_data.get('cie10_1', cie10_1 | default('')) }}" readonly>
+                        <div id="suggestions-1" class="suggestions-box"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="disease-2" class="form-label">Descripción del Diagnostico 2:</label>
+                        <input type="text" class="form-control" id="disease-2" name="diagnostico_2"
+                            value="{{ form_data.get('diagnostico_2', diagnostico_2 | default('')) }}">
+                        <input type="text" class="form-control" id="code-2" name="cie10_2"
+                            value="{{ form_data.get('cie10_2', cie10_2 | default('')) }}" readonly>
+                        <div id="suggestions-2" class="suggestions-box"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="disease-3" class="form-label">Descripción del Diagnostico 3:</label>
+                        <input type="text" class="form-control" id="disease-3" name="diagnostico_3"
+                            value="{{ form_data.get('diagnostico_3', diagnostico_3 | default('')) }}">
+                        <input type="text" class="form-control" id="code-3" name="cie10_3"
+                            value="{{ form_data.get('cie10_3', cie10_3 | default('')) }}" readonly>
+                        <div id="suggestions-3" class="suggestions-box"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="disease-4" class="form-label">Descripción del Diagnostico 4:</label>
+                        <input type="text" class="form-control" id="disease-4" name="diagnostico_4"
+                            value="{{ form_data.get('diagnostico_4', diagnostico_4 | default('')) }}">
+                        <input type="text" class="form-control" id="code-4" name="cie10_4"
+                            value="{{ form_data.get('cie10_4', cie10_4 | default('')) }}" readonly>
+                        <div id="suggestions-4" class="suggestions-box"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <p>14. APTITUD MEDICA PARA EL TRABAJO</p>
+                    <div class="mb-3">
+                        <label for="aptitud" class="form-label">Aptitud:</label>
+                        <select class="form-control" id="aptitud" name="aptitud">
+                            <option value="APTO" {{ 'selected' if form_data.get('aptitud', aptitud |
+                                default(''))=='APTO' else '' }}>APTO</option>
+                            <option value="APTO EN OBSERVACIÓN" {{ 'selected' if form_data.get('aptitud', aptitud |
+                                default(''))=='APTO EN OBSERVACIÓN' else '' }}>APTO EN OBSERVACIÓN</option>
+                            <option value="APTO CON LIMITACIONES" {{ 'selected' if form_data.get('aptitud', aptitud |
+                                default(''))=='APTO CON LIMITACIONES' else '' }}>APTO CON LIMITACIONES</option>
+                            <option value="NO APTO" {{ 'selected' if form_data.get('aptitud', sexo |
+                                default(''))=='NO APTO' else '' }}>NO APTO</option>
+                        </select>
+                    </div>
+
+                    <label for="aptitud_observ" class="form-label">Observacion:</label>
+                    <input type="text" class="form-control {% if errores.get('aptitud_observ') %}is-invalid{% endif %}"
+                        id="aptitud_observ" name="aptitud_observ"
+                        value="{{ form_data.get('aptitud_observ', aptitud_observ | default('')) }}" required>
+                    {% if errores.get('aptitud_observ') %}
+                    <div class="invalid-feedback">{{ errores['aptitud_observ'] }}</div>
+                    {% endif %}
+
+                    <label for="aptitud_limitacion" class="form-label">Limitacion:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('aptitud_limitacion') %}is-invalid{% endif %}"
+                        id="aptitud_limitacion" name="aptitud_limitacion"
+                        value="{{ form_data.get('aptitud_limitacion', aptitud_limitacion | default('')) }}" required>
+                    {% if errores.get('aptitud_limitacion') %}
+                    <div class="invalid-feedback">{{ errores['aptitud_limitacion'] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="recomendaciones_tto" class="form-label">14. RECOMENDACIONES Y TTO:</label>
+                    <input type="text"
+                        class="form-control {% if errores.get('recomendaciones_tto') %}is-invalid{% endif %}"
+                        id="recomendaciones_tto" name="recomendaciones_tto"
+                        value="{{ form_data.get('recomendaciones_tto', recomendaciones_tto | default('')) }}" required>
+                    {% if errores.get('recomendaciones_tto') %}
+                    <div class="invalid-feedback">{{ errores['recomendaciones_tto'] }}</div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Firma Colaborador -->
+                <div class="mb-3" id="signature-pad2">
+                    <label class="form-label">Firma Colaborador:</label>
+                    <canvas class="firma-canva" id="signature-canvas2"></canvas>
+                    <div class="button-group">
+                        <button type="button" id="clear-signature2" class="btn btn-clear"> <i
+                                class="fa-solid fa-trash"></i> Limpiar
+                        </button>
+                        <button type="button" id="save-signature2" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Guardar
+                        </button>
+                    </div>
+                </div>
+
+                <input type="hidden" id="firma_colaborador" name="firma_colaborador">
+
+                <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+                <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+                <script>
+                    window.onload = function () {
+
+                        // Configuración de la firma del Colaborador
+                        var canvas2 = document.getElementById('signature-canvas2');
+                        var signaturePad2 = new SignaturePad(canvas2);
+
+                        resizeCanvas(canvas2);
+
+                        document.getElementById('clear-signature2').addEventListener('click', function () {
+                            signaturePad2.clear();
+                        });
+
+                        document.getElementById('save-signature2').addEventListener('click', function (event) {
+                            event.preventDefault();
+
+                            if (signaturePad2.isEmpty()) {
+                                alert("Por favor, realiza una firma.");
+                            } else {
+                                var dataURL = signaturePad2.toDataURL('image/png');
+                                document.getElementById('firma_colaborador').value = dataURL;
+                                alert("Firma del colaborador guardada");
+                                console.log('firma cola', dataURL);
+                            }
+                        });
+
+                        // Redimensionar los canvas cuando la ventana cambie de tamaño
+                        window.onresize = function () {
+                            resizeCanvas(canvas1);
+                            resizeCanvas(canvas2);
+                        };
+                    };
+                </script>
+
+                <script>
+                    $(document).ready(function () {
+                        for (let i = 1; i <= 6; i++) {
+                            (function (index) {
+                                $('#disease-' + index).on('input', function () {
+                                    let query = $(this).val();
+                                    if (query.length > 0) {
+                                        $.ajax({
+                                            url: '{{ url_for('ocupacional.validar') }}',
+                                            method: 'GET',
+                                            data: { query: query },
+                                            success: function (data) {
+                                                console.log(data);
+                                                $('#suggestions-' + index).empty().show();
+                                                if (data.length > 0) {
+                                                    data.forEach(function (item) {
+                                                        $('#suggestions-' + index).append('<div class="suggestion-item" data-index="' + index + '" data-code="' + item.COD_3 + '">' + item.DESCRIPCION + '</div>');
+                                                    });
+                                                } else {
+                                                    $('#code-' + index).val('');
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        $('#suggestions-' + index).hide();
+                                        $('#code-' + index).val('');
+                                    }
+                                });
+
+                                $(document).on('click', '.suggestion-item', function () {
+                                    let description = $(this).text();
+                                    let code = $(this).data('code');
+                                    let index = $(this).data('index');
+                                    $('#disease-' + index).val(description);
+                                    $('#code-' + index).val(code);
+                                    $('#suggestions-' + index).hide();
+                                });
+
+                                $(document).click(function (event) {
+                                    if (!$(event.target).closest('[id^="disease-"], [id^="suggestions-"]').length) {
+                                        $('.suggestions-box').hide();
+                                    }
+                                });
+                            })(i);
+                        }
+
+
+                    });
+                </script>
+
+                <div class="button-froup mt-5">
+                    <a href="{{ url_for('auth.logout', campaign=campaign) }}" class="btn btn-danger"
+                        style="width: 49%;">Cerrar sesión</a>
+                    <button type="submit" class="btn btn-primary " style="width: 49%;">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<!-- Bootstrap JS y tus scripts personalizados -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
+</html>

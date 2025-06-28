@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generador de Tokens - ACC</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --blue: #0d6efd;
+        --blue_dark: #0b5ed7;
+        --blue_hover: #0a58ca;
+        --light-gray: #f8f9fa;
+        --accent-color: #0d6efd;
+        --accent-color-hover: #3a56d4;
+        --success: #38b000;
+        --warning: #ff9500;
+        --danger: #ff3b30;
+        --text-primary: #333333;
+        --text-secondary: #6c757d;
+        --border-radius: 12px;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+        --transition: all 0.3s ease;
+      }
+
+      body {
+        background-color: #f0f2f5;
+        /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        color: var(--text-primary);
+      }
+
+      header {
+        background-color: var(--blue);
+        color: #ffffff;
+        padding: 15px 20px;
+        box-shadow: var(--shadow-md);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .brand-logo {
+        height: auto;
+        transition: transform 0.3s ease;
+      }
+
+      .brand-logo:hover {
+        transform: scale(1.05);
+      }
+
+      .main-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      .generator-box {
+        background-color: #fff;
+        padding: 35px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 700px;
+        transition: var(--transition);
+      }
+
+      .generator-box:hover {
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn {
+        padding: 12px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      .btn-primary {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-color-hover);
+        border-color: var(--accent-color-hover);
+      }
+
+      .btn-light {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        color: var(--text-secondary);
+      }
+
+      .btn-light:hover {
+        background-color: #e9ecef;
+        color: var(--text-primary);
+      }
+
+      .btn-outline-primary {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--accent-color);
+        color: white;
+      }
+
+      .btn-success {
+        background-color: var(--success);
+        border-color: var(--success);
+      }
+
+      .btn-success:hover {
+        background-color: var(--primary);
+        border-color: var(--blue_dark);
+      }
+
+      .form-control {
+        padding: 14px 16px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        transition: var(--transition);
+        font-size: 16px;
+        box-shadow: none;
+      }
+
+      .form-control:focus {
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+        border-color: var(--accent-color);
+      }
+
+      .form-label {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--text-primary);
+        font-size: 16px;
+      }
+
+      .page-title {
+        color: var(--text-primary);
+        position: relative;
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+      }
+
+      .page-title::after {
+        content: "";
+        position: absolute;
+        width: 60px;
+        height: 4px;
+        background-color: var(--accent-color);
+        bottom: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+
+      /* Sección de Tokens */
+      .tokens-section {
+        margin-top: 30px;
+        border-top: 1px solid #eaeaea;
+        padding-top: 30px;
+      }
+
+      .tokens-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .tokens-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      .tokens-textarea {
+        width: 100%;
+        min-height: 180px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+          monospace;
+        resize: vertical;
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #495057;
+        transition: var(--transition);
+      }
+
+      .tokens-textarea:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+      }
+
+      /* Contenedor de acciones */
+      .token-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 15px;
+      }
+
+      .token-actions .btn {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      /* Range slider personalizado */
+      .range-slider-container {
+        position: relative;
+        margin-bottom: 35px;
+      }
+
+      .range-value-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .range-current-value {
+        background-color: var(--accent-color);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        position: relative;
+        transition: left 0.2s ease;
+      }
+
+      .form-range {
+        height: 8px;
+        border-radius: 4px;
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        background: #dee2e6;
+        outline: none;
+        transition: var(--transition);
+      }
+
+      .form-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        margin-top: -8px;
+        /* Ajusta la posición del thumb */
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--accent-color);
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: var(--transition);
+      }
+
+      .form-range::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+      }
+
+      .form-range::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--accent-color);
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: var(--transition);
+      }
+
+      .form-range::-moz-range-thumb:hover {
+        transform: scale(1.1);
+      }
+
+      /* Presets de cantidad */
+      .amount-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+        margin-bottom: 20px;
+      }
+
+      .preset-btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        background-color: #f0f2f5;
+        border: 1px solid #dee2e6;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .preset-btn:hover {
+        background-color: #e9ecef;
+        color: var(--text-primary);
+      }
+
+      .preset-btn.active {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: white;
+      }
+
+      /* Toast de notificación */
+      .toast-notification {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        z-index: 1050;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .toast-notification.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .toast-success {
+        background-color: var(--success);
+      }
+
+      .toast-warning {
+        background-color: var(--warning);
+      }
+
+      .toast-icon {
+        font-size: 20px;
+      }
+
+      .toast-message {
+        font-weight: 500;
+      }
+
+      /* Loader para generación */
+      .loader-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border-radius);
+        z-index: 10;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+      }
+
+      .loader-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid var(--accent-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Animaciones */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-15px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fadeIn {
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      /* Tooltip personalizado */
+      .tooltip-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-left: 5px;
+        cursor: help;
+      }
+
+      .tooltip-icon {
+        color: var(--text-secondary);
+        font-size: 16px;
+        transition: color 0.3s ease;
+      }
+
+      .tooltip-wrapper:hover .tooltip-icon {
+        color: var(--accent-color);
+      }
+
+      .tooltip-content {
+        position: absolute;
+        bottom: 130%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 14px;
+        width: 240px;
+        text-align: center;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        pointer-events: none;
+      }
+
+      .tooltip-content::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+      }
+
+      .tooltip-wrapper:hover .tooltip-content {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* Contador de tokens */
+      .token-counter {
+        background-color: #e9ecef;
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 14px;
+        color: var(--text-secondary);
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .generator-box {
+          padding: 25px 20px;
+        }
+
+        .main-container {
+          padding: 20px 15px;
+        }
+
+        .token-actions {
+          flex-direction: column;
+        }
+
+        .token-actions .btn {
+          width: 100%;
+        }
+
+        .amount-presets {
+          justify-content: center;
+        }
+      }
+    </style>
+    <style>
+      :root {
+        --primary: #0d6efd;
+        --primary-dark: #0b5ed7;
+        --secondary: #6c757d;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #198754;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --border-radius: 8px;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+
+      body {
+        /* font-family: 'Poppins', sans-serif; */
+        background-color: #f5f7fa;
+        color: #333;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header styles */
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        padding: 15px 0;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0 1.5rem;
+      }
+
+      .header-title {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0 0 0 15px;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+      }
+
+      /* Main content styles */
+      .main-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        flex: 1;
+      }
+
+      .page-title {
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        position: relative;
+        padding-bottom: 0.75rem;
+        text-align: center;
+      }
+
+      .page-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background-color: var(--primary);
+        border-radius: 2px;
+      }
+
+      /* Navigation styles */
+      .nav-menu {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+
+      .nav-item {
+        border: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 0;
+      }
+
+      .nav-item:last-child {
+        border-bottom: none;
+      }
+
+      .nav-link {
+        padding: 1rem 1.25rem;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        color: var(--dark);
+        font-weight: 500;
+        text-decoration: none;
+        position: relative;
+      }
+
+      .nav-link:hover {
+        background-color: rgba(13, 110, 253, 0.05);
+        transform: translateX(5px);
+      }
+
+      .nav-link i {
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+        font-size: 1.1rem;
+        color: var(--primary);
+      }
+
+      .nav-btn {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        text-align: left;
+        font-weight: 500;
+        padding: 1rem 1.25rem;
+        transition: var(--transition);
+      }
+
+      .nav-btn.primary:hover {
+        background-color: rgba(13, 110, 253, 0.05);
+      }
+
+      .nav-btn.danger {
+        color: var(--danger);
+      }
+
+      .nav-btn.danger i {
+        color: var(--danger);
+      }
+
+      .nav-btn.danger:hover {
+        background-color: rgba(220, 53, 69, 0.05);
+      }
+
+      /* Alert styles */
+      .alert {
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        border: none;
+      }
+
+      /* Toast styles */
+      .toast {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        border: none;
+        overflow: hidden;
+        max-width: 350px;
+      }
+
+      .toast-header {
+        background-color: var(--primary);
+        color: white;
+        border-bottom: none;
+      }
+
+      .toast-header .btn-close {
+        filter: brightness(0) invert(1);
+      }
+
+      .toast-body {
+        padding: 1rem;
+        color: var(--dark);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 576px) {
+        .header-title {
+          font-size: 1rem;
+        }
+
+        .main-container {
+          padding: 1.5rem 1rem;
+        }
+
+        .page-title {
+          font-size: 1.5rem;
+        }
+      }
+
+      /* Animation for nav-link */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .nav-item {
+        animation: fadeIn 0.3s ease forwards;
+        opacity: 0;
+      }
+
+      .nav-item:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+
+      .nav-item:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .nav-item:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      .nav-item:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      .nav-item:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+
+      .nav-item:nth-child(6) {
+        animation-delay: 0.6s;
+      }
+
+      .nav-item:nth-child(7) {
+        animation-delay: 0.7s;
+      }
+
+      /* Footer styles */
+      footer {
+        background-color: var(--dark);
+        color: white;
+        text-align: center;
+        padding: 1rem 0;
+        font-size: 0.875rem;
+        margin-top: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    {% set titulo_header = 'Sistema de generación de tokens' %} {% include
+    'base/header_colaborador.html' %}
+
+    <div class="container main-container">
+      <div class="generator-box fadeIn">
+        <h2 class="page-title fw-bold d-block d-md-none">
+          Generador de Tokens
+        </h2>
+
+        <form
+          method="POST"
+          action="{{ url_for('auth.generate_tokens') }}"
+          id="form-interno"
+          class="position-relative"
+        >
+          <div class="loader-overlay" id="loaderOverlay">
+            <div class="loader"></div>
+          </div>
+
+          <div class="mb-4">
+            <label
+              for="tokenAmount"
+              class="form-label d-flex justify-content-between align-items-center"
+            >
+              <span>Cantidad de tokens:</span>
+              <span class="token-counter">
+                <i class="fas fa-key"></i>
+                <span id="sliderValue">10</span>
+              </span>
+            </label>
+
+            <div class="range-slider-container">
+              <input
+                type="range"
+                class="form-range"
+                id="tokenAmount"
+                name="tokenAmount"
+                min="1"
+                max="100"
+                value="10"
+              />
+              <div class="range-value-container">
+                <small>1</small>
+                <small>100</small>
+              </div>
+            </div>
+
+            <div class="amount-presets">
+              <button type="button" class="preset-btn" data-value="5">5</button>
+              <button type="button" class="preset-btn active" data-value="10">
+                10
+              </button>
+              <button type="button" class="preset-btn" data-value="25">
+                25
+              </button>
+              <button type="button" class="preset-btn" data-value="50">
+                50
+              </button>
+              <button type="button" class="preset-btn" data-value="100">
+                100
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100" id="generateBtn">
+            <i class="fas fa-key"></i>
+            Generar Tokens
+          </button>
+        </form>
+
+        <div class="tokens-section">
+          <div class="tokens-header">
+            <h3 class="tokens-title">Tokens Generados</h3>
+            <span class="token-counter" id="tokenCount">
+              <i class="fas fa-list-ul"></i>
+              <span>0 tokens</span>
+            </span>
+          </div>
+
+          <textarea
+            id="tokensTextarea"
+            class="tokens-textarea"
+            readonly
+            placeholder="Los tokens generados aparecerán aquí..."
+          >
+{%- if tokens and tokens.get('tokens') -%}
+            {{ tokens.get('tokens') | join('\n\n') }}
+            {%- endif -%}</textarea
+          >
+
+          <div class="token-actions">
+            <button
+              class="btn btn-danger"
+              id="clearBtn"
+              onclick="limpiarTokens()"
+            >
+              <i class="fas fa-eraser"></i>
+              Limpiar
+            </button>
+            <button class="btn btn-light" id="copyBtn" onclick="copiarTokens()">
+              <i class="fas fa-copy"></i>
+              Copiar
+            </button>
+
+            <button
+              class="btn btn-light"
+              id="downloadBtn"
+              onclick="descargarTokens()"
+            >
+              <i class="fas fa-download"></i>
+              Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-notification" id="toastNotification">
+      <i class="fas fa-check-circle toast-icon"></i>
+      <span class="toast-message" id="toastMessage"
+        >Copiado al portapapeles</span
+      >
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tokens.js') }}"></script>
+  </body>
+</html>

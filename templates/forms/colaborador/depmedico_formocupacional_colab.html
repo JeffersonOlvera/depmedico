@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACC - Colaborador</title>
+    <!-- Bootstrap CSS -->
+    <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+
+    <!-- Tu hoja de estilos personalizada -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #ffffff;
+            /* Cambia esto al color de fondo deseado */
+        }
+
+        .header {
+            background-color: #f4f4f4;
+            /* Rojo Claro */
+            color: #ffffff;
+            /* Blanco */
+            padding: 20px;
+            text-align: left;
+        }
+
+        .brand-logo {
+            height: auto;
+            margin-top: 20px;
+            /* Ajusta el margen superior si es necesario */
+        }
+
+        .login-container {
+            min-height: calc(100vh - 60px);
+            /* Ajusta esto para tomar en cuenta la altura del header */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Sombra suave para el contenedor */
+            width: 100%;
+            /* Ajusta según la anchura deseada */
+            max-width: 400px;
+            /* Máxima anchura del contenedor */
+        }
+
+        .login-button {
+            background-color: #ff0000;
+            /* Rojo Claro */
+            border-color: #ff0000;
+            /* Para mantener el color al hacer hover */
+        }
+
+        .login-button:hover {
+            background-color: #e60000;
+            /* Un rojo ligeramente más oscuro al hacer hover */
+        }
+
+        #signature-canvas {
+            border: 1px solid #000;
+            border-radius: 5px;
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* CSS para hacer el botón sticky */
+        .sticky-menu {
+            position: sticky;
+            top: 0;
+            right: 0;
+            /* Coloca el contenedor en la derecha */
+            z-index: 1000;
+            /* Asegúrate de que esté por encima de otros elementos */
+            background-color: #ffffff;
+            /* Fondo blanco o el color que prefieras */
+            padding: 10px;
+            /* Añadir algo de espacio alrededor del botón */
+            text-align: right;
+            /* Alinea el contenido (botón) a la derecha */
+        }
+    </style>
+</head>
+
+<div class="header">
+    <div class="header">
+        <img src="https://intranet.americancallcenter.com/wp-content/uploads/2021/11/LOGO-ACC.svg" title="Logo Acc"
+            alt="Logo Acc" width="100" height="50">
+    </div>
+</div>
+
+<!--Botón para volver al menú del colaborador-->
+<div class="sticky-menu">
+    <a href="{{ url_for('depmedico.menu_principal') }}" class="btn btn-primary">Menú Principal</a>
+</div>
+
+
+<div class="container my-5">
+    <script src="{{ url_for('static', filename='js/signature_pad.min.js') }}"></script>
+    <!-- Mostrar mensajes flash aquí -->
+    <h2 class="mb-4">FICHA OCUPACION COLABORADOR - ACC</h2>
+
+    <p>Su ayuda con los siguientes datos:</p>
+    <form method="POST" id="myForm" action="{{ url_for('depmedico.procesar_formulario_colaborador') }}">
+        <div class="row">
+            <div class="col-md-6">
+
+                <!-- FECHA -->
+                <div class="mb-3">
+                    <label for="fecha" class="form-label">Fecha de Actual:</label>
+                    <input type="date" class="form-control " id="fecha" name="fecha" value="" required>
+
+                </div>
+
+
+                <!-- Número de Cédula -->
+                <div class="mb-3">
+                    <label for="ci_colaborador" class="form-label">Número de Cédula*</label>
+                    <input type="text" class="form-control" id="ci_colaborador" name="ci_colaborador" value=""
+                        pattern="^\d{10}$" title="La cédula debe tener exactamente 10 dígitos" required
+                        inputmode="numeric" maxlength="10" oninput="this.value = this.value.replace(/\D/g, '')">
+                </div>
+
+                <!-- Nombre del cliente -->
+                <div class="mb-3">
+                    <label for="nombre_colaborador" class="form-label">Nombres completos:</label>
+                    <input type="text" class="form-control " id="nombre_colaborador" name="nombre_colaborador" value=""
+                        required>
+
+                </div>
+
+                <!-- EDAD -->
+                <div class="mb-3">
+                    <label for="edad" class="form-label">Edad*</label>
+                    <input type="numeric" class="form-control " id="edad" name="edad" value="" maxlength="3" required>
+
+                </div>
+
+
+                <!-- TSEXO -->
+                <div class="mb-3">
+                    <label for="sexo" class="form-label">Sexo:</label>
+                    <select class="form-control" id="sexo" name="sexo">
+                        <option value="MASCULINO">MASCULINO</option>
+                        <option value="FEMENINO">FEMENINO</option>
+                    </select>
+                </div>
+
+                <!-- cargo -->
+                <div class="mb-3">
+                    <label for="cargo" class="form-label">Cargo:</label>
+                    <input type="text" class="form-control " id="cargo" name="cargo" value="" required>
+
+                </div>
+
+                <!-- Tiempo Cargo -->
+                <div class="mb-3">
+                    <label for="tiempo_cargo" class="form-label">Tiempo de cargo: </label>
+                    <input type="text" class="form-control " id="tiempo_cargo" name="tiempo_cargo" value="" required>
+
+                </div>
+
+                <!-- ANTECENDENTES -->
+                <div class="mb-3">
+                    <p>ANTECEDENTES PERSONALES</p>
+                    <label for="antecep_clinicos" class="form-label">Clínicos/Quirurgicos:</label>
+                    <input type="text" class="form-control " id="antecep_clinicos" name="antecep_clinicos" value=""
+                        required>
+
+
+                    <label for="act_fisica" class="form-label">Actividad Fisica:</label>
+                    <select class="form-control" id="act_fisica" name="act_fisica"
+                        onchange="handleStatusChangeactfisic()">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_actfisic" style="display: none;">
+                        <label for="act_fisica_obser" class="form-label">Cual: (Actividad Fisica)</label>
+                        <input type="text" class="form-control " id="act_fisica_obser" name="act_fisica_obser" value=""
+                            required>
+
+                    </div>
+                    <script>
+                        function handleStatusChangeactfisic() {
+                            var act_fisica = document.getElementById('act_fisica').value;
+                            var additionalField_motivo_actfisic = document.getElementById('additionalField_motivo_actfisic');
+                            if (act_fisica === 'SI') {
+                                additionalField_motivo_actfisic.style.display = 'block';
+                                document.getElementById('act_fisica_obser').setAttribute('required', '');
+                                // Mostrar cuando NEGADO
+                            } else {
+                                additionalField_motivo_actfisic.style.display = 'none';
+                                document.getElementById('act_fisica_obser').removeAttribute('required');
+                                document.getElementById('act_fisica_obser').value = "";
+                                // Ocultar en cualquier otro caso
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeactfisic();
+                        });
+                    </script>
+
+                    <label for="medi_actual" class="form-label">Medicacion Actual:</label>
+                    <select class="form-control" id="medi_actual" name="medi_actual"
+                        onchange="handleStatusChangemediactual()">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_mediactual" style="display: none;">
+                        <label for="medi_actual_obser" class="form-label">Cual: (Medicacion Actual)</label>
+                        <input type="text" class="form-control" id="medi_actual_obser" name="medi_actual_obser" value=""
+                            required>
+
+                    </div>
+                    <script>
+                        function handleStatusChangemediactual() {
+                            var medi_actual = document.getElementById('medi_actual').value;
+                            var additionalField_motivo_mediactual = document.getElementById('additionalField_motivo_mediactual');
+                            if (medi_actual === 'SI') {
+                                additionalField_motivo_mediactual.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('medi_actual_obser').setAttribute('required', '');
+
+                            } else {
+                                additionalField_motivo_mediactual.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('medi_actual_obser').removeAttribute('required');
+                                document.getElementById('medi_actual_obser').value = "";
+                            }
+
+
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangemediactual();
+                        });
+                    </script>
+
+                    <label for="alcohol" class="form-label">Alcohol:</label>
+                    <select class="form-control" id="alcohol" name="alcohol" onchange="handleStatusChangeAlcohol()">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_Alcohol" style="display: none;">
+                        <label for="alcohol_obser" class="form-label">Cual: (Alcohol)</label>
+                        <input type="text" class="form-control " id="alcohol_obser" name="alcohol_obser" value=""
+                            required>
+
+                    </div>
+                    <script>
+                        function handleStatusChangeAlcohol() {
+                            var alcohol = document.getElementById('alcohol').value;
+                            var additionalField_motivo_Alcohol = document.getElementById('additionalField_motivo_Alcohol');
+                            if (alcohol === 'SI') {
+                                additionalField_motivo_Alcohol.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('alcohol_obser').setAttribute('required', '');
+                            } else {
+                                additionalField_motivo_Alcohol.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('alcohol_obser').removeAttribute('required');
+                                document.getElementById('alcohol_obser').value = "";
+
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeAlcohol();
+                        });
+                    </script>
+
+                    <label for="tabaco" class="form-label">Tabaco:</label>
+                    <select class="form-control" id="tabaco" name="tabaco" onchange="handleStatusChangeTabaco()">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+
+                    <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                    <div id="additionalField_motivo_Tabaco" style="display: none;">
+                        <label for="tabaco_obser" class="form-label">Cual: (tabaco)</label>
+                        <input type="text" class="form-control " id="tabaco_obser" name="tabaco_obser" value=""
+                            required>
+
+                    </div>
+                    <script>
+                        function handleStatusChangeTabaco() {
+                            var tabaco = document.getElementById('tabaco').value;
+                            var additionalField_motivo_Tabaco = document.getElementById('additionalField_motivo_Tabaco');
+                            if (tabaco === 'SI') {
+                                additionalField_motivo_Tabaco.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('tabaco_obser').setAttribute('required', '');
+                            } else {
+                                additionalField_motivo_Tabaco.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('tabaco_obser').removeAttribute('required');
+                                document.getElementById('tabaco_obser').value = "";
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeTabaco();
+                        });
+                    </script>
+                    <!-- OTROS -->
+                    <label for="otros" class="form-label">Otros:</label>
+                    <select class="form-control" id="otros" name="otros" onchange="handleStatusChangeotros()">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+
+                    <!-- MOTIVO OTROS -->
+                    <div id="additionalField_motivo_otros" style="display: none;">
+                        <label for="otros_obser" class="form-label">Cual: (Otros)</label>
+                        <input type="text" class="form-control " id="otros_obser" name="otros_obser" value="" required>
+
+                    </div>
+                    <script>
+                        function handleStatusChangeotros() {
+                            var otros = document.getElementById('otros').value;
+                            var additionalField_motivo_otros = document.getElementById('additionalField_motivo_otros');
+                            if (otros === 'SI') {
+                                additionalField_motivo_otros.style.display = 'block'; // Mostrar cuando NEGADO
+                                document.getElementById('otros_obser').setAttribute('required', '');
+                            } else {
+                                additionalField_motivo_otros.style.display = 'none'; // Ocultar en cualquier otro caso
+                                document.getElementById('otros_obser').removeAttribute('required');
+                                document.getElementById('otros_obser').value = "";
+                            }
+                        }
+
+                        // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                        document.addEventListener('DOMContentLoaded', function () {
+                            handleStatusChangeotros();
+                        });
+                    </script>
+                </div>
+
+                <!-- Estatus -->
+                <div class="mb-3">
+                    <p>INFORMACION OCUPACIONAL</p>
+                    <label for="incidente_trabajo" class="form-label">Incidente de trabajo:</label>
+                    <input type="text" class="form-control " id="incidente_trabajo" name="incidente_trabajo" value=""
+                        required>
+
+
+                    <label for="accidente_trabajo" class="form-label">Accidente de trabajo:</label>
+                    <select class="form-control" id="accidente_trabajo" name="accidente_trabajo"
+                        onchange="handleStatusChange1()">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+
+
+
+                </div>
+
+                <div id="additionalField1" style="display: none;">
+                    <label for="accidente_trabajo_calif" class="form-label">Descripcion del accidente de trabajo
+                        :</label>
+                    <input type="text" class="form-control " id="accidente_trabajo_calif" name="accidente_trabajo_calif"
+                        value="" required>
+
+                    <label for="accidente_trabajo_fecha" class="form-label">Fecha del Accidente:</label>
+                    <input type="date" class="form-control " id="accidente_trabajo_fecha" name="accidente_trabajo_fecha"
+                        value="" required>
+
+                </div>
+                <script>
+                    function handleStatusChange1() {
+                        var status1 = document.getElementById('accidente_trabajo').value;
+                        var additionalField1 = document.getElementById('additionalField1');
+                        if (status1 === 'SI') {
+                            additionalField1.style.display = 'block'; // Mostrar cuando NEGADO
+                            document.getElementById('accidente_trabajo_calif').setAttribute('required', '');
+                            document.getElementById('accidente_trabajo_fecha').setAttribute('required', '');
+                        } else {
+                            additionalField1.style.display = 'none'; // Ocultar en cualquier otro caso
+                            document.getElementById('accidente_trabajo_calif').removeAttribute('required');
+                            document.getElementById('accidente_trabajo_fecha').removeAttribute('required');
+                            document.getElementById('accidente_trabajo_calif').value = "";
+                            document.getElementById('accidente_trabajo_fecha').value = "";
+                        }
+                    }
+
+                    // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                    document.addEventListener('DOMContentLoaded', function () {
+                        handleStatusChange1();
+                    });
+                </script>
+
+
+                <div class="mb-3">
+                    <label for="enfermedad_prof" class="form-label">Enfermedad profesional:</label>
+                    <select class="form-control" id="enfermedad_prof" name="enfermedad_prof"
+                        onchange="handleStatusChange2()">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+
+                <!-- Elemento adicional para mostrar cuando estatus es NEGADO -->
+                <div id="additionalField2" style="display: none;">
+                    <label for="enfermedad_prof_calif" class="form-label">Descripcion de la Enfermedad
+                        profesional:</label>
+                    <input type="text" class="form-control " id="enfermedad_prof_calif" name="enfermedad_prof_calif"
+                        value="" required>
+
+                    <label for="enfermedad_prof_fecha" class="form-label">Fecha de la Enfermedad profesional:</label>
+                    <input type="date" class="form-control " id="enfermedad_prof_fecha" name="enfermedad_prof_fecha"
+                        value="" required>
+
+                </div>
+
+                <script>
+                    function handleStatusChange2() {
+                        var status2 = document.getElementById('enfermedad_prof').value;
+                        var additionalField2 = document.getElementById('additionalField2');
+                        if (status2 === 'SI') {
+                            additionalField2.style.display = 'block'; // Mostrar cuando NEGADO
+                            document.getElementById('enfermedad_prof_calif').setAttribute('required', '');
+                            document.getElementById('enfermedad_prof_fecha').setAttribute('required', '');
+                        } else {
+                            additionalField2.style.display = 'none'; // Ocultar en cualquier otro caso
+                            document.getElementById('enfermedad_prof_calif').removeAttribute('required');
+                            document.getElementById('enfermedad_prof_fecha').removeAttribute('required');
+                            document.getElementById('enfermedad_prof_calif').value = "";
+                            document.getElementById('enfermedad_prof_fecha').value = "";
+                        }
+                    }
+
+                    // Llamada inicial para manejar el estado predeterminado del formulario (por ejemplo, al recargar la página con una selección guardada)
+                    document.addEventListener('DOMContentLoaded', function () {
+                        handleStatusChange2();
+                    });
+                </script>
+                <!-- Antecedentes Familiares -->
+                <div class="mb-3">
+                    <label class="form-label">Antecedentes Familiares:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_cardio_vas" name="antecf_cardio_vas"
+                            value="X">
+                        <label class="form-check-label" for="antecf_cardio_vas">Cardio-vascular</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_metabotica" name="antecf_metabotica"
+                            value="X">
+                        <label class="form-check-label" for="antecf_metabotica">Metabólica</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_neurologica"
+                            name="antecf_neurologica" value="X">
+                        <label class="form-check-label" for="antecf_neurologica">Neurológica</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_oncologica" name="antecf_oncologica"
+                            value="X">
+                        <label class="form-check-label" for="antecf_oncologica">Oncológica</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_infecciosa" name="antecf_infecciosa"
+                            value="X">
+                        <label class="form-check-label" for="antecf_infecciosa">Infecciosa</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="antecf_hereditario"
+                            name="antecf_hereditario" value="X">
+                        <label class="form-check-label" for="antecf_hereditario">Hereditaria</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="antecf_observacion" class="form-label">Observación</label>
+                        <textarea class="form-control" id="antecf_observacion" name="antecf_observacion"
+                            rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- Inmunización -->
+                <div class="mb-3">
+                    <label class="form-label">Inmunización:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inmuni_influenza" name="inmuni_influenza"
+                            value="X">
+                        <label class="form-check-label" for="inmuni_influenza">Influenza</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inmuni_tetano" name="inmuni_tetano"
+                            value="X">
+                        <label class="form-check-label" for="inmuni_tetano">Tétano</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inmuni_hepatitisB" name="inmuni_hepatitisB"
+                            value="X">
+                        <label class="form-check-label" for="inmuni_hepatitisB">Hepatitis B</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inmuni_coviddosis" class="form-label">COVID Dosis #:</label>
+                        <input type="number" class="form-control" id="inmuni_coviddosis" name="inmuni_coviddosis"
+                            pattern="^\d{2}$" title="Cantidad incorrecta" required inputmode="numeric" maxlength="2">
+                    </div>
+                </div>
+
+                <div class="signature-pad" id="signature-pad">
+                    <label class="form-label">Firma:</label>
+                    <canvas id="signature-canvas"></canvas>
+                    <div class="button-container">
+                        <button type="button" id="clear-signature" class="btn btn-secondary">Limpiar</button>
+                        <button type="button" id="save-signature" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+
+                <input type="hidden" id="firma_colaborador" name="firma_colaborador">
+
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <a href="{{ url_for('auth.logout', campaign=campaign) }}" class="btn btn-secondary"
+                        style="float: right;">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background-color: #ff0000">
+                <h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="bi bi-info-circle-fill text-primary" style="font-size: 2rem;"></i>
+                <p class="mt-3 mb-0" id="messageModalBody"></p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
+                    onclick="window.location.reload()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Bootstrap JS y tus scripts personalizados -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--GUARDAR LA FIRMA-->
+<script>
+
+    window.onload = function () {
+        var canvas = document.getElementById('signature-canvas');
+        var signaturePad = new SignaturePad(canvas);
+
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+        }
+
+        window.onresize = resizeCanvas;
+        resizeCanvas();
+
+        document.getElementById('clear-signature').addEventListener('click', function () {
+            signaturePad.clear();
+        });
+
+        document.getElementById('save-signature').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto
+
+            if (signaturePad.isEmpty()) {
+                alert("Por favor, realiza una firma.");
+            } else {
+                var dataURL = signaturePad.toDataURL('image/png');
+                document.getElementById('firma_colaborador').value = dataURL;
+                console.log(document.getElementById('firma_colaborador').value);
+                alert("Firma guardada");
+            }
+        });
+    };
+
+    function showModal(message, callback) {
+        event.preventDefault();
+        document.getElementById('messageModalBody').textContent = message;
+        const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+        messageModal.show();
+
+        const modalElement = document.getElementById('messageModal');
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            if (callback) {
+                callback();
+            }
+        }, { once: true });
+    }
+</script>
+</body>
+
+</html>

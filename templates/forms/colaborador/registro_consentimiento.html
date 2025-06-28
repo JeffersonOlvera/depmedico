@@ -1,0 +1,93 @@
+{% extends 'base/base_form.html' %}
+{%block title%}ACC - Colaborador{%endblock%}
+{%block ficha_name%}CONSENTIMIENTO INFORMADO - ACC{%endblock%}
+{%block form %}
+
+<div class="container mt-5">
+  <div class="card mb-5 p-4 shadow-sm">
+    <p style="font-weight: 600; text-align: center;">CONSENTIMIENTO INFORMADO PARA PROCEDIMIENTOS, VALORACIONES
+      OCUPACIONALES</p>
+    <p>El Consultorio Médico de American Call Center tiene el permiso correspondiente para el funcionamiento <span
+        id="anio"></span> otorgado por el Ministerio de Salud Pública para actividades preventivas y curativas.</p>
+
+    <p>Al rellenar los siguientes datos, autorizo permiso para procedimientos tales como:</p>
+    <ul>
+      <li>Toma de muestras de exámenes de laboratorio </li>
+    </ul>
+    <ul>
+      <li>Curación de heridas en caso de emergencia </li>
+    </ul>
+    <ul>
+      <li>Suruta en caso de emergencia</li>
+    </ul>
+    <ul>
+      <li>Exámenes ginecológicos, genital</li>
+    </ul>
+    <ul>
+      <li>Traslado al centro de atención de alta complejidad IESS - MSP en caso de emergencia</li>
+    </ul>
+    <ul>
+      <li>Valoraciones ocupacionales: audiometrías/ optometría </li>
+    </ul>
+    <ul>
+      <li>Tamizajes de rutina o por conceptos de campañas </li>
+    </ul>
+
+  </div>
+  <form method="POST" id="myForm" action="{{ url_for('consentimiento.guardar') }}">
+    <div class="mb-3">
+      <label for="nombre" class="form-label fw-bold">Nombre completo</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre completo"
+        pattern="^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$" maxlength="60" required
+        value="{{ form_data.get('nombre', nombre | default('')) }}"
+        title="El nombre solo puede contener letras y espacios."
+        oninvalid="this.setCustomValidity('El nombre solo puede contener letras y espacios.')"
+        oninput="this.setCustomValidity('')">
+
+    </div>
+    <div class="row">
+      <div class="mb-3 col-6">
+        <label for="cedula" class="form-label fw-bold">Cédula</label>
+        <input type="text" class="form-control" id="cedula" name="cedula" placeholder="N° Cédula - 0999999999"
+          pattern="^\d{10}$" value="{{ form_data.get('cedula', cedula | default('')) }}"
+          title="El número de cédula debe tener 10 dígitos."
+          oninvalid="this.setCustomValidity('El número de cédula debe tener 10 dígitos.')"
+          oninput="this.setCustomValidity('')" maxlength="10" required>
+      </div>
+
+
+      <div class="mb-3 col-6">
+        <label for="fecha" class="form-label fw-bold">Fecha</label>
+        <input type="date" class="form-control" id="fecha" value="{{ form_data.get('fecha', fecha | default('')) }}"
+          name="fecha" required>
+      </div>
+    </div>
+    <div class="col-md-md-12">
+        <div class="signature-pad" id="signature-pad">
+            <label class="form-label">Firma:</label>
+            <canvas id="signature-canvas"></canvas>
+            <div class="btn-group">
+                <button type="button" id="clear-signature" class="btn btn-secondary">
+                    Limpiar
+                </button>
+
+            </div>
+        </div>
+
+         <input type="hidden" id="firma" name="firma" />
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
+  </form>
+</div>
+
+
+
+{%endblock%}
+{%block scripts%}
+
+<script src="{{ url_for('static', filename='js/firma_colaborador.js') }}"></script>
+
+{%endblock%}
