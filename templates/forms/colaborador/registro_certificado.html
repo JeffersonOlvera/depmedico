@@ -8,31 +8,21 @@
             placeholder="Nombre completo" required value="{{ session['nombreColaborador'] }}" disabled>
         <div class="form-text">Solo letras y espacios.</div>
     </div>
-    <div class="row">
-        <div class="col-md-6 mb-3">
+    <div class="row ">
+        <div class="col-md-4 mb-3">
             <label for="cedula" class="form-label">Cédula</label>
             <input type="text" class="form-control" id="cedula" name="cedula" pattern="^\d{10}$"
                 placeholder="0999999999" maxlength="10" value="{{ session['cedula'] }}" disabled required>
             <div class="form-text">Debe tener exactamente 10 dígitos.</div>
         </div>
 
-        <div class="col-md-6 mb-3">
+        <div class="col-md-4 mb-3">
             <label for="edad" class="form-label">Edad</label>
             <input type="text" class="form-control" id="edad" name="edad" pattern="^\d+$" placeholder="Edad" required>
             <div class="form-text">Solo números.</div>
         </div>
 
-        <!-- <div class="col-md-6 mb-3">
-            <label for="nhc" class="form-label">NHC</label>
-            <input type="text" class="form-control" id="nhc" name="nhc" pattern="^\d+$"
-                placeholder="Número de Historia Clínica" required>
-            <div class="form-text">Solo números.</div>
-        </div> -->
-    </div>
-    <div class="row">
-
-
-        <div class="col-md-6 mb-3">
+        <div class="col-md-4 mb-3">
             <label for="sexo" class="form-label">Sexo</label>
             <select class="form-select" id="sexo" name="sexo" required>
                 <option value="">Seleccione el sexo</option>
@@ -40,6 +30,12 @@
                 <option value="Masculino">Masculino</option>
             </select>
         </div>
+
+    </div>
+    <div class="row">
+
+
+        
     </div>
     <div class="row">
         <div class="col-md-6 mb-3">

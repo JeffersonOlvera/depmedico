@@ -1,64 +1,160 @@
-  document.addEventListener("DOMContentLoaded", function () {
-    const radio1 = document.getElementById("Gin_Ciclos_R");
-    const radio2 = document.getElementById("Gin_Ciclos_I");
+// Script para permitir solo una selección en orientación sexual e identidad de género
 
-    radio1.addEventListener("change", function () {
-      if (radio1.checked) radio2.checked = false;
-    });
-
-    radio2.addEventListener("change", function () {
-      if (radio2.checked) radio1.checked = false;
-    });
-
-
-    >
-  document.addEventListener("DOMContentLoaded", function () {
-    const hoy = new Date().toISOString().split('T')[0];
-
-    // Establecer fecha en 'fecha' y 'fecha_actual' si existen
-    const idsFecha = ['fecha', 'fecha_actual'];
-    idsFecha.forEach(id => {
-      const campo = document.getElementById(id);
-      if (campo) campo.value = hoy;
-    });
-
-    // Solo uno entre Gin_Ciclos_R e I
-    const radioR = document.getElementById("Gin_Ciclos_R");
-    const radioI = document.getElementById("Gin_Ciclos_I");
-
-    if (radioR && radioI) {
-      radioR.addEventListener("change", () => {
-        if (radioR.checked) radioI.checked = false;
+document.addEventListener('DOMContentLoaded', function() {
+    
+  // Grupos de orientación sexual (checkboxes que actúan como radio buttons)
+  const orientacionSexual = [
+      'Ori_Lesbiana',
+      'Ori_Gay', 
+      'Ori_Bisexual',
+      'Ori_Hetero',
+      'Ori_Omitir'
+  ];
+  
+  // Grupos de identidad de género (radio buttons)
+  const identidadGenero = [
+      'femenino',
+      'masculino', 
+      'transgenero',
+      'omite_genero'
+  ];
+  
+  // Grupos de ciclos ginecológicos (radio buttons)
+  const ciclosGinecologicos = [
+      'Gin_Ciclos_R',
+      'Gin_Ciclos_I'
+  ];
+  
+  // Función para manejar selección única en orientación sexual
+  function handleOrientacionSelection(selectedId) {
+      orientacionSexual.forEach(id => {
+          const checkbox = document.getElementById(id);
+          if (checkbox && checkbox.id !== selectedId) {
+              checkbox.checked = false;
+          }
       });
-      radioI.addEventListener("change", () => {
-        if (radioI.checked) radioR.checked = false;
+  }
+  
+  // Función para manejar selección única en identidad de género
+  function handleIdentidadSelection(selectedId) {
+      identidadGenero.forEach(id => {
+          const radio = document.getElementById(id);
+          if (radio && radio.id !== selectedId) {
+              radio.checked = false;
+          }
       });
-    }
-
-    // Función para permitir solo un checkbox activo en un grupo
-    function permitirSoloUno(grupoIds) {
-      grupoIds.forEach(id => {
-        const checkbox = document.getElementById(id);
-        if (checkbox) {
-          checkbox.addEventListener("change", function () {
-            if (this.checked) {
-              grupoIds.forEach(otroId => {
-                if (otroId !== id) {
-                  const otroCheckbox = document.getElementById(otroId);
-                  if (otroCheckbox) otroCheckbox.checked = false;
-                }
-              });
-            }
+  }
+  
+  // Función para manejar selección única en ciclos ginecológicos
+  function handleCiclosSelection(selectedId) {
+      ciclosGinecologicos.forEach(id => {
+          const radio = document.getElementById(id);
+          if (radio && radio.id !== selectedId) {
+              radio.checked = false;
+          }
+      });
+  }
+  
+  // Agregar event listeners para orientación sexual
+  orientacionSexual.forEach(id => {
+      const checkbox = document.getElementById(id);
+      if (checkbox) {
+          checkbox.addEventListener('change', function() {
+              if (this.checked) {
+                  handleOrientacionSelection(this.id);
+              }
           });
-        }
+      }
+  });
+  
+  // Agregar event listeners para identidad de género (aunque ya funcionan como radio buttons)
+  identidadGenero.forEach(id => {
+      const radio = document.getElementById(id);
+      if (radio) {
+          radio.addEventListener('change', function() {
+              if (this.checked) {
+                  handleIdentidadSelection(this.id);
+              }
+          });
+      }
+  });
+  
+  // Agregar event listeners para ciclos ginecológicos
+  ciclosGinecologicos.forEach(id => {
+      const radio = document.getElementById(id);
+      if (radio) {
+          radio.addEventListener('change', function() {
+              if (this.checked) {
+                  handleCiclosSelection(this.id);
+              }
+          });
+      }
+  });
+  
+  // Función adicional para resetear todas las selecciones si es necesario
+  function resetSelections() {
+      // Reset orientación sexual
+      orientacionSexual.forEach(id => {
+          const checkbox = document.getElementById(id);
+          if (checkbox) checkbox.checked = false;
       });
-    }
+      
+      // Reset identidad de género
+      identidadGenero.forEach(id => {
+          const radio = document.getElementById(id);
+          if (radio) radio.checked = false;
+      });
+      
+      // Reset ciclos ginecológicos
+      ciclosGinecologicos.forEach(id => {
+          const radio = document.getElementById(id);
+          if (radio) radio.checked = false;
+      });
+  }
+  
+  // Exponer función de reset globalmente si es necesaria
+  window.resetGenderSelections = resetSelections;
+  
+  console.log('Script de selección única cargado correctamente');
+});
 
-    // Grupos de checkboxes: orientación sexual e identidad de género
-    const orientacionIds = ['Ori_Lesbiana', 'Ori_Gay', 'Ori_Bisexual', 'Ori_Hetero', 'Ori_Omitir'];
-    const identidadIds = ['femenino', 'masculino', 'transgenero', 'omite_genero'];
-
-    permitirSoloUno(orientacionIds);
-    permitirSoloUno(identidadIds);
+// Versión alternativa más compacta si prefieres:
+/*
+document.addEventListener('DOMContentLoaded', function() {
+  // Para orientación sexual - convertir checkboxes en comportamiento de radio
+  const oriCheckboxes = document.querySelectorAll('input[name^="Ori_"]');
+  oriCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+          if (this.checked) {
+              oriCheckboxes.forEach(cb => {
+                  if (cb !== this) cb.checked = false;
+              });
+          }
+      });
   });
+  
+  // Para identidad de género - asegurar comportamiento de radio
+  const genRadios = document.querySelectorAll('input[name^="Iden_"]');
+  genRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+          if (this.checked) {
+              genRadios.forEach(r => {
+                  if (r !== this) r.checked = false;
+              });
+          }
+      });
   });
+  
+  // Para ciclos ginecológicos - asegurar comportamiento de radio
+  const ciclosRadios = document.querySelectorAll('input[name^="Gin_Ciclos_"]');
+  ciclosRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+          if (this.checked) {
+              ciclosRadios.forEach(r => {
+                  if (r !== this) r.checked = false;
+              });
+          }
+      });
+  });
+});
+*/

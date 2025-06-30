@@ -94,7 +94,7 @@ class CertificadoController:
     def _preparar_payload(self, form_data, usuario):
         """Prepara el payload para enviar a la API"""
         return {
-            "usuario_registro": "",
+            "usuario_registro": session.get("nombreColaborador", "No disponible"),
             "nombre": session.get("nombreColaborador", "No disponible"),
             "cedula": session.get("cedula", "No disponible"),
             "nhc": form_data.get("nhc"),
