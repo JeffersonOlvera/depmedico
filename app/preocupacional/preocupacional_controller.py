@@ -113,7 +113,7 @@ class PreocupacionalController:
         """Prepara el payload para enviar a la API"""
         return {
             "Tipo_Ficha": "Preocupacional",
-            "usuario_registro": "",
+            "usuario_registro": session.get("nombreColaborador", "No disponible"),
             "Sector": "Privado",
             "status": "Pendiente",
             "Nombre": session.get("nombreColaborador", ""),

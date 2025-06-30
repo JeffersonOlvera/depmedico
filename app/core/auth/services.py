@@ -9,6 +9,7 @@ import os
 from logging.handlers import RotatingFileHandler
 from flask import current_app
 
+
 class AuthService:
     """
     Servicio para manejar la autenticación y operaciones relacionadas con la seguridad.
@@ -60,7 +61,6 @@ class AuthService:
 
         errores = {}
         form_data = request.form.to_dict()
-
         # Validación básica de la cédula
         if not cedula or len(cedula) < 10:
             flash("Cédula no válida")
@@ -79,7 +79,7 @@ class AuthService:
             session["nombreColaborador"] = "USUARIO"
             session["rol"] = "colaborador"
             print("[DEBUG] Usuario no encontrado localmente, asignando rol por defecto")
-            
+
         current_app.logger.info(f'[DEBUG] ROL: {session["rol"]}')
         # Hacer la llamada a la API
         try:
@@ -90,7 +90,7 @@ class AuthService:
                 verify=False,
             )
 
-            current_app.logger.info(f'API Response: {response}')
+            current_app.logger.info(f"API Response: {response}")
 
             print(f"[DEBUG] Respuesta de la API: Status {response.status_code}")
 

@@ -15,10 +15,10 @@ from app.certificado.certificado_routes import certificado_routes
 
 
 def create_app():
-    app_env = os.getenv("APP_ENV", "development")
+    app_env = os.getenv("APP_ENV", "production")
     # app_env = os.getenv("APP_ENV", "production")
 
-    env_file = ".env.dev" if app_env == "development" else ".env.prod"
+    env_file = ".env.dev" if app_env == "development" else ".env"
 
     load_dotenv(env_file)
 
@@ -49,4 +49,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, port=int(os.getenv("PORT", 8000)), host="0.0.0.0")
+    app.run(debug=True, port=int(os.getenv("PORT", 8003)))

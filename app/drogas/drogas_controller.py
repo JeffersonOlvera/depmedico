@@ -112,7 +112,7 @@ class DrogaController:
     def _preparar_payload(self, form_data, usuario):
         """Prepara el payload para enviar a la API"""
         return {
-            "usuario_registro": "",
+            "usuario_registro": session.get("nombreColaborador", "No disponible"),
             "tipo_ficha": "ConsumoDroga",
             "tipo_sangre": form_data.get("tipo_sangre", ""),
             "fecha_apertura_F_RPD": form_data.get("fecha_apertura_F_RPD", ""),
