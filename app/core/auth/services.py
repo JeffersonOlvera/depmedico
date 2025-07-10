@@ -57,6 +57,12 @@ class AuthService:
                 "nombre": "SALAZAR FIALLOS MARITZA YADIRA",
                 "rol": "GTH",
             },
+            {
+                "cedula": "0919280784",
+                "nombre": "GAIBOR ESPINOSA LEYLA PAULINA",
+                "rol": "admin",
+            },
+            
         ]
 
         errores = {}

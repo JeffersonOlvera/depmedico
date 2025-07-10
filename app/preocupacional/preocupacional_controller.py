@@ -216,10 +216,10 @@ class PreocupacionalController:
                 **form_data,
                 "usuario_actualizacion": usuario,
                 "status": "Completada",
-                "tipo_ficha": "Droga",
-                "firma_Colaborador": session.get("firma_colaborador", ""),
+                "tipo_ficha": "Preocupacional",
             }
 
+            print("DATOS A ACTUALIZAR:", payload)
             data_validated = PreocupacionalSchema(**payload).dict()
 
             response = service.actualizar_formulario(data_validated)

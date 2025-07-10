@@ -6,7 +6,7 @@ from datetime import datetime
 
 class SeguimientoService:
 
-    BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+    BASE_URL = os.getenv("BASE_URL", "https://192.168.137.16:47096")
     API_GUARDAR = f"{BASE_URL}/FormDepMedico/Guardar/fichaSegDrogas"
     API_ACTUALIZAR = f"{BASE_URL}/FormDepMedico/Actualizar/fichaSegDrogas"
     API_CARGAR = f"{BASE_URL}/FormDepMedico/Cargar/fichaSegDrogas"
@@ -119,6 +119,7 @@ class SeguimientoService:
             print(f"Código de estado: {response.status_code}")
 
             if response.status_code == 201:
+                print(f"Respuesta: {response.json()}")
                 return response
             else:
                 return {

@@ -6,7 +6,7 @@ from datetime import datetime
 
 class DrogaService:
 
-    BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+    BASE_URL = os.getenv("BASE_URL", "https://192.168.137.16:47096")
     API_GUARDAR = f"{BASE_URL}/FormDepMedico/Guardar/fichaDrogas"
     API_ACTUALIZAR = f"{BASE_URL}/FormDepMedico/Actualizar/fichaDrogas"
     API_CARGAR = f"{BASE_URL}/FormDepMedico/Cargar/fichaDrogas"

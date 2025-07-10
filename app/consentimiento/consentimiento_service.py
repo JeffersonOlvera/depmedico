@@ -7,7 +7,7 @@ class ConsentimientoService(BaseApiService):
 
     def __init__(self):
         # Primero obtenemos la BASE_URL
-        BASE_URL = os.getenv("BASE_URL", "http://localhost:9900")
+        BASE_URL = os.getenv("BASE_URL", "https://192.168.137.16:47096")
 
         # Luego llamamos al constructor padre usando la variable local
         super().__init__(

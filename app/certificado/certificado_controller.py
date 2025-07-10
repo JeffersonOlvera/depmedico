@@ -128,7 +128,7 @@ class CertificadoController:
                 "usuario_actualizacion": usuario,
                 "status": "Completada",
             }
-            print(payload)
+            # print(payload)
 
             data_validated = CertificadoSchema(**payload).dict()
 
@@ -194,14 +194,7 @@ class CertificadoController:
             recomendaciones = form_data.get("Recomendaciones")
             firma_colaborador = form_data.get("Firma_colaborador")
             firma_doc = form_data.get("Firma_doc", "")
-            fecha_emision_raw = form_data.get("Fecha_emision")
-
-            try:
-                fecha_emision = datetime.strptime(
-                    fecha_emision_raw, "%d/%m/%Y"
-                ).strftime("%Y-%m-%d")
-            except ValueError:
-                fecha_emision = ""
+            fecha_emision = form_data.get("Fecha_emision")
 
             data = {
                 "nombre": nombre,
@@ -225,6 +218,8 @@ class CertificadoController:
                 "firma_doc": firma_doc,
                 "status": "Pendiente",
             }
+
+            print("Datos cargados:", data)
 
             return render_template(
                 "forms/medico/form_certificado_doc.html", errores={}, form_data=data

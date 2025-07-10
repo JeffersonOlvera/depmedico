@@ -19,7 +19,7 @@
     <div class="col-md-6">
       <label for="Fecha_actualizacion" class="form-label">Fecha de Actualización</label>
       <input type="date" class="form-control" id="Fecha_actualizacion" name="Fecha_actualizacion"
-        value="{{ form_data.get('fecha', fecha | default('')) }}" required />
+        value="{{ form_data.get('Fecha_actualizacion', Fecha_actualizacion | default('')) }}" required />
     </div>
     <div class="col-md-6">
       <label for="edad" class="form-label">Edad</label>
@@ -133,7 +133,7 @@
     </div>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" value="X" {% if form_data.get('Enfer_cron_notransmi')=='X'
-        %}checked{% endif %} id="Enfer_cron_notransmi" name="Enfer_cron_notransmi" />
+        %}checked{% endif %} id="Enfer_cron_notransmi" name="enfer_cron_notransmi" />
       <label class="form-check-label" for="Enfer_cron_notransmi">Crónica No Transmisible</label>
     </div>
     <div class="form-check">
@@ -170,9 +170,6 @@
         <button type="button" id="clear-signature" class="btn btn-secondary">
           Limpiar
         </button>
-        <button type="button" id="save-signature" class="btn btn-primary">
-          Guardar
-        </button>
       </div>
     </div>
 
@@ -181,32 +178,72 @@
   <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
 
 
-
-
   <script>
     window.onload = function () {
       var canvas = document.getElementById('signature-canvas');
       var context = canvas.getContext('2d');
       var signaturePad = new SignaturePad(canvas);
-
+    
       // Redimensiona el canvas según la ventana
       function resizeCanvas() {
         var ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;
         context.scale(ratio, ratio);
+    
+        // Recargar la imagen después de redimensionar si existe
+        loadExistingSignature();
       }
-
+    
+      // Función para guardar automáticamente la firma
+      function autoSaveSignature() {
+        if (!signaturePad.isEmpty()) {
+          var dataURL = signaturePad.toDataURL('image/png');
+          document.getElementById('firma_colaborador').value = dataURL;
+          console.log('Firma guardada automáticamente');
+        } else {
+          // Si está vacía, limpiar el campo oculto
+          document.getElementById('firma_colaborador').value = '';
+          console.log('Firma limpiada automáticamente');
+        }
+      }
+    
+      // Función para cargar la firma existente
+      function loadExistingSignature() {
+        // Corregir la obtención del base64 desde el backend
+        var base64FirmaGuardada = "{{ form_data.Firma_colaborador|default('') }}";
+        
+        if (base64FirmaGuardada && base64FirmaGuardada.trim() !== '') {
+          // Verificar que el base64 tenga el formato correcto
+          if (!base64FirmaGuardada.startsWith('data:image/')) {
+            base64FirmaGuardada = 'data:image/png;base64,' + base64FirmaGuardada;
+          }
+          
+          var image = new Image();
+          image.onload = function () {
+            // Usar SignaturePad para cargar la imagen en lugar de dibujarla directamente
+            signaturePad.fromDataURL(base64FirmaGuardada);
+            
+            // También actualizar el input hidden con el valor existente
+            document.getElementById('firma_colaborador').value = base64FirmaGuardada;
+          };
+          image.onerror = function() {
+            console.error('Error al cargar la firma existente');
+          };
+          image.src = base64FirmaGuardada;
+        }
+      }
+    
       // Ajustar tamaño del canvas al cargar la página
       window.onresize = resizeCanvas;
       resizeCanvas();
-
+    
       // Función para centrar y escalar la imagen en el canvas
       function drawCenteredImage(image) {
         var canvasAspect = canvas.width / canvas.height;
         var imageAspect = image.width / image.height;
         var renderableWidth, renderableHeight, xStart, yStart;
-
+    
         // Ajustar el tamaño de la imagen para que encaje en el canvas
         if (imageAspect < canvasAspect) {
           // La imagen es más alta que el canvas, ajustar el ancho
@@ -221,12 +258,12 @@
           xStart = 0;
           yStart = (canvas.height - renderableHeight) / 2;
         }
-
+    
         // Dibujar la imagen centrada
         context.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas antes de dibujar
         context.drawImage(image, xStart, yStart, renderableWidth, renderableHeight);
       }
-
+    
       // Cargar la firma guardada si existe y centrarla
       var base64FirmaGuardada = "{{ form_data.get('firma_colaborador', firma_colaborador | default('')) }}";
       if (base64FirmaGuardada) {
@@ -236,25 +273,28 @@
           drawCenteredImage(image); // Llamar a la función para dibujar la imagen centrada
         };
       }
-
+    
+      // Eventos de auto-guardado
+      // Guardar automáticamente al finalizar el trazo
+      signaturePad.onEnd = function() {
+        autoSaveSignature();
+      };
+    
       // Limpiar firma
       document.getElementById('clear-signature').addEventListener('click', function () {
         signaturePad.clear();
+        autoSaveSignature(); // Guardar automáticamente después de limpiar
       });
-
-      // Guardar firma
-      document.getElementById('save-signature').addEventListener('click', function (event) {
-        event.preventDefault(); // Prevenir comportamiento por defecto
-
-        if (signaturePad.isEmpty()) {
-          alert("Por favor, realiza una firma.");
-        } else {
-          var dataURL = signaturePad.toDataURL('image/png');
-          document.getElementById('firma_colaborador').value = dataURL; // Guardar en el campo oculto
-          alert("Firma guardada");
-        }
-      });
+    
+      // Eliminar el botón de guardar (opcional) o simplemente no hacer nada
+      var saveButton = document.getElementById('save-signature');
+      if (saveButton) {
+        saveButton.style.display = 'none'; // Ocultar el botón de guardar
+        // O alternativamente, puedes remover completamente el event listener
+        // saveButton.removeEventListener('click', function() {});
+      }
     };
   </script>
+  
 
   {%endblock%}

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class PreocupacionalSchema(BaseModel):
     usuario_actualizacion: str = ""
     tipo_ficha: str = ""
@@ -227,4 +228,3 @@ class PreocupacionalSchema(BaseModel):
     medico: str = ""
     codigo: str = ""
     status: str = ""
-    

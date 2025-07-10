@@ -63,25 +63,25 @@
             <label for="fecha_emision" class="form-label">Fecha de Emisión</label>
             <input type="date" class="form-control" id="fecha_emision" name="fecha_emision"
                 value="{{ form_data.get('fecha_emision', '') | default('') }}" required>
+                
         </div>
-
         <div class="col-md-6 mb-3">
             <label class="form-label">Evaluación:</label>
             <div class="d-flex">
                 <div class="form-check me-3">
-                    <input type="hidden" name="ingreso" value="">
+                    
                     <input class="form-check-input" type="checkbox" id="ingreso" name="ingreso" value="X"
                         {% if form_data.get('ingreso') == 'Sí' or form_data.get('ingreso') == 'X' %}checked{% endif %}>
                     <label class="form-check-label" for="ingreso">Ingreso</label>
                 </div>
                 <div class="form-check me-3">
-                    <input type="hidden" name="periodico" value="">
+                    
                     <input class="form-check-input" type="checkbox" id="periodico" name="periodico" value="X"
                         {% if form_data.get('periodico') == 'Sí' or form_data.get('periodico') == 'X' %}checked{% endif %}>
                     <label class="form-check-label" for="periodico">Periódico</label>
                 </div>
                 <div class="form-check">
-                    <input type="hidden" name="reintegro" value="">
+                    
                     <input class="form-check-input" type="checkbox" id="reintegro" name="reintegro" value="X"
                         {% if form_data.get('reintegro') == 'Sí' or form_data.get('reintegro') == 'X' %}checked{% endif %}>
                     <label class="form-check-label" for="reintegro">Reintegro</label>
@@ -125,14 +125,14 @@
         <label for="apto_detalles" class="form-label">Detalles de Observación/Limitaciones</label>
         <textarea class="form-control" id="apto_detalles" name="apto_detalles"
             placeholder="Ingrese detalles (si es necesario)">{{ form_data.get('apto_detalles', '') }}
-            </textarea>
+        </textarea>
     </div>
 
     <div class="mb-3">
         <label for="recomendaciones" class="form-label">Recomendaciones</label>
         <textarea class="form-control" id="recomendaciones" name="recomendaciones" placeholder="Recomendaciones"
             required>{{ form_data.get('recomendaciones', '') }}
-            </textarea>
+        </textarea>
     </div>
 
     <p>
@@ -143,108 +143,145 @@
 
 
     <!-- Firma Colaborador -->
-    <div class="mb-3" id="signature-pad2">
-        <label class="form-label">Firma Colaborador:</label>
-        <canvas class="firma-canva" id="signature-canvas2"></canvas>
-        <div class="button-group">
-            <button type="button" id="clear-signature2" class="btn btn-clear"> <i class="fa-solid fa-trash"></i> Limpiar
+    <div class="col-md-12">
+        <div class="signature-pad" id="signature-pad">
+          <label class="form-label">Firma:</label>
+          <canvas id="signature-canvas"></canvas>
+          <div class="btn-group">
+            <button type="button" id="clear-signature" class="btn btn-secondary">
+              Limpiar
             </button>
-            <button type="button" id="save-signature2" class="btn btn-primary">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar
-            </button>
+          </div>
         </div>
-    </div>
-
-
-    <input type="hidden" id="firma_colaborador" name="firma_colaborador">
+    
+        <input type="hidden" id="firma_colaborador" name="firma_colaborador" />
+      </div>
 
     <button type="submit" class="btn btn-primary mt-4 w-100">Enviar</button>
 </form>
 
 {%endblock%}
 {%block scripts%}
-<script>
+<script src="{{ url_for('static', filename='js/radio_btn.js') }}"></script>
 
+<script>
     window.onload = function () {
         var canvas = document.getElementById('signature-canvas');
+        var context = canvas.getContext('2d');
         var signaturePad = new SignaturePad(canvas);
-
+      
+        // Redimensiona el canvas según la ventana
         function resizeCanvas() {
-            var ratio = Math.max(window.devicePixelRatio || 1, 1);
-            canvas.width = canvas.offsetWidth * ratio;
-            canvas.height = canvas.offsetHeight * ratio;
-            canvas.getContext("2d").scale(ratio, ratio);
+          var ratio = Math.max(window.devicePixelRatio || 1, 1);
+          canvas.width = canvas.offsetWidth * ratio;
+          canvas.height = canvas.offsetHeight * ratio;
+          context.scale(ratio, ratio);
+      
+          // Recargar la imagen después de redimensionar si existe
+          loadExistingSignature();
         }
-
+      
+        // Función para guardar automáticamente la firma
+        function autoSaveSignature() {
+          if (!signaturePad.isEmpty()) {
+            var dataURL = signaturePad.toDataURL('image/png');
+            document.getElementById('firma_colaborador').value = dataURL;
+            console.log('Firma guardada automáticamente');
+          } else {
+            // Si está vacía, limpiar el campo oculto
+            document.getElementById('firma_colaborador').value = '';
+            console.log('Firma limpiada automáticamente');
+          }
+        }
+      
+        // Función para cargar la firma existente
+        function loadExistingSignature() {
+          // Corregir la obtención del base64 desde el backend
+          var base64FirmaGuardada = "{{ form_data.Firma_colaborador|default('') }}";
+          
+          if (base64FirmaGuardada && base64FirmaGuardada.trim() !== '') {
+            // Verificar que el base64 tenga el formato correcto
+            if (!base64FirmaGuardada.startsWith('data:image/')) {
+              base64FirmaGuardada = 'data:image/png;base64,' + base64FirmaGuardada;
+            }
+            
+            var image = new Image();
+            image.onload = function () {
+              // Usar SignaturePad para cargar la imagen en lugar de dibujarla directamente
+              signaturePad.fromDataURL(base64FirmaGuardada);
+              
+              // También actualizar el input hidden con el valor existente
+              document.getElementById('firma_colaborador').value = base64FirmaGuardada;
+            };
+            image.onerror = function() {
+              console.error('Error al cargar la firma existente');
+            };
+            image.src = base64FirmaGuardada;
+          }
+        }
+      
+        // Ajustar tamaño del canvas al cargar la página
         window.onresize = resizeCanvas;
         resizeCanvas();
+      
+        // Función para centrar y escalar la imagen en el canvas
+        function drawCenteredImage(image) {
+          var canvasAspect = canvas.width / canvas.height;
+          var imageAspect = image.width / image.height;
+          var renderableWidth, renderableHeight, xStart, yStart;
+      
+          // Ajustar el tamaño de la imagen para que encaje en el canvas
+          if (imageAspect < canvasAspect) {
+            // La imagen es más alta que el canvas, ajustar el ancho
+            renderableHeight = canvas.height;
+            renderableWidth = image.width * (canvas.height / image.height);
+            xStart = (canvas.width - renderableWidth) / 2;
+            yStart = 0;
+          } else {
+            // La imagen es más ancha que el canvas, ajustar la altura
+            renderableWidth = canvas.width;
+            renderableHeight = image.height * (canvas.width / image.width);
+            xStart = 0;
+            yStart = (canvas.height - renderableHeight) / 2;
+          }
+      
+          // Dibujar la imagen centrada
+          context.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas antes de dibujar
+          context.drawImage(image, xStart, yStart, renderableWidth, renderableHeight);
+        }
+      
+        // Cargar la firma guardada si existe y centrarla
+        var base64FirmaGuardada = "{{ form_data.get('firma_colaborador', firma_colaborador | default('')) }}";
 
-        document.getElementById('clear-signature').addEventListener('click', function () {
-            signaturePad.clear();
-        });
-
-        document.getElementById('save-signature').addEventListener('click', function (event) {
-            event.preventDefault(); // Prevenir el comportamiento por defecto
-
-            if (signaturePad.isEmpty()) {
-                alert("Por favor, realiza una firma.");
-            } else {
-                var dataURL = signaturePad.toDataURL('image/png');
-                document.getElementById('firma_colaborador').value = dataURL;
-                console.log(document.getElementById('firma_colaborador').value);
-                alert("Firma guardada");
-            }
-        });
-    };
-
-    function showModal(message, callback) {
-        event.preventDefault();
-        document.getElementById('messageModalBody').textContent = message;
-        const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
-        messageModal.show();
-
-        const modalElement = document.getElementById('messageModal');
-        modalElement.addEventListener('hidden.bs.modal', function () {
-            if (callback) {
-                callback();
-            }
-        }, { once: true });
-    }
-</script>
-
-<script>
-    window.onload = function () {
-
-
-        // Configuración de la firma del Colaborador
-        var canvas2 = document.getElementById('signature-canvas2');
-        var signaturePad2 = new SignaturePad(canvas2);
-
-        resizeCanvas(canvas2);
-
-        document.getElementById('clear-signature2').addEventListener('click', function () {
-            signaturePad2.clear();
-        });
-
-        document.getElementById('save-signature2').addEventListener('click', function (event) {
-            event.preventDefault();
-
-            if (signaturePad2.isEmpty()) {
-                alert("Por favor, realiza una firma.");
-            } else {
-                var dataURL = signaturePad2.toDataURL('image/png');
-                document.getElementById('firma_colaborador').value = dataURL;
-                alert("Firma del colaborador guardada");
-                console.log('firma cola', dataURL);
-            }
-        });
-
-        // Redimensionar los canvas cuando la ventana cambie de tamaño
-        window.onresize = function () {
-            resizeCanvas(canvas1);
-            resizeCanvas(canvas2);
+        console.log('Firma guardada:', base64FirmaGuardada); // Para depuración 
+        if (base64FirmaGuardada) {
+          var image = new Image();
+          image.src = base64FirmaGuardada;
+          image.onload = function () {
+            drawCenteredImage(image); // Llamar a la función para dibujar la imagen centrada
+          };
+        }
+      
+        // Eventos de auto-guardado
+        // Guardar automáticamente al finalizar el trazo
+        signaturePad.onEnd = function() {
+          autoSaveSignature();
         };
-    };
+      
+        // Limpiar firma
+        document.getElementById('clear-signature').addEventListener('click', function () {
+          signaturePad.clear();
+          autoSaveSignature(); // Guardar automáticamente después de limpiar
+        });
+      
+        // Eliminar el botón de guardar (opcional) o simplemente no hacer nada
+        var saveButton = document.getElementById('save-signature');
+        if (saveButton) {
+          saveButton.style.display = 'none'; // Ocultar el botón de guardar
+          // O alternativamente, puedes remover completamente el event listener
+          // saveButton.removeEventListener('click', function() {});
+        }
+      };
 </script>
 
 {%endblock%}

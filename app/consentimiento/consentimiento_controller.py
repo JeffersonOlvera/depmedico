@@ -232,6 +232,8 @@ class ConsentimientoController:
             else:
                 session["firma_colaborador_path"] = ""
 
+            print("Datos cargados:", form_data)
+
             return render_template(
                 "forms/medico/form_consentimiento_doc.html",
                 errores={},
